@@ -25,6 +25,5 @@ class ShelterAllocator:
         result = self.planner.run(
             shelters=shelters,
             displaced_population=displaced_population,
-            population_zones=population_zones,
         )
         return result

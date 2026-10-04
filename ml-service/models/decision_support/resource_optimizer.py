@@ -23,8 +23,7 @@ class ResourceOptimizer:
         road_segments: List[Dict[str, Any]],
     ) -> Dict[str, Any]:
         result = self.optimizer.run(
-            resource_demand=demand,
-            resource_supply=supply,
-            road_segments=road_segments,
+            demand=demand,
+            supply=supply,
         )
         return result

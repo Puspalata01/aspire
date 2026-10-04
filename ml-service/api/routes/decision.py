@@ -25,13 +25,20 @@ async def optimize_response(request: DecisionSupportRequest):
     Generate optimized evacuation routes, resource allocation, and shelter assignments
     """
     try:
+        prepared_shelters = []
+        for sh in request.shelters:
+            s = dict(sh)
+            if 'floor_area_sqm' not in s and 'capacity' in s:
+                s['floor_area_sqm'] = s['capacity'] * 2.0
+            prepared_shelters.append(s)
+            
         evacuation_planner = EvacuationPlanner()
         resource_optimizer = ResourceOptimizer()
         shelter_allocator = ShelterAllocator()
         
         evacuation_plan = evacuation_planner.plan_evacuation(
             population_zones=request.population_zones,
-            shelters=request.shelters,
+            shelters=prepared_shelters,
             road_segments=request.road_segments,
             priorities=request.priorities,
         )
@@ -46,7 +53,7 @@ async def optimize_response(request: DecisionSupportRequest):
         
         shelter_plan = shelter_allocator.allocate_shelters(
             displaced_population=request.displaced_population,
-            shelters=request.shelters,
+            shelters=prepared_shelters,
             population_zones=request.population_zones,
         )
         

@@ -4,7 +4,7 @@
 **Geography:** Odisha, India (MVP)  
 **Primary Hazard:** Flood Detection  
 **Status:** In Development  
-**Last Updated:** 2026-10-04 17:50 UTC
+**Last Updated:** 2026-10-04 18:15 UTC
 
 ---
 
@@ -194,11 +194,11 @@
 
 ## Phase 8: API and Integration Layer
 
-### Phase 8.1: REST API for ML inference endpoints 🔄
+### Phase 8.1: REST API for ML inference endpoints ✅
 - [x] FastAPI/Flask service setup (`api/main.py`, middleware, lifespan manager)
-- [x] Model inference endpoints — flood, risk, impact, decision support, multi-hazard, LLM
+- [x] Model inference endpoints — flood, risk, impact, decision support, multi-hazard, LLM, GIS/GeoJSON
 - [x] Request validation and rate limiting (Pydantic schemas + `RateLimitMiddleware`)
-- [ ] Response formatting (JSON + GeoJSON) — GeoJSON schemas defined (`GeoJSONFeature`, `GeoJSONFeatureCollection`) but no routes export GeoJSON yet
+- [x] Response formatting (JSON + GeoJSON) — `/gis/export-geojson` returns GeoJSON FeatureCollection
 - [x] API documentation (OpenAPI/Swagger) — auto-generated at `/docs` by FastAPI
 
 ### Phase 8.2: Real-time monitoring and alerting system
@@ -244,10 +244,10 @@
 
 ## Progress Tracking
 
-**Current Phase:** Phase 8 - API and Integration Layer (in progress)  
+**Current Phase:** Phase 8 - API and Integration Layer (Phase 8.1 complete)  
 **Completed Phases:** Phase 1 ✅, Phase 2 ✅, Phase 3 ✅, Phase 4 ✅, Phase 5 ✅, Phase 6 ✅, Phase 7 ✅  
-**Phase 8 Status:** 4/15 sub-items done (Phase 8.1 nearly complete; 8.2 and 8.3 not started)  
-**Total Progress:** 66.3% (26/39 sub-phases completed)
+**Phase 8 Status:** 5/15 sub-items done (Phase 8.1 complete; 8.2 and 8.3 not started)  
+**Total Progress:** 67.4% (31/46 sub-phases completed)
 
 ---
 
@@ -255,8 +255,9 @@
 
 - **Compute:** Local deployment for MVP
 - **Data:** Sample/synthetic data initially, real data integration later
-- **Frameworks:** TBD based on Phase 1.1 setup
+- **Frameworks:** FastAPI + Pydantic for REST API (Phase 8.1 complete)
 - **Deployment:** Docker containers for portability
+- **Phase 8.1 Notes:** 9 endpoints verified passing: health, flood/detect, flood/assess-risk, flood/predict-impact, decision/optimize, multi-hazard/heatwave, multi-hazard/cascade, llm/query, gis/export-geojson
 
 ---
 
