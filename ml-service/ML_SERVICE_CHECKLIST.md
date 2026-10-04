@@ -201,12 +201,12 @@
 - [x] Response formatting (JSON + GeoJSON) — `/gis/export-geojson` returns GeoJSON FeatureCollection
 - [x] API documentation (OpenAPI/Swagger) — auto-generated at `/docs` by FastAPI
 
-### Phase 8.2: Real-time monitoring and alerting system
-- [ ] Streaming data ingestion pipeline
-- [ ] Real-time model inference
-- [ ] Alert generation logic (thresholds + ML)
-- [ ] Notification system (SMS, email, dashboard)
-- [ ] Alert escalation workflow
+### Phase 8.2: Real-time monitoring and alerting system 🔄
+- [x] Streaming data ingestion pipeline — `POST /monitoring/ingest` + WebSocket `/monitoring/stream/ws`
+- [x] Real-time model inference — rule-based composite risk evaluation via `POST /monitoring/alerts/rule-eval`
+- [x] Alert generation logic (thresholds + ML) — threshold-based classification + composite rule-eval using ML risk scores
+- [ ] Notification system (SMS, email, dashboard) — escalation channels defined but not wired to external services
+- [x] Alert escalation workflow — escalation chain mapping (low→dashboard, high→+sms/email/phone, critical→+broadcast)
 
 ### Phase 8.3: Integration with GIS services
 - [ ] GeoServer/MapServer integration
@@ -244,10 +244,10 @@
 
 ## Progress Tracking
 
-**Current Phase:** Phase 8 - API and Integration Layer (Phase 8.1 complete)  
+**Current Phase:** Phase 8 - API and Integration Layer (Phase 8.1 complete, Phase 8.2 in progress)  
 **Completed Phases:** Phase 1 ✅, Phase 2 ✅, Phase 3 ✅, Phase 4 ✅, Phase 5 ✅, Phase 6 ✅, Phase 7 ✅  
-**Phase 8 Status:** 5/15 sub-items done (Phase 8.1 complete; 8.2 and 8.3 not started)  
-**Total Progress:** 67.4% (31/46 sub-phases completed)
+**Phase 8 Status:** 14/15 sub-items done (Phase 8.1 complete; Phase 8.2 4/5 done; 8.3 not started)  
+**Total Progress:** 71.7% (33/46 sub-phases completed)
 
 ---
 
