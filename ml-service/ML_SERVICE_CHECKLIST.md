@@ -4,7 +4,7 @@
 **Geography:** Odisha, India (MVP)  
 **Primary Hazard:** Flood Detection  
 **Status:** In Development  
-**Last Updated:** 2026-10-04 10:33 UTC
+**Last Updated:** 2026-10-04 17:50 UTC
 
 ---
 
@@ -194,12 +194,12 @@
 
 ## Phase 8: API and Integration Layer
 
-### Phase 8.1: REST API for ML inference endpoints
-- [ ] FastAPI/Flask service setup
-- [ ] Model inference endpoints (flood, risk, impact)
-- [ ] Request validation and rate limiting
-- [ ] Response formatting (JSON + GeoJSON)
-- [ ] API documentation (OpenAPI/Swagger)
+### Phase 8.1: REST API for ML inference endpoints 🔄
+- [x] FastAPI/Flask service setup (`api/main.py`, middleware, lifespan manager)
+- [x] Model inference endpoints — flood, risk, impact, decision support, multi-hazard, LLM
+- [x] Request validation and rate limiting (Pydantic schemas + `RateLimitMiddleware`)
+- [ ] Response formatting (JSON + GeoJSON) — GeoJSON schemas defined (`GeoJSONFeature`, `GeoJSONFeatureCollection`) but no routes export GeoJSON yet
+- [x] API documentation (OpenAPI/Swagger) — auto-generated at `/docs` by FastAPI
 
 ### Phase 8.2: Real-time monitoring and alerting system
 - [ ] Streaming data ingestion pipeline
@@ -244,9 +244,10 @@
 
 ## Progress Tracking
 
-**Current Phase:** Phase 8 - API and Integration Layer  
+**Current Phase:** Phase 8 - API and Integration Layer (in progress)  
 **Completed Phases:** Phase 1 ✅, Phase 2 ✅, Phase 3 ✅, Phase 4 ✅, Phase 5 ✅, Phase 6 ✅, Phase 7 ✅  
-**Total Progress:** 62.9% (22/35 sub-phases completed)
+**Phase 8 Status:** 4/15 sub-items done (Phase 8.1 nearly complete; 8.2 and 8.3 not started)  
+**Total Progress:** 66.3% (26/39 sub-phases completed)
 
 ---
 
