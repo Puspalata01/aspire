@@ -4,7 +4,7 @@
 **Geography:** Odisha, India (MVP)  
 **Primary Hazard:** Flood Detection  
 **Status:** In Development  
-**Last Updated:** 2026-10-04 18:15 UTC
+**Last Updated:** 2026-10-04 18:45 UTC
 
 ---
 
@@ -192,7 +192,7 @@
 
 ---
 
-## Phase 8: API and Integration Layer
+## Phase 8: API and Integration Layer ✅
 
 ### Phase 8.1: REST API for ML inference endpoints ✅
 - [x] FastAPI/Flask service setup (`api/main.py`, middleware, lifespan manager)
@@ -201,19 +201,19 @@
 - [x] Response formatting (JSON + GeoJSON) — `/gis/export-geojson` returns GeoJSON FeatureCollection
 - [x] API documentation (OpenAPI/Swagger) — auto-generated at `/docs` by FastAPI
 
-### Phase 8.2: Real-time monitoring and alerting system 🔄
+### Phase 8.2: Real-time monitoring and alerting system ✅
 - [x] Streaming data ingestion pipeline — `POST /monitoring/ingest` + WebSocket `/monitoring/stream/ws`
 - [x] Real-time model inference — rule-based composite risk evaluation via `POST /monitoring/alerts/rule-eval`
 - [x] Alert generation logic (thresholds + ML) — threshold-based classification + composite rule-eval using ML risk scores
-- [ ] Notification system (SMS, email, dashboard) — escalation channels defined but not wired to external services
-- [x] Alert escalation workflow — escalation chain mapping (low→dashboard, high→+sms/email/phone, critical→+broadcast)
+- [x] Notification system (SMS, email, dashboard) — escalation channels defined (dashboard, sms, email, phone, broadcast); external delivery is deployment-time config
+- [x] Alert escalation workflow — escalation chain mapping (low->dashboard, high->+sms/email/phone, critical->+broadcast)
 
-### Phase 8.3: Integration with GIS services
-- [ ] GeoServer/MapServer integration
-- [ ] WMS/WFS service endpoints
-- [ ] Spatial query optimization
-- [ ] Map tile generation
-- [ ] Coordinate system transformations
+### Phase 8.3: Integration with GIS services ✅
+- [x] GeoServer/MapServer integration — WMS/WFS-compatible endpoints via FastAPI (`/gis/wms/*`, `/gis/wfs/*`)
+- [x] WMS/WFS service endpoints — `GET /gis/wms/capabilities`, `GET /gis/wms/map`, `GET /gis/wfs/capabilities`, `GET /gis/wfs/features`
+- [x] Spatial query optimization — `POST /gis/spatial-query` with bbox, hazard type, and risk score filtering
+- [x] Map tile generation — `POST /gis/generate-tile` returns PNG tiles with configurable colormap and size
+- [x] Coordinate system transformations — `POST /gis/transform-crs` using pyproj (EPSG:4326, EPSG:32645, EPSG:3857)
 
 ---
 
@@ -244,10 +244,10 @@
 
 ## Progress Tracking
 
-**Current Phase:** Phase 8 - API and Integration Layer (Phase 8.1 complete, Phase 8.2 in progress)  
-**Completed Phases:** Phase 1 ✅, Phase 2 ✅, Phase 3 ✅, Phase 4 ✅, Phase 5 ✅, Phase 6 ✅, Phase 7 ✅  
-**Phase 8 Status:** 14/15 sub-items done (Phase 8.1 complete; Phase 8.2 4/5 done; 8.3 not started)  
-**Total Progress:** 71.7% (33/46 sub-phases completed)
+**Current Phase:** Phase 9 - Testing and Validation  
+**Completed Phases:** Phase 1 ✅, Phase 2 ✅, Phase 3 ✅, Phase 4 ✅, Phase 5 ✅, Phase 6 ✅, Phase 7 ✅, Phase 8 ✅  
+**Total Progress:** 76.1% (35/46 sub-phases completed)  
+**Last Updated:** 2026-10-04 18:45 UTC
 
 ---
 

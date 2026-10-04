@@ -15,7 +15,7 @@ from api.middleware.middleware import (
     ErrorHandlingMiddleware,
     RateLimitMiddleware,
 )
-from api.routes import flood, decision, multi_hazard, llm, gis, monitoring, monitoring_stream
+from api.routes import flood, decision, multi_hazard, llm, gis, gis_services, monitoring, monitoring_stream
 from api.schemas.requests import HealthResponse
 from utils.logger import get_logger
 from utils.config_loader import Config
@@ -75,6 +75,7 @@ app.include_router(decision.router)
 app.include_router(multi_hazard.router)
 app.include_router(llm.router)
 app.include_router(gis.router)
+app.include_router(gis_services.router)
 app.include_router(monitoring.router)
 app.include_router(monitoring_stream.router)
 
