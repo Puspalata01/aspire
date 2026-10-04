@@ -4,7 +4,7 @@
 **Geography:** Odisha, India (MVP)  
 **Primary Hazard:** Flood Detection  
 **Status:** In Development  
-**Last Updated:** 2026-10-04 09:36 UTC
+**Last Updated:** 2026-10-04 10:15 UTC
 
 ---
 
@@ -30,6 +30,31 @@
 - [x] Image preprocessing for satellite data
 - [x] Data validation and quality checks
 - [x] Feature engineering pipeline
+
+---
+
+## Phase 2: Core ML Models - Flood Detection (MVP) ✅
+
+### Phase 2.1: Flood inundation segmentation model (CNN/U-Net) ✅
+- [x] Model architecture design (U-Net + Attention U-Net)
+- [x] Training pipeline with sample data (Dice + BCE loss)
+- [x] Model evaluation metrics (IoU, F1, precision/recall)
+- [x] Model serialization and versioning (checkpoint system)
+- [x] Inference pipeline (batch predict, flood extent, severity)
+
+### Phase 2.2: Precipitation forecasting model (LSTM/Transformer) ✅
+- [x] Time-series model architecture (LSTM, GRU, Attention LSTM, Seq2Seq)
+- [x] Training pipeline with rainfall sequences
+- [x] Forecast evaluation (MAE, RMSE, R², MAPE)
+- [x] Multi-step ahead prediction (autoregressive)
+- [x] Uncertainty quantification (Seq2Seq with teacher forcing)
+
+### Phase 2.3: River discharge prediction model ✅
+- [x] Hydrological model integration (Physics-Informed LSTM)
+- [x] Discharge prediction from rainfall + terrain
+- [x] Calibration with historical data (NSE metric)
+- [x] Real-time prediction pipeline
+- [x] Alert threshold configuration
 
 ---
 
@@ -242,10 +267,9 @@
 
 ## Progress Tracking
 
-**Current Phase:** Phase 2 - Core ML Models (Flood Detection MVP)  
-**Completed Phases:** Phase 1 ✅  
-**Completed Sub-Phases:** 3/3 Phase 1 complete  
-**Total Progress:** 8.6% (3/35 sub-phases completed)
+**Current Phase:** Phase 3 - Risk Assessment Engine  
+**Completed Phases:** Phase 1 ✅, Phase 2 ✅  
+**Total Progress:** 17.1% (6/35 sub-phases completed)
 
 ---
 
