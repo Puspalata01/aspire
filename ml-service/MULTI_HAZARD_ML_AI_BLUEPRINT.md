@@ -4,7 +4,7 @@
 
 **Tagline:** From Warning to Action  
 **Project type:** AI + GIS + Disaster Management + Decision Support System  
-**Primary geography for MVP:** Odisha, India  
+**Primary geography for MVP:** India  
 **MVP modeling focus:** Flood  
 **Long-term scope:** Flood, Cyclone, Storm Surge, Heatwave, Landslide, Lightning, Drought and cascading multi-hazard events
 
