@@ -34,7 +34,7 @@
 │  HOURS 00 - 12    │  HOURS 12 - 24    │  HOURS 24 - 36    │  HOURS 36 - 48        │
 │  FOUNDATION & DB  │  BACKEND & ML     │  FRONTEND (NEXT16)│  POLISH & DEMO PITCH  │
 ├───────────────────┼───────────────────┼───────────────────┼───────────────────────┤
-│ • PostGIS Docker  │ • FastAPI routes  │ • Next.js 16 init │ • Live simulation run │
+│ • PostGIS Docker  │ • API routes      │ • Next.js 16 init │ • Live simulation run │
 │ • 26 DB Migrations│ • ML inference API│ • Tailwind v4 css │ • Odisha flood scenario│
 │ • Synthetic Seeds │ • Cascade graph   │ • Mapbox GL canvas│ • Video recording     │
 │ • JWT Auth logic  │ • Shelter routing │ • Dark GIS UI kit │ • Slide deck / pitch  │
@@ -56,7 +56,7 @@ aspire/
 │   ├── 05_API_SPECIFICATION_DOCUMENT.md
 │   └── 06_IMPLEMENTATION_ROADMAP_AND_SPRINT_PLAN.md
 │
-├── frontend/                                # Next.js 16 App Router Frontend
+├── web/                                     # Next.js 16 App — frontend + backend API
 │   ├── package.json
 │   ├── next.config.ts
 │   ├── tsconfig.json
@@ -92,19 +92,15 @@ aspire/
 │       ├── socket.ts                        # WebSocket singleton listener
 │       └── store.ts                         # Zustand state store
 │
-├── backend/                                 # Python FastAPI Core Server
-│   ├── Dockerfile
-│   ├── requirements.txt
-│   ├── alembic/                             # Database migrations
-│   └── app/
-│       ├── main.py                          # FastAPI gateway & CORS
-│       ├── config.py                        # Pydantic Settings
-│       ├── database.py                      # SQLAlchemy + PostGIS async engine
-│       ├── models/                          # 26 SQLAlchemy DB models
-│       ├── schemas/                         # Pydantic v2 validation schemas
-│       ├── api/v1/                          # REST route controllers
-│       ├── websocket/                       # WebSocket real-time connection hub
-│       └── services/                        # Optimization, routing & PostGIS queries
+│   ├── src/server/                          # BACKEND service layer (Next.js-integrated)
+│   │   ├── config.ts                        # Zod-validated environment config
+│   │   ├── logger.ts                        # Pino structured logging
+│   │   ├── db/                              # pg pool + Kysely typed queries
+│   │   ├── core/                            # Error envelopes, Redis, auth guards
+│   │   └── services/                        # ML client, GIS/routing, domain logic
+│   ├── src/app/api/v1/                      # REST route handlers (health, auth, disasters, ...)
+│   ├── migrations/                          # node-pg-migrate raw SQL (docs/03)
+│   └── scripts/                             # seed_odisha.ts demo data
 │
 ├── ml-service/                              # Python Machine Learning & AI Engine
 │   ├── Dockerfile
@@ -127,10 +123,10 @@ Establish a running database with PostGIS spatial extensions, run all table sche
 
 ### Action Items
 - [ ] Spin up PostgreSQL 16 + PostGIS 3.4 in Docker container.
-- [ ] Initialize Python backend with FastAPI and SQLAlchemy 2.0.
+- [ ] Backend lives inside Next.js: initialize `src/server/` service layer + `/api/v1` route handlers.
 - [ ] Create all database models (26 tables specified in `03_BACKEND_SCHEMA_DOCUMENT.md`).
 - [ ] Run initial migration script or automatic table creation on startup.
-- [ ] Create synthetic seed script (`seed_odisha.py`) containing:
+- [ ] Create synthetic seed script (`seed_odisha.ts`) containing:
   - 1 Active Cyclone event (*Cyclone Remal*).
   - 10 Designated Shelters with real Lat/Lng in Puri & Bhubaneswar.
   - 4 Hospitals with ICU and ambulance capacities.
@@ -143,7 +139,7 @@ Establish a running database with PostGIS spatial extensions, run all table sche
 ## 4. Phase 2: Core Backend & ML Integration (Hours 12–24)
 
 ### Sprint Goal
-Connect FastAPI business logic with the ML service inference pipeline, PostGIS geospatial functions, and real-time WebSocket broadcasting.
+Connect Next.js route-handler business logic with the ML service inference pipeline, PostGIS geospatial functions, and real-time WebSocket broadcasting.
 
 ### Action Items
 - [ ] Implement REST endpoints:
@@ -151,7 +147,7 @@ Connect FastAPI business logic with the ML service inference pipeline, PostGIS g
 - [ ] Implement PostGIS spatial queries:
   - `ST_DWithin` for nearest shelters and hospitals within radius.
   - `ST_Intersects` to compute flooded road intersections with flood polygons.
-- [ ] Connect FastAPI backend to ML Service:
+- [ ] Connect Next.js backend to ML Service:
   - `/risk/assess` endpoint calculating ensemble risk scores.
   - `/cascade/simulate` generating cascading failure graphs.
 - [ ] Implement AI Evacuation Router using Dijkstra / A* weighted by flood depths.
@@ -233,20 +229,20 @@ docker run -d \
   postgis/postgis:16-3.4
 ```
 
-### 8.2 Backend FastAPI Setup
+### 8.2 Backend Setup (Next.js-integrated)
 ```bash
-# Navigate to backend directory
-cd backend
+# The backend lives inside the Next.js app
+cd web
 
-# Create and activate python virtual environment
-python -m venv venv
-.\venv\Scripts\Activate.ps1    # (On Windows PowerShell)
+# Install all dependencies (frontend + backend)
+npm install
 
-# Install required backend dependencies
-pip install fastapi uvicorn[standard] sqlalchemy asyncpg psycopg2-binary geoalchemy2 pydantic pydantic-settings python-jose[cryptography] passlib[bcrypt] python-multipart httpx websockets
+# Run development server — API available at /api/v1/*
+npm run dev
 
-# Run development server
-uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+# Typecheck / lint
+npm run typecheck
+npm run lint
 ```
 
 ### 8.3 ML Service Setup
@@ -268,10 +264,10 @@ uvicorn api.main:app --host 0.0.0.0 --port 8001 --reload
 ### 8.4 Frontend Next.js 16 Setup
 ```bash
 # Initialize Next.js 16 with TypeScript and Tailwind CSS
-npx create-next-app@latest frontend --typescript --tailwind --eslint --app --src-dir=false --import-alias="@/*"
+npx create-next-app@latest web --typescript --tailwind --eslint --app --src-dir --import-alias="@/*"
 
-# Navigate to frontend
-cd frontend
+# Navigate to web directory
+cd web
 
 # Install UI and map visualization dependencies
 npm install mapbox-gl @types/mapbox-gl lucide-react recharts framer-motion zustand @tanstack/react-query clsx tailwind-merge sonner socket.io-client date-fns @radix-ui/react-dialog @radix-ui/react-dropdown-menu @radix-ui/react-select @radix-ui/react-tabs

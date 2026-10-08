@@ -1406,7 +1406,7 @@ GROUP BY r.id, r.name, ra.hazard_type, ra.risk_level, ra.risk_score, ra.confiden
 
 CREATE UNIQUE INDEX idx_mv_region_risk ON mv_region_risk_summary(region_id, hazard_type);
 
--- Refresh command (called by Celery beat)
+-- Refresh command (scheduled every 5 min via node-cron or pg_cron)
 REFRESH MATERIALIZED VIEW CONCURRENTLY mv_region_risk_summary;
 ```
 
@@ -1535,20 +1535,17 @@ Recommended demo region for natural disaster relevance:
 
 ## 13. Migration Strategy
 
-### 13.1 Alembic Setup
+### 13.1 node-pg-migrate Setup
 
 ```bash
-# Initialize Alembic
-alembic init alembic
-
-# Generate migration
-alembic revision --autogenerate -m "create_initial_schema"
+# Create a migration (raw SQL — mirrors this document verbatim)
+npm run migrate:create -- create_initial_schema
 
 # Run migrations
-alembic upgrade head
+npm run migrate
 
-# Rollback
-alembic downgrade -1
+# Rollback last migration
+npm run migrate:down
 ```
 
 ### 13.2 Migration Order

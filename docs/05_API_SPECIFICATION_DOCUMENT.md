@@ -37,10 +37,9 @@
 
 | Target Service | Base URL (Development) | Base URL (Production) | Description |
 |---|---|---|---|
-| **Next.js BFF Gateway** | `http://localhost:3000/api` | `https://aspire.gov.in/api` | Client-facing BFF proxy & session validation |
-| **FastAPI Core Backend** | `http://localhost:8000/api/v1` | `https://api.aspire.gov.in/v1` | Business logic, PostGIS spatial queries, DB transactions |
+| **Next.js Core API (Route Handlers)** | `http://localhost:3000/api/v1` | `https://aspire.gov.in/api/v1` | Business logic, PostGIS spatial queries, DB transactions, auth |
 | **FastAPI ML Service** | `http://localhost:8001/api/v1` | `https://ml.aspire.gov.in/v1` | Deep learning inference, XGBoost models, LLM copilot |
-| **WebSocket Hub** | `ws://localhost:8000/ws` | `wss://api.aspire.gov.in/ws` | Real-time push for SOS, alerts, and live risk layers |
+| **WebSocket Hub** | `ws://localhost:3000/ws` | `wss://aspire.gov.in/ws` | Real-time push for SOS, alerts, and live risk layers |
 
 ### 1.2 Common HTTP Request Headers
 

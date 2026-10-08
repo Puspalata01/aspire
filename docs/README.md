@@ -12,10 +12,10 @@ Welcome to the comprehensive technical and product documentation suite for **ASP
 | # | Document | File Path | Focus Area | Key Highlights |
 |---|---|---|---|---|
 | **01** | **Product Requirements Document (PRD)** | [01_PRODUCT_REQUIREMENTS_DOCUMENT.md](file:///c:/Users/omnay/Desktop/Hackathons/aspire/docs/01_PRODUCT_REQUIREMENTS_DOCUMENT.md) | Vision, Problem & Personas | • Complete 6-phase disaster management lifecycle<br>• User personas (Commanders, Rescuers, Citizens)<br>• Feature prioritization matrix & success metrics |
-| **02** | **Technical Requirements Document (TRD)** | [02_TECHNICAL_REQUIREMENTS_DOCUMENT.md](file:///c:/Users/omnay/Desktop/Hackathons/aspire/docs/02_TECHNICAL_REQUIREMENTS_DOCUMENT.md) | Full-Stack Architecture | • Next.js 16 + React 19 + Tailwind CSS v4 architecture<br>• FastAPI + PostGIS geospatial engine<br>• Real-time WebSocket event streaming pipeline |
+| **02** | **Technical Requirements Document (TRD)** | [02_TECHNICAL_REQUIREMENTS_DOCUMENT.md](file:///c:/Users/omnay/Desktop/Hackathons/aspire/docs/02_TECHNICAL_REQUIREMENTS_DOCUMENT.md) | Full-Stack Architecture | • Next.js 16 + React 19 + Tailwind CSS v4 architecture<br>• Next.js Route Handlers + PostGIS geospatial engine<br>• Real-time WebSocket event streaming pipeline |
 | **03** | **Backend Database Schema Document** | [03_BACKEND_SCHEMA_DOCUMENT.md](file:///c:/Users/omnay/Desktop/Hackathons/aspire/docs/03_BACKEND_SCHEMA_DOCUMENT.md) | PostgreSQL 16 + PostGIS | • 26 production-grade relational & spatial tables<br>• PostGIS geometry definitions & GIST spatial indexing<br>• Seed schema definitions for Odisha disaster scenario |
 | **04** | **Frontend Feature & UI/UX Document** | [04_FRONTEND_FEATURE_DOCUMENT.md](file:///c:/Users/omnay/Desktop/Hackathons/aspire/docs/04_FRONTEND_FEATURE_DOCUMENT.md) | UI/UX & Component Library | • Command-center dark GIS layout (`#0B0F19`)<br>• Mapbox GL JS multi-layer spatial visualizer<br>• Citizen mobile-first quick SOS & shelter finder |
-| **05** | **API Specification Document** | [05_API_SPECIFICATION_DOCUMENT.md](file:///c:/Users/omnay/Desktop/Hackathons/aspire/docs/05_API_SPECIFICATION_DOCUMENT.md) | REST & WebSocket Interfaces | • 50+ fully typed REST endpoints across 15 domains<br>• Pydantic & TypeScript request/response envelopes<br>• Real-time WebSocket pub/sub protocol specification |
+| **05** | **API Specification Document** | [05_API_SPECIFICATION_DOCUMENT.md](file:///c:/Users/omnay/Desktop/Hackathons/aspire/docs/05_API_SPECIFICATION_DOCUMENT.md) | REST & WebSocket Interfaces | • 50+ fully typed REST endpoints across 15 domains<br>• Zod & TypeScript request/response envelopes<br>• Real-time WebSocket pub/sub protocol specification |
 | **06** | **Implementation Roadmap & Sprint Plan** | [06_IMPLEMENTATION_ROADMAP_AND_SPRINT_PLAN.md](file:///c:/Users/omnay/Desktop/Hackathons/aspire/docs/06_IMPLEMENTATION_ROADMAP_AND_SPRINT_PLAN.md) | Execution & Demo Playbook | • 48-hour hackathon execution schedule<br>• Monorepo directory scaffolding blueprint<br>• Copy-paste setup commands & judge pitch script |
 
 ---
@@ -39,7 +39,7 @@ Welcome to the comprehensive technical and product documentation suite for **ASP
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                           API & INGESTION GATEWAY                           │
 │                                                                             │
-│                    FastAPI Core Service (Python 3.11+)                      │
+│                  Next.js API (Node.js 22 · Route Handlers)                  │
 │             REST JSON Endpoints · WebSockets · JWT Authentication           │
 └──────────────────┬───────────────────────┬──────────────────────────────────┘
                    │                       │
