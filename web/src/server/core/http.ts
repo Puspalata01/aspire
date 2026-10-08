@@ -11,10 +11,21 @@ export type Pagination = {
   has_prev: boolean;
 };
 
+export type Cookie = {
+  name: string;
+  value: string;
+  httpOnly?: boolean;
+  secure?: boolean;
+  sameSite?: "lax" | "strict" | "none";
+  path?: string;
+  maxAge?: number;
+};
+
 export type ApiResult = {
   status?: number;
   data?: unknown;
   pagination?: Pagination;
+  cookies?: Cookie[];
 };
 
 function successMeta(requestId: string, startedAt: number) {
@@ -33,6 +44,13 @@ export function getRequestId(request: NextRequest): string {
   return request.headers.get("x-request-id") ?? crypto.randomUUID();
 }
 
+export function requestContext(request: NextRequest): { ip: string | null; userAgent: string | null } {
+  const forwarded = request.headers.get("x-forwarded-for");
+  const ip = forwarded?.split(",")[0]?.trim() || request.headers.get("x-real-ip") || null;
+  const userAgent = request.headers.get("user-agent");
+  return { ip, userAgent };
+}
+
 export async function runApi(
   request: NextRequest,
   handler: () => Promise<ApiResult>,
@@ -48,6 +66,17 @@ export async function runApi(
     };
     if (result.pagination) body.pagination = result.pagination;
     const response = NextResponse.json(body, { status: result.status ?? 200 });
+    if (result.cookies) {
+      for (const cookie of result.cookies) {
+        response.cookies.set(cookie.name, cookie.value, {
+          httpOnly: cookie.httpOnly,
+          secure: cookie.secure,
+          sameSite: cookie.sameSite,
+          path: cookie.path,
+          maxAge: cookie.maxAge,
+        });
+      }
+    }
     response.headers.set("x-request-id", requestId);
     return response;
   } catch (error) {
@@ -79,7 +108,7 @@ function errorResponse(request: NextRequest, error: unknown, requestId: string):
 }
 
 export function zodFieldIssues(
-  issues: { path: (string | number)[]; message: string }[],
+  issues: { path: PropertyKey[]; message: string }[],
 ): ErrorDetail[] {
   return issues.map((i) => ({
     field: i.path.map(String).join(".") || undefined,

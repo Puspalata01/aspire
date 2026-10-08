@@ -1,10 +1,11 @@
 import pg from "pg";
 import { Kysely, PostgresDialect } from "kysely";
 import { env } from "@/server/config";
+import type { Database } from "@/server/db/types";
 
 const { Pool } = pg;
 
-export type DatabaseSchema = Record<string, never>;
+export type DatabaseSchema = Database;
 
 type Globals = { __aspirePool?: pg.Pool; __aspireDb?: Kysely<DatabaseSchema> };
 const g = globalThis as unknown as Globals;
