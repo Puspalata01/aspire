@@ -1,37 +1,156 @@
-import { env } from "@/server/config";
-import { httpErrors } from "@/server/core/errors";
+import { env } from "../config.ts";
+import { logger } from "../logger.ts";
 
-const ML_TIMEOUT_MS = 10_000;
-const HEALTH_TIMEOUT_MS = 1_500;
+type CircuitState = "closed" | "open" | "half_open";
 
-function mlUrl(path: string): string {
-  const base = env.ML_SERVICE_URL.replace(/\/$/, "");
-  return `${base}${path.startsWith("/") ? path : `/${path}`}`;
+class CircuitBreaker {
+  private state: CircuitState = "closed";
+  private failureCount = 0;
+  private successCount = 0;
+  private nextAttempt = Date.now();
+  private readonly threshold = 5;
+  private readonly timeout = 60000;
+  private readonly halfOpenSuccessThreshold = 2;
+
+  async execute<T>(fn: () => Promise<T>): Promise<T> {
+    if (this.state === "open") {
+      if (Date.now() < this.nextAttempt) {
+        throw new Error("Circuit breaker is OPEN");
+      }
+      this.state = "half_open";
+      this.successCount = 0;
+    }
+
+    try {
+      const result = await fn();
+      this.onSuccess();
+      return result;
+    } catch (error) {
+      this.onFailure();
+      throw error;
+    }
+  }
+
+  private onSuccess() {
+    this.failureCount = 0;
+    if (this.state === "half_open") {
+      this.successCount++;
+      if (this.successCount >= this.halfOpenSuccessThreshold) {
+        this.state = "closed";
+        logger.info("Circuit breaker closed after successful requests");
+      }
+    }
+  }
+
+  private onFailure() {
+    this.failureCount++;
+    if (this.failureCount >= this.threshold) {
+      this.state = "open";
+      this.nextAttempt = Date.now() + this.timeout;
+      logger.warn(`Circuit breaker opened after ${this.failureCount} failures`);
+    }
+  }
+
+  getState() {
+    return this.state;
+  }
 }
 
-export async function mlFetch<T>(path: string, init?: RequestInit): Promise<T> {
-  const url = mlUrl(path);
-  let response: Response;
+const circuitBreaker = new CircuitBreaker();
+
+export type MLClientOptions = {
+  timeout?: number;
+  retries?: number;
+  retryDelay?: number;
+};
+
+export type HealthCheckResult = {
+  status: "ok" | "error";
+  detail?: string;
+  latency_ms?: number;
+};
+
+export async function checkMlService(): Promise<HealthCheckResult> {
   try {
-    response = await fetch(url, { ...init, signal: init?.signal ?? AbortSignal.timeout(ML_TIMEOUT_MS) });
+    const start = Date.now();
+    const healthy = await mlHealthCheck();
+    const latency = Date.now() - start;
+    if (healthy) {
+      return { status: "ok", latency_ms: latency };
+    }
+    return { status: "error", detail: "ML service returned unhealthy" };
   } catch (error) {
-    const detail = error instanceof Error ? error.message : String(error);
-    throw httpErrors.mlInference(`ML service unreachable at ${url}: ${detail}`);
+    return { status: "error", detail: error instanceof Error ? error.message : "unknown" };
   }
-  if (!response.ok) {
-    throw httpErrors.mlInference(`ML service returned HTTP ${response.status} for ${path}`);
-  }
-  return (await response.json()) as T;
 }
 
-export type MlCheck = { status: "connected" | "unreachable"; detail?: string };
+async function fetchWithTimeout(url: string, options: RequestInit & { timeout?: number }) {
+  const { timeout = 10000, ...fetchOptions } = options;
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
 
-export async function checkMlService(): Promise<MlCheck> {
   try {
-    const response = await fetch(mlUrl("/health"), { signal: AbortSignal.timeout(HEALTH_TIMEOUT_MS) });
-    if (!response.ok) return { status: "unreachable", detail: `HTTP ${response.status}` };
-    return { status: "connected" };
+    const response = await fetch(url, { ...fetchOptions, signal: controller.signal });
+    clearTimeout(id);
+    return response;
   } catch (error) {
-    return { status: "unreachable", detail: error instanceof Error ? error.message : String(error) };
+    clearTimeout(id);
+    throw error;
   }
+}
+
+export async function mlRequest<T>(
+  path: string,
+  options: MLClientOptions & { method?: string; body?: unknown } = {}
+): Promise<T> {
+  const { timeout = 10000, retries = 3, retryDelay = 1000, method = "GET", body } = options;
+  const url = `${env.ML_SERVICE_URL}${path}`;
+
+  let lastError: Error | null = null;
+
+  for (let attempt = 0; attempt < retries; attempt++) {
+    try {
+      const result = await circuitBreaker.execute(async () => {
+        const response = await fetchWithTimeout(url, {
+          method,
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: body ? JSON.stringify(body) : undefined,
+          timeout,
+        });
+
+        if (!response.ok) {
+          throw new Error(`ML service returned ${response.status}: ${response.statusText}`);
+        }
+
+        return response.json();
+      });
+
+      return result as T;
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error(String(error));
+      logger.warn(`ML request failed (attempt ${attempt + 1}/${retries}): ${lastError.message}`);
+
+      if (attempt < retries - 1) {
+        await new Promise((resolve) => setTimeout(resolve, retryDelay * (attempt + 1)));
+      }
+    }
+  }
+
+  throw lastError || new Error("ML request failed");
+}
+
+export async function mlHealthCheck(): Promise<boolean> {
+  try {
+    await mlRequest("/health", { timeout: 5000, retries: 1 });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function getCircuitBreakerState(): CircuitState {
+  return circuitBreaker.getState();
 }
