@@ -56,7 +56,7 @@
 │                                                                             │
 │   ┌─────────────────────────────────────────────────────────────────┐       │
 │   │                     Next.js API Routes                          │       │
-│   │           (Server-Side Proxy + BFF Pattern)                     │       │
+│   │              (Core API — App Router Route Handlers)             │       │
 │   │   ┌──────────┬──────────┬───────────┬──────────┬──────────┐    │       │
 │   │   │   Auth   │   Map    │   Risk    │   SOS    │ Resource │    │       │
 │   │   │  Routes  │  Routes  │  Routes   │ Routes   │  Routes  │    │       │
@@ -70,8 +70,8 @@
 ┌───────────────────┐ ┌──────────────────┐ ┌──────────────────────┐
 │   BACKEND API     │ │   ML SERVICE     │ │   LLM SERVICE        │
 │                   │ │                  │ │                      │
-│   FastAPI         │ │   FastAPI        │ │   Gemini/OpenAI API  │
-│   Python 3.11+    │ │   Python 3.11+   │ │   Tool Calling       │
+│   Next.js API     │ │   FastAPI        │ │   Gemini/OpenAI API  │
+│   Node.js 22      │ │   Python 3.11+   │ │   Tool Calling       │
 │                   │ │                  │ │   NL Query Interface │
 │   • Auth          │ │   • Flood Model  │ │                      │
 │   • CRUD          │ │   • Cyclone      │ │   • Explanations     │
@@ -116,9 +116,9 @@
 
 ### Architecture Principles
 
-1. **Service-Oriented Architecture (SOA)** — Separate services for Frontend, Backend API, ML Service, LLM Service
-2. **Backend-for-Frontend (BFF)** — Next.js API routes act as a proxy layer between client and backend services
-3. **Microservice-Ready** — Each service is containerized and independently deployable
+1. **Integrated Full-Stack Core** — Frontend and core API share one Next.js app; ML and LLM stay separate services
+2. **Direct Route Handlers** — Next.js route handlers serve `/api/v1/*` directly (no proxy hop), calling `src/server/` services
+3. **Microservice-Ready** — ML service (and LLM tooling) containerized and independently deployable
 4. **Event-Driven** — Real-time data flows via Redis Pub/Sub + WebSocket
 5. **GIS-First** — PostGIS for all spatial queries, Mapbox for visualization
 6. **AI-Human Collaboration** — AI recommends, humans decide
@@ -143,31 +143,31 @@
 | **Framer Motion** | 11.x | Animations & transitions |
 | **Zustand** | 5.x | Lightweight state management |
 | **TanStack Query** | 5.x | Server state management & caching |
-| **Zod** | 3.x | Schema validation |
-| **next-auth** | 5.x | Authentication |
+| **Zod** | 4.x | Schema validation |
+| **jose** | Latest | JWT sign/verify (shared client/server) |
 | **Socket.io Client** | 4.x | Real-time WebSocket communication |
 | **Turf.js** | 7.x | Client-side geospatial analysis |
 | **date-fns** | 3.x | Date manipulation |
 
-### 2.2 Backend Stack
+### 2.2 Backend Stack (Next.js-integrated)
 
 | Technology | Version | Purpose |
 |---|---|---|
-| **FastAPI** | 0.115+ | High-performance Python API framework |
-| **Python** | 3.11+ | Backend programming language |
-| **Uvicorn** | Latest | ASGI server |
-| **SQLAlchemy** | 2.x | ORM with async support |
-| **GeoAlchemy2** | Latest | PostGIS integration for SQLAlchemy |
-| **Alembic** | Latest | Database migrations |
-| **Pydantic** | 2.x | Data validation & serialization |
-| **Celery** | 5.x | Async task queue |
-| **Redis** | 7.x | Caching, sessions, Pub/Sub, task broker |
+| **Next.js Route Handlers** | 16 (App Router, Node runtime) | HTTP layer — REST API at `/api/v1/*` |
+| **TypeScript** | 5.x | Backend programming language |
+| **pg** | 8.x | PostgreSQL driver (Supabase `DATABASE_URL`) |
+| **Kysely** | 0.29.x | Type-safe SQL query builder (no ORM) |
+| **node-pg-migrate** | 9.x | SQL migrations mirroring docs/03 |
+| **Zod** | 4.x | Request validation & environment config |
+| **Redis (ioredis)** | 6.x | Caching, sessions, Pub/Sub, rate limiting |
 | **PostgreSQL** | 16 | Primary relational database |
 | **PostGIS** | 3.4 | Geospatial extension |
-| **JWT** | PyJWT | Token-based authentication |
-| **Passlib** | Latest | Password hashing (bcrypt) |
-| **httpx** | Latest | Async HTTP client for external APIs |
-| **WebSocket** | fastapi websocket | Real-time bidirectional communication |
+| **JWT (jose)** | Latest | Token-based authentication |
+| **bcrypt** | Latest | Password hashing |
+| **pino** | 10.x | Structured request logging |
+| **Fetch API** | Built-in | Async HTTP client (ML service, external APIs) |
+| **WebSocket** | native/ws | Real-time bidirectional communication |
+| **node-cron / BullMQ** | Latest | Scheduled & background jobs (matview refresh, ingestion) |
 
 ### 2.3 ML Service Stack
 
@@ -277,14 +277,12 @@ frontend/
 │   │       └── page.tsx              # Emergency guidance
 │   │
 │   └── api/
-│       ├── auth/
-│       │   ├── [...nextauth]/
-│       │   │   └── route.ts          # NextAuth configuration
-│       │   └── register/
-│       │       └── route.ts          # User registration
-│       ├── proxy/
+│       ├── v1/
+│       │   ├── health/
+│       │   │   └── route.ts              # System health check
+│       │   ├── auth/, disasters/, ...    # Domain route handlers (docs/05)
 │       │   └── [...path]/
-│       │       └── route.ts          # BFF proxy to FastAPI backend
+│       │       └── route.ts              # JSON 404 for unknown /api/v1 routes
 │       └── websocket/
 │           └── route.ts              # WebSocket relay
 │
@@ -532,8 +530,8 @@ frontend/
     "@turf/turf": "^7.0.0",
     "@tanstack/react-query": "^5.0.0",
     "zustand": "^5.0.0",
-    "zod": "^3.23.0",
-    "next-auth": "^5.0.0",
+    "zod": "^4.6.0",
+    "jose": "^6.0.0",
     "recharts": "^2.12.0",
     "framer-motion": "^11.5.0",
     "socket.io-client": "^4.7.0",
@@ -556,124 +554,76 @@ frontend/
 
 ## 4. Backend Architecture
 
-### 4.1 FastAPI Service Structure
+### 4.1 Backend Service Structure (Next.js-integrated)
+
+The backend lives **inside the Next.js app** — route handlers for HTTP, `src/server/` for business logic:
 
 ```
-backend/
-├── app/
-│   ├── __init__.py
-│   ├── main.py                      # FastAPI application entry
-│   ├── config.py                    # Configuration (Pydantic Settings)
+web/
+├── src/
+│   ├── app/
+│   │   ├── api/
+│   │   │   └── v1/
+│   │   │       ├── health/route.ts        # System health check
+│   │   │       ├── [...path]/route.ts     # JSON 404 for unknown routes
+│   │   │       ├── auth/                  # Auth endpoints
+│   │   │       ├── disasters/             # Disaster CRUD
+│   │   │       ├── hazards/               # Hazard data endpoints
+│   │   │       ├── risk/                  # Risk scoring endpoints
+│   │   │       ├── predictions/           # Prediction endpoints
+│   │   │       ├── impact/                # Impact analysis endpoints
+│   │   │       ├── map/                   # GIS/map data endpoints
+│   │   │       ├── roads/                 # Road network endpoints
+│   │   │       ├── shelters/              # Shelter management
+│   │   │       ├── hospitals/             # Hospital management
+│   │   │       ├── resources/             # Resource management
+│   │   │       ├── sos/                   # SOS request endpoints
+│   │   │       ├── reports/               # Citizen report endpoints
+│   │   │       ├── simulation/            # What-if simulation
+│   │   │       ├── cascade/               # Cascade prediction endpoints
+│   │   │       ├── analytics/             # Historical analytics
+│   │   │       ├── notifications/         # Notification endpoints
+│   │   │       ├── evacuation/            # Evacuation planning
+│   │   │       └── llm/                   # LLM query endpoints
+│   │   └── (frontend pages — see docs/04)
 │   │
-│   ├── api/
-│   │   ├── __init__.py
-│   │   ├── deps.py                  # Dependency injection (DB sessions, auth)
-│   │   ├── v1/
-│   │   │   ├── __init__.py
-│   │   │   ├── router.py            # Main v1 router
-│   │   │   ├── auth.py              # Auth endpoints
-│   │   │   ├── disasters.py         # Disaster CRUD
-│   │   │   ├── hazards.py           # Hazard data endpoints
-│   │   │   ├── risk.py              # Risk scoring endpoints
-│   │   │   ├── predictions.py       # Prediction endpoints
-│   │   │   ├── impact.py            # Impact analysis endpoints
-│   │   │   ├── map.py               # GIS/map data endpoints
-│   │   │   ├── roads.py             # Road network endpoints
-│   │   │   ├── shelters.py          # Shelter management
-│   │   │   ├── hospitals.py         # Hospital management
-│   │   │   ├── resources.py         # Resource management
-│   │   │   ├── sos.py               # SOS request endpoints
-│   │   │   ├── citizen_reports.py   # Citizen report endpoints
-│   │   │   ├── simulation.py        # What-if simulation
-│   │   │   ├── cascade.py           # Cascade prediction endpoints
-│   │   │   ├── analytics.py         # Historical analytics
-│   │   │   ├── notifications.py     # Notification endpoints
-│   │   │   ├── evacuation.py        # Evacuation planning
-│   │   │   └── llm.py               # LLM query endpoints
-│   │   └── websocket/
-│   │       ├── __init__.py
-│   │       └── handler.py           # WebSocket connection manager
+│   ├── server/                            # Backend service layer
+│   │   ├── config.ts                      # Zod-validated environment config
+│   │   ├── logger.ts                      # Pino structured logging
+│   │   ├── db/
+│   │   │   ├── index.ts                   # pg pool + Kysely instance
+│   │   │   └── types.ts                   # Kysely table type definitions
+│   │   ├── core/
+│   │   │   ├── http.ts                    # Envelope helpers + route wrapper
+│   │   │   ├── errors.ts                  # ApiError + error codes (docs/05 §15)
+│   │   │   ├── redis.ts                   # Redis connection & checks
+│   │   │   ├── auth.ts                    # JWT verify, RBAC guards
+│   │   │   └── middleware.ts              # Rate limiting, request logging
+│   │   ├── services/
+│   │   │   ├── auth_service.ts            # Auth business logic
+│   │   │   ├── disaster_service.ts        # Disaster management logic
+│   │   │   ├── risk_service.ts            # Risk calculation orchestration
+│   │   │   ├── gis_service.ts             # Spatial queries, nearest, routing
+│   │   │   ├── sos_service.ts             # SOS processing pipeline
+│   │   │   ├── notification_service.ts    # Notification delivery
+│   │   │   ├── weather_service.ts         # Weather data ingestion
+│   │   │   ├── simulation_service.ts      # Simulation orchestration
+│   │   │   └── ml_client.ts               # HTTP client to ML microservice
+│   │   └── schemas/                       # Zod request/response schemas
 │   │
-│   ├── models/
-│   │   ├── __init__.py
-│   │   ├── user.py                  # User SQLAlchemy model
-│   │   ├── disaster.py              # Disaster event model
-│   │   ├── hazard.py                # Hazard data model
-│   │   ├── risk_assessment.py       # Risk assessment model
-│   │   ├── prediction.py            # Prediction model
-│   │   ├── shelter.py               # Shelter model
-│   │   ├── hospital.py              # Hospital model
-│   │   ├── resource.py              # Resource model
-│   │   ├── sos_report.py            # SOS report model
-│   │   ├── citizen_report.py        # Citizen report model
-│   │   ├── road.py                  # Road model
-│   │   ├── notification.py          # Notification model
-│   │   └── simulation.py            # Simulation model
-│   │
-│   ├── schemas/
-│   │   ├── __init__.py
-│   │   ├── auth.py                  # Auth request/response schemas
-│   │   ├── disaster.py              # Disaster schemas
-│   │   ├── risk.py                  # Risk schemas
-│   │   ├── shelter.py               # Shelter schemas
-│   │   ├── hospital.py              # Hospital schemas
-│   │   ├── resource.py              # Resource schemas
-│   │   ├── sos.py                   # SOS schemas
-│   │   ├── simulation.py            # Simulation schemas
-│   │   └── common.py                # Shared schemas (pagination, errors)
-│   │
-│   ├── services/
-│   │   ├── __init__.py
-│   │   ├── auth_service.py          # Auth business logic
-│   │   ├── disaster_service.py      # Disaster management logic
-│   │   ├── risk_service.py          # Risk calculation orchestration
-│   │   ├── gis_service.py           # GIS queries and spatial analysis
-│   │   ├── notification_service.py  # Notification delivery
-│   │   ├── sos_service.py           # SOS processing pipeline
-│   │   ├── resource_service.py      # Resource allocation logic
-│   │   ├── weather_service.py       # Weather data ingestion
-│   │   ├── simulation_service.py    # Simulation orchestration
-│   │   └── ml_client.py             # Client to call ML microservice
-│   │
-│   ├── core/
-│   │   ├── __init__.py
-│   │   ├── security.py              # JWT, password hashing, CORS
-│   │   ├── database.py              # AsyncSession, engine setup
-│   │   ├── redis.py                 # Redis connection
-│   │   ├── middleware.py            # Rate limiting, logging, error handling
-│   │   └── exceptions.py           # Custom exceptions
-│   │
-│   ├── tasks/
-│   │   ├── __init__.py
-│   │   ├── celery_app.py            # Celery configuration
-│   │   ├── weather_tasks.py         # Periodic weather data fetch
-│   │   ├── risk_tasks.py            # Periodic risk recalculation
-│   │   └── notification_tasks.py    # Async notification delivery
-│   │
-│   └── utils/
-│       ├── __init__.py
-│       ├── geo_utils.py             # Geospatial utility functions
-│       ├── date_utils.py            # Date/time utilities
-│       └── validators.py            # Custom validators
+│   ├── lib/                               # Frontend client helpers (api.ts, socket.ts)
+│   ├── hooks/                             # React hooks
+│   ├── stores/                            # Zustand stores
+│   └── components/                        # UI components (see docs/04)
 │
-├── alembic/
-│   ├── versions/                    # Migration scripts
-│   ├── env.py                       # Alembic environment
-│   └── alembic.ini                  # Alembic config
-│
-├── tests/
-│   ├── conftest.py                  # Test fixtures
-│   ├── test_auth.py
-│   ├── test_disasters.py
-│   ├── test_risk.py
-│   ├── test_sos.py
-│   └── test_resources.py
-│
-├── Dockerfile                       # Backend Docker image
-├── docker-compose.yml               # Full stack local dev
-├── requirements.txt                 # Python dependencies
-├── .env.example                     # Environment variable template
-└── pyproject.toml                   # Project metadata
+├── migrations/                            # node-pg-migrate raw SQL (mirrors docs/03)
+│   ├── 001_enums.ts
+│   └── ...
+├── scripts/
+│   └── seed_odisha.ts                     # Odisha demo data seeder
+├── tests/                                 # vitest + supertest suites
+├── .env.example                           # Environment variable template
+└── package.json
 ```
 
 ### 4.2 Backend API Groups
@@ -753,8 +703,8 @@ See **Backend Schema Document** (separate document) for complete database schema
 | Primary DB | PostgreSQL 16 | Relational data storage |
 | Spatial Extension | PostGIS 3.4 | Geospatial queries |
 | Cache | Redis 7 | Caching, sessions, pub/sub |
-| ORM | SQLAlchemy 2.x + GeoAlchemy2 | Database abstraction |
-| Migrations | Alembic | Schema versioning |
+| Query Builder | Kysely + pg (typed SQL) | Database abstraction |
+| Migrations | node-pg-migrate (raw SQL) | Schema versioning |
 
 ### 6.2 Core Tables Overview
 
@@ -970,7 +920,7 @@ All spatial data served in GeoJSON `FeatureCollection` format:
 ```
 ┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
 │  Weather APIs    │────▶│  Data Ingestion  │────▶│   PostgreSQL    │
-│  (OpenWeather,   │     │  Service (Celery) │     │   + PostGIS     │
+│  (OpenWeather,   │     │  Service (cron)   │     │   + PostGIS     │
 │   IMD)           │     │                  │     │                 │
 └─────────────────┘     │  • Validate      │     └────────┬────────┘
                          │  • Clean         │              │
@@ -1062,12 +1012,11 @@ All spatial data served in GeoJSON `FeatureCollection` format:
 
 ```
 ┌──────────┐     ┌──────────────┐     ┌──────────────┐
-│  Client   │────▶│  Next.js      │────▶│  FastAPI      │
-│           │     │  NextAuth.js  │     │  /auth/login  │
-│           │     │               │     │               │
-│  Login    │     │  JWT Cookie   │     │  Verify creds │
-│  Form     │     │  Management   │     │  Issue JWT    │
-│           │◀────│               │◀────│  Return token │
+│  Client   │────▶│  Next.js     │────▶│  Auth API     │
+│           │     │  Route       │     │  /api/v1/auth │
+│  Login    │     │  Handler     │     │  Verify creds │
+│  Form     │     │  (jose JWT)  │     │  bcrypt hash  │
+│           │◀────│  Set cookie  │◀────│  Issue JWT    │
 └──────────┘     └──────────────┘     └──────────────┘
 ```
 
@@ -1103,22 +1052,25 @@ All spatial data served in GeoJSON `FeatureCollection` format:
 ```yaml
 version: "3.9"
 services:
-  frontend:
-    build: ./frontend
+  web:
+    build: ./web
     ports: ["3000:3000"]
     environment:
-      - NEXT_PUBLIC_API_URL=http://backend:8000
       - NEXT_PUBLIC_MAPBOX_TOKEN=${MAPBOX_TOKEN}
-    depends_on: [backend]
-
-  backend:
-    build: ./backend
-    ports: ["8000:8000"]
-    environment:
-      - DATABASE_URL=postgresql+asyncpg://user:pass@db:5432/aspire
+      - NEXT_PUBLIC_API_URL=http://web:3000
+      - DATABASE_URL=postgresql://user:pass@db:5432/aspire
       - REDIS_URL=redis://redis:6379/0
-      - ML_SERVICE_URL=http://ml-service:8001
+      - ML_SERVICE_URL=http://ml-service:8001/api/v1
+      - JWT_SECRET=${JWT_SECRET}
     depends_on: [db, redis, ml-service]
+
+  jobs:
+    build: ./web
+    command: npm run jobs
+    environment:
+      - DATABASE_URL=postgresql://user:pass@db:5432/aspire
+      - REDIS_URL=redis://redis:6379/0
+    depends_on: [redis, db]
 
   ml-service:
     build: ./ml-service
@@ -1140,16 +1092,6 @@ services:
     image: redis:7-alpine
     ports: ["6379:6379"]
 
-  celery-worker:
-    build: ./backend
-    command: celery -A app.tasks.celery_app worker -l info
-    depends_on: [redis, db]
-
-  celery-beat:
-    build: ./backend
-    command: celery -A app.tasks.celery_app beat -l info
-    depends_on: [redis, db]
-
 volumes:
   pgdata:
 ```
@@ -1160,9 +1102,9 @@ volumes:
 ┌──────────────┐     ┌──────────────┐     ┌──────────────────┐
 │   Vercel      │     │  Railway /    │     │  Supabase /      │
 │               │     │  Render       │     │  Managed PG      │
-│  Frontend     │────▶│  Backend      │────▶│  PostgreSQL      │
-│  Next.js      │     │  FastAPI +    │     │  + PostGIS       │
-│               │     │  ML Service   │     │                  │
+│  Next.js App  │────▶│  ML Service   │────▶│  PostgreSQL      │
+│  (pages +     │     │  (FastAPI)    │     │  + PostGIS       │
+│   API routes) │     │               │     │                  │
 └──────────────┘     └──────────────┘     └──────────────────┘
                             │
                             ▼
@@ -1253,8 +1195,8 @@ Citizen SOS ──▶ API Endpoint ──▶ Validation
 | Backend | ML Service | HTTP REST | Model predictions |
 | Backend | Redis | TCP | Caching, pub/sub |
 | Backend | PostgreSQL | TCP | Data persistence |
-| Celery Worker | Redis | TCP | Task queue |
-| Celery Worker | External APIs | HTTPS | Data ingestion |
+| Job Runner (node-cron) | Redis | TCP | Scheduled task queue |
+| Job Runner (node-cron) | External APIs | HTTPS | Periodic data ingestion |
 
 ---
 
@@ -1335,8 +1277,8 @@ Citizen SOS ──▶ API Endpoint ──▶ Validation
                     └────────────┬────────────┘
                                  │
                     ┌────────────▼────────────┐
-                    │   Input Validation       │  Pydantic + Zod
-                    │   SQL Injection Prev.    │  SQLAlchemy ORM
+                    │   Input Validation       │  Zod (TS)
+                    │   SQL Injection Prev.    │  Parameterized SQL (Kysely)
                     │   XSS Prevention         │  React auto-escaping
                     └────────────┬────────────┘
                                  │
@@ -1366,8 +1308,8 @@ Citizen SOS ──▶ API Endpoint ──▶ Validation
 
 | Optimization | Technique |
 |---|---|
-| Async I/O | FastAPI + asyncpg (fully async) |
-| Connection pooling | SQLAlchemy async pool |
+| Async I/O | Node.js route handlers (non-blocking event loop) |
+| Connection pooling | pg Pool (10 conns) + Kysely |
 | Caching | Redis (risk scores, GeoJSON, session) |
 | Spatial indexing | PostGIS GiST indexes |
 | Query optimization | Materialized views for analytics |
