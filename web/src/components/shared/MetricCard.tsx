@@ -38,23 +38,23 @@ export function MetricCard({
   const isTrend = displayType === "trend" || (!isPercentage && !isCount && Boolean(change));
 
   const getTrendColor = () => {
-    if (!trend || trend === "neutral") return "text-[#9AA3B8] border-white/10 bg-white/5";
+    if (!trend || trend === "neutral") return "text-[#5D5775] border-[#E7E2DA] bg-[#F8F7F4]";
     if (trendGood) {
       return trend === "up"
-        ? "text-[#2FD07F] border-[#2FD07F]/40 bg-[#2FD07F]/10"
-        : "text-[#FF4D5E] border-[#FF4D5E]/40 bg-[#FF4D5E]/10";
+        ? "text-[#059669] border-[#A7F3D0] bg-[#ECFDF5]"
+        : "text-[#DC2626] border-[#FECACA] bg-[#FEF2F2]";
     }
     return trend === "up"
-      ? "text-[#FF4D5E] border-[#FF4D5E]/40 bg-[#FF4D5E]/10"
-      : "text-[#2FD07F] border-[#2FD07F]/40 bg-[#2FD07F]/10";
+      ? "text-[#DC2626] border-[#FECACA] bg-[#FEF2F2]"
+      : "text-[#059669] border-[#A7F3D0] bg-[#ECFDF5]";
   };
 
   const getStatusColor = () => {
-    if (variant === "critical") return "#FF4D5E";
-    if (variant === "warning") return "#FF8A3D";
-    if (variant === "success") return "#2FD07F";
-    if (variant === "accent") return "#3B6CFF";
-    return "#4FB3FF";
+    if (variant === "critical") return "#DC2626";
+    if (variant === "warning") return "#EA580C";
+    if (variant === "success") return "#059669";
+    if (variant === "accent") return "#7C3AED";
+    return "#7C3AED";
   };
 
   // SVG Ring Chart calculation
@@ -66,23 +66,23 @@ export function MetricCard({
   return (
     <div
       className={cn(
-        "relative rounded-[18px] bg-[#101624]/75 p-4 border border-white/10 backdrop-blur-xl shadow-lg flex flex-col justify-between h-full min-h-[160px] select-none",
+        "relative rounded-[18px] bg-white/95 p-4 border border-[#E7E2DA] backdrop-blur-xl shadow-[0_8px_24px_rgba(124,58,237,0.04)] flex flex-col justify-between h-full min-h-[160px] select-none hover:border-[#7C3AED]/30 transition-all",
         className
       )}
     >
       {/* ── Top Header ── */}
       <div className="flex items-start justify-between gap-2">
-        <p className="text-[11px] font-bold text-[#9AA3B8] uppercase tracking-wider">
+        <p className="text-[11px] font-bold text-[#5D5775] uppercase tracking-wider">
           {title}
         </p>
         {Icon && (
-          <div className="rounded-xl p-2 bg-white/5 border border-white/10 text-[#4FB3FF] shrink-0">
+          <div className="rounded-xl p-2 bg-[#F8F7F4] border border-[#E7E2DA] text-[#7C3AED] shrink-0">
             <Icon className="w-4 h-4" />
           </div>
         )}
       </div>
 
-      {/* ── Middle Visual Data Section (Pictures Instead of Text) ── */}
+      {/* ── Middle Visual Data Section ── */}
       <div className="my-2 flex-1 flex flex-col justify-center">
         {/* CASE 1: PERCENTAGE RING CHART with Inset Centre */}
         {isPercentage ? (
@@ -93,7 +93,7 @@ export function MetricCard({
                   cx="27"
                   cy="27"
                   r={radius}
-                  stroke="rgba(255,255,255,0.08)"
+                  stroke="#E7E2DA"
                   strokeWidth="5"
                   fill="none"
                 />
@@ -101,7 +101,7 @@ export function MetricCard({
                   cx="27"
                   cy="27"
                   r={radius}
-                  stroke={pctValue > 80 ? "#FF4D5E" : pctValue > 60 ? "#FF8A3D" : "#2FD07F"}
+                  stroke={pctValue > 80 ? "#DC2626" : pctValue > 60 ? "#EA580C" : "#059669"}
                   strokeWidth="5"
                   strokeDasharray={circumference}
                   strokeDashoffset={strokeDashoffset}
@@ -110,8 +110,8 @@ export function MetricCard({
                   className="transition-all duration-500 ease-out"
                 />
               </svg>
-              <div className="absolute inset-1 rounded-full bg-[#161D2E] flex items-center justify-center">
-                <span className="font-mono font-bold text-xs text-[#F5F7FB]">
+              <div className="absolute inset-1 rounded-full bg-[#F8F7F4] flex items-center justify-center">
+                <span className="font-mono font-bold text-xs text-[#1C1929]">
                   {value}
                 </span>
               </div>
@@ -121,7 +121,7 @@ export function MetricCard({
                 <span className={cn("inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded-full border font-mono", getTrendColor())}>
                   {change}
                 </span>
-                <p className="text-[9px] text-[#6B7488]">Telemetry Trend</p>
+                <p className="text-[9px] text-[#767092]">Telemetry Trend</p>
               </div>
             )}
           </div>
@@ -129,7 +129,7 @@ export function MetricCard({
           /* CASE 2: COUNTS (SOS, teams): Large Number + One Coloured Dot Per Item */
           <div className="space-y-2">
             <div className="flex items-baseline gap-2">
-              <h4 className="font-mono text-2xl lg:text-3xl font-extrabold tracking-tight text-[#F5F7FB]">
+              <h4 className="font-mono text-2xl lg:text-3xl font-extrabold tracking-tight text-[#1C1929]">
                 {value}
               </h4>
               {change && (
@@ -138,19 +138,19 @@ export function MetricCard({
                 </span>
               )}
             </div>
-            <div className="flex flex-wrap gap-1.5 p-1.5 rounded-xl bg-[#161D2E]/80 border border-white/5 max-w-[200px]">
+            <div className="flex flex-wrap gap-1.5 p-1.5 rounded-xl bg-[#F8F7F4] border border-[#E7E2DA] max-w-[200px]">
               {Array.from({ length: Math.min(Math.round(numVal), 24) }).map((_, i) => (
                 <span
                   key={i}
                   className={cn(
-                    "w-2 h-2 rounded-full shadow-sm transition-transform hover:scale-125",
+                    "w-2 h-2 rounded-full shadow-xs transition-transform hover:scale-125",
                     variant === "critical"
-                      ? "bg-[#FF4D5E]"
+                      ? "bg-[#DC2626]"
                       : variant === "accent"
-                      ? "bg-[#3B6CFF]"
+                      ? "bg-[#7C3AED]"
                       : variant === "success"
-                      ? "bg-[#2FD07F]"
-                      : "bg-[#4FB3FF]"
+                      ? "bg-[#059669]"
+                      : "bg-[#7C3AED]"
                   )}
                   title={`Unit ${i + 1}`}
                 />
@@ -161,7 +161,7 @@ export function MetricCard({
           /* CASE 3: TRENDS: Smooth Sparkline with Soft Gradient Fill + Small +/- Pill */
           <div className="space-y-2">
             <div className="flex items-baseline justify-between gap-2">
-              <h4 className="font-mono text-2xl font-bold tracking-tight text-[#F5F7FB]">
+              <h4 className="font-mono text-2xl font-bold tracking-tight text-[#1C1929]">
                 {value}
               </h4>
               {change && (
@@ -173,11 +173,11 @@ export function MetricCard({
                 </span>
               )}
             </div>
-            <div className="w-full h-7 overflow-hidden rounded-lg bg-[#161D2E]/60 p-0.5">
+            <div className="w-full h-7 overflow-hidden rounded-lg bg-[#F8F7F4] border border-[#E7E2DA] p-0.5">
               <svg className="w-full h-full" viewBox="0 0 100 28" preserveAspectRatio="none">
                 <defs>
                   <linearGradient id={`spark-${title.replace(/\s+/g, "")}`} x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor={getStatusColor()} stopOpacity="0.35" />
+                    <stop offset="0%" stopColor={getStatusColor()} stopOpacity="0.25" />
                     <stop offset="100%" stopColor={getStatusColor()} stopOpacity="0.0" />
                   </linearGradient>
                 </defs>
@@ -198,7 +198,7 @@ export function MetricCard({
         ) : (
           /* CASE 4: STANDARD / PROGRESS METRIC */
           <div className="flex items-baseline gap-2">
-            <h4 className="font-mono text-2xl font-bold tracking-tight text-[#F5F7FB]">
+            <h4 className="font-mono text-2xl font-bold tracking-tight text-[#1C1929]">
               {value}
             </h4>
             {change && (
@@ -212,7 +212,7 @@ export function MetricCard({
 
       {/* ── Subtitle / Metadata (Baseline aligned) ── */}
       {subtitle && (
-        <p className="text-[10px] text-[#6B7488] leading-tight pt-1 border-t border-white/5">
+        <p className="text-[10px] text-[#767092] leading-tight pt-1 border-t border-[#E7E2DA]">
           {subtitle}
         </p>
       )}

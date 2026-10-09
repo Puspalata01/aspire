@@ -31,7 +31,7 @@ export function MapboxView({ height = "100%" }: { height?: string }) {
 
   return (
     <div
-      className="relative w-full overflow-hidden bg-[#05070D] rounded-[20px] shadow-2xl"
+      className="relative w-full overflow-hidden bg-[#F5F3ED] rounded-[20px] shadow-sm"
       style={{ height }}
     >
       <RealEarthMap

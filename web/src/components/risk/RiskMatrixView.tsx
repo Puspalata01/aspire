@@ -40,39 +40,39 @@ export function RiskMatrixView() {
   return (
     <div className="space-y-5 select-none">
       {/* ── Top AI Risk Score Banner (Visual Big Metric + Traffic Light Threat Indicator) ── */}
-      <div className="rounded-[20px] border border-white/10 bg-[#101624]/75 p-5 lg:p-6 backdrop-blur-xl shadow-2xl">
+      <div className="rounded-[20px] border border-[#E7E2DA] bg-white/95 p-5 lg:p-6 backdrop-blur-xl shadow-[0_8px_24px_rgba(124,58,237,0.04)]">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <span className="p-1.5 rounded-xl bg-[#FF4D5E]/15 border border-[#FF4D5E]/30 text-[#FF4D5E]">
+              <span className="p-1.5 rounded-xl bg-[#EF4444]/15 border border-[#EF4444]/30 text-[#EF4444]">
                 <BrainCircuit className="w-5 h-5 animate-pulse" />
               </span>
-              <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#FF4D5E]">
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#EF4444]">
                 Composite Disaster Risk Index (CDRI)
               </span>
             </div>
-            <h2 className="text-2xl lg:text-3xl font-extrabold tracking-tight text-[#F5F7FB]">
-              Category 4 Surge Risk: <span className="font-mono text-[#FF4D5E]">89.4</span> / 100
+            <h2 className="text-2xl lg:text-3xl font-extrabold tracking-tight text-[#1C1929]">
+              Category 4 Surge Risk: <span className="font-mono text-[#EF4444]">89.4</span> / 100
             </h2>
-            <p className="text-xs text-[#9AA3B8] max-w-2xl leading-relaxed">
+            <p className="text-xs text-[#5D5775] max-w-2xl leading-relaxed">
               Multi-hazard neural ensemble combining Sentinel-1 SAR inundation imagery, IMD Doppler radar velocities, and CWC hydrological river telemetry.
             </p>
           </div>
 
           {/* Quick Telemetry Chips (Large Numbers & Visual Threat Level) */}
-          <div className="flex items-center gap-4 bg-[#05070D]/90 p-3 sm:p-4 px-5 rounded-[18px] border border-white/10 shadow-inner shrink-0 flex-wrap sm:flex-nowrap">
+          <div className="flex items-center gap-4 bg-[#FAF8F5] p-3 sm:p-4 px-5 rounded-[18px] border border-[#E7E2DA] shadow-sm shrink-0 flex-wrap sm:flex-nowrap">
             <div className="text-center">
-              <p className="text-[10px] text-[#6B7488] uppercase font-mono">Confidence</p>
-              <p className="text-xl sm:text-2xl font-mono font-bold text-[#2FD07F]">94.2%</p>
+              <p className="text-[10px] text-[#767092] uppercase font-mono">Confidence</p>
+              <p className="text-xl sm:text-2xl font-mono font-bold text-[#16A34A]">94.2%</p>
             </div>
-            <div className="h-8 w-px bg-white/10 hidden sm:block" />
+            <div className="h-8 w-px bg-[#E7E2DA] hidden sm:block" />
             <div className="text-center">
-              <p className="text-[10px] text-[#6B7488] uppercase font-mono">Lead Time</p>
-              <p className="text-xl sm:text-2xl font-mono font-bold text-[#3B6CFF]">+6.5 hrs</p>
+              <p className="text-[10px] text-[#767092] uppercase font-mono">Lead Time</p>
+              <p className="text-xl sm:text-2xl font-mono font-bold text-[#7C3AED]">+6.5 hrs</p>
             </div>
-            <div className="h-8 w-px bg-white/10 hidden sm:block" />
+            <div className="h-8 w-px bg-[#E7E2DA] hidden sm:block" />
             <div className="text-center">
-              <p className="text-[10px] text-[#6B7488] uppercase font-mono mb-1">Threat Level</p>
+              <p className="text-[10px] text-[#767092] uppercase font-mono mb-1">Threat Level</p>
               <DangerLevelIndicator level={4} label="CRITICAL 4" showBar={true} />
             </div>
           </div>
@@ -82,13 +82,13 @@ export function RiskMatrixView() {
       {/* ── Two Column Bento Layout (Zonal Risk vs Factor Attribution) ── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* Vulnerable Sector Zones */}
-        <div className="rounded-[20px] border border-white/10 bg-[#101624]/75 p-5 backdrop-blur-xl shadow-xl space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-white/10">
-            <h3 className="text-sm font-bold text-[#F5F7FB] flex items-center gap-2">
-              <Flame className="w-4 h-4 text-[#FF8A3D]" />
+        <div className="rounded-[20px] border border-[#E7E2DA] bg-white/95 p-5 backdrop-blur-xl shadow-[0_8px_24px_rgba(124,58,237,0.04)] space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-[#E7E2DA]">
+            <h3 className="text-sm font-bold text-[#1C1929] flex items-center gap-2">
+              <Flame className="w-4 h-4 text-[#F97316]" />
               Zonal Risk Assessment
             </h3>
-            <span className="text-xs text-[#6B7488] font-mono">Puri District Coastal Sector</span>
+            <span className="text-xs text-[#767092] font-mono">Puri District Coastal Sector</span>
           </div>
 
           <div className="space-y-3">
@@ -97,14 +97,14 @@ export function RiskMatrixView() {
               return (
                 <div
                   key={zone.id}
-                  className="p-3.5 rounded-[16px] border border-white/10 bg-[#161D2E]/50 hover:border-white/20 transition-all space-y-2.5"
+                  className="p-3.5 rounded-[16px] border border-[#E7E2DA] bg-[#FAF8F5] hover:border-[#7C3AED]/40 hover:bg-[#F3E8FF]/20 transition-all space-y-2.5"
                 >
                   <div className="flex items-center justify-between">
                     <div>
-                      <h4 className="text-xs font-bold text-[#F5F7FB]">{zone.name}</h4>
-                      <p className="text-[11px] text-[#9AA3B8] mt-0.5 font-mono">
-                        Population: <span className="text-[#F5F7FB] font-bold">{zone.population.toLocaleString()}</span> | Evacuated:{" "}
-                        <span className="text-[#2FD07F] font-bold">{zone.evacuatedCount.toLocaleString()} ({evacPct}%)</span>
+                      <h4 className="text-xs font-bold text-[#1C1929]">{zone.name}</h4>
+                      <p className="text-[11px] text-[#5D5775] mt-0.5 font-mono">
+                        Population: <span className="text-[#1C1929] font-bold">{zone.population.toLocaleString()}</span> | Evacuated:{" "}
+                        <span className="text-[#16A34A] font-bold">{zone.evacuatedCount.toLocaleString()} ({evacPct}%)</span>
                       </p>
                     </div>
                     <SeverityBadge severity={zone.severity as any} />
@@ -112,17 +112,17 @@ export function RiskMatrixView() {
 
                   {/* Evacuation Visual Progress Bar (Color-Coded) */}
                   <div className="space-y-1">
-                    <div className="flex justify-between text-[10px] font-mono text-[#6B7488]">
+                    <div className="flex justify-between text-[10px] font-mono text-[#767092]">
                       <span>Relocation Progress</span>
-                      <span className="text-[#2FD07F] font-bold">{evacPct}% Complete</span>
+                      <span className="text-[#16A34A] font-bold">{evacPct}% Complete</span>
                     </div>
-                    <div className="w-full bg-[#05070D] h-2.5 rounded-full overflow-hidden border border-white/10 flex">
+                    <div className="w-full bg-[#E7E2DA] h-2.5 rounded-full overflow-hidden border border-[#E7E2DA] flex">
                       <div
-                        className="h-full bg-[#2FD07F] transition-all duration-700"
+                        className="h-full bg-[#16A34A] transition-all duration-700"
                         style={{ width: `${evacPct}%` }}
                       />
                       <div
-                        className="h-full bg-[#FF4D5E] opacity-60"
+                        className="h-full bg-[#EF4444] opacity-60"
                         style={{ width: `${100 - evacPct}%` }}
                       />
                     </div>
@@ -134,37 +134,37 @@ export function RiskMatrixView() {
         </div>
 
         {/* Feature Attribution Weights (SHAP Factor Importance) */}
-        <div className="rounded-[20px] border border-white/10 bg-[#101624]/75 p-5 backdrop-blur-xl shadow-xl space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-white/10">
-            <h3 className="text-sm font-bold text-[#F5F7FB] flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-[#3B6CFF]" />
+        <div className="rounded-[20px] border border-[#E7E2DA] bg-white/95 p-5 backdrop-blur-xl shadow-[0_8px_24px_rgba(124,58,237,0.04)] space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-[#E7E2DA]">
+            <h3 className="text-sm font-bold text-[#1C1929] flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-[#7C3AED]" />
               Neural Feature Attribution (SHAP)
             </h3>
-            <span className="text-xs text-[#6B7488] font-mono">Weight Impact %</span>
+            <span className="text-xs text-[#767092] font-mono">Weight Impact %</span>
           </div>
 
           <div className="space-y-3.5 pt-1">
             {riskFactors.map((f, i) => (
-              <div key={i} className="space-y-1.5 p-2 rounded-xl hover:bg-white/5 transition-colors">
+              <div key={i} className="space-y-1.5 p-2 rounded-xl hover:bg-[#FAF8F5] transition-colors">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-[#F5F7FB] font-medium">{f.name}</span>
+                  <span className="text-[#1C1929] font-medium">{f.name}</span>
                   <div className="flex items-center gap-2">
                     <span
                       className="text-[10px] font-mono px-2 py-0.2 rounded-full font-bold"
                       style={{
-                        backgroundColor: `${f.color}20`,
+                        backgroundColor: `${f.color}15`,
                         color: f.color,
-                        border: `1px solid ${f.color}40`,
+                        border: `1px solid ${f.color}30`,
                       }}
                     >
                       {f.status}
                     </span>
-                    <span className="font-mono text-xs font-bold text-[#F5F7FB]">{f.weight}%</span>
+                    <span className="font-mono text-xs font-bold text-[#1C1929]">{f.weight}%</span>
                   </div>
                 </div>
 
                 {/* Visual Fill Track */}
-                <div className="w-full bg-[#05070D] h-2 rounded-full overflow-hidden border border-white/5">
+                <div className="w-full bg-[#FAF8F5] h-2 rounded-full overflow-hidden border border-[#E7E2DA]">
                   <div
                     className="h-full rounded-full transition-all duration-700"
                     style={{
@@ -180,29 +180,29 @@ export function RiskMatrixView() {
       </div>
 
       {/* ── Interactive What-If Scenario Stress Testing ── */}
-      <div className="rounded-[20px] border border-white/10 bg-[#101624]/75 p-5 lg:p-6 backdrop-blur-xl shadow-xl space-y-4">
-        <div className="flex items-center justify-between pb-3 border-b border-white/10">
+      <div className="rounded-[20px] border border-[#E7E2DA] bg-white/95 p-5 lg:p-6 backdrop-blur-xl shadow-[0_8px_24px_rgba(124,58,237,0.04)] space-y-4">
+        <div className="flex items-center justify-between pb-3 border-b border-[#E7E2DA]">
           <div className="flex items-center gap-2">
-            <Sliders className="w-4 h-4 text-[#3B6CFF]" />
-            <h3 className="text-sm font-bold text-[#F5F7FB]">
+            <Sliders className="w-4 h-4 text-[#7C3AED]" />
+            <h3 className="text-sm font-bold text-[#1C1929]">
               Interactive Scenario Stress Simulator
             </h3>
           </div>
-          <span className="text-xs text-[#2FD07F] font-mono font-bold flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-[#2FD07F] animate-pulse" />
+          <span className="text-xs text-[#16A34A] font-mono font-bold flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-[#16A34A] animate-pulse" />
             AI SIMULATOR ONLINE
           </span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-1">
           {/* Slider 1: Simulated Rainfall */}
-          <div className="space-y-2.5 p-3.5 rounded-xl bg-[#161D2E]/50 border border-white/5">
+          <div className="space-y-2.5 p-3.5 rounded-xl bg-[#FAF8F5] border border-[#E7E2DA]">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-[#F5F7FB] flex items-center gap-2">
-                <CloudRain className="w-4 h-4 text-[#4FB3FF]" />
+              <span className="text-xs font-semibold text-[#1C1929] flex items-center gap-2">
+                <CloudRain className="w-4 h-4 text-[#7C3AED]" />
                 Rainfall Accumulation (24h)
               </span>
-              <span className="font-mono text-xs font-bold text-[#4FB3FF] px-2 py-0.5 rounded-full bg-[#4FB3FF]/15 border border-[#4FB3FF]/30">
+              <span className="font-mono text-xs font-bold text-[#7C3AED] px-2 py-0.5 rounded-full bg-[#7C3AED]/15 border border-[#7C3AED]/30">
                 {simulationRainfallMm} mm
               </span>
             </div>
@@ -213,9 +213,9 @@ export function RiskMatrixView() {
               step="5"
               value={simulationRainfallMm}
               onChange={(e) => setSimulationParam("simulationRainfallMm", Number(e.target.value))}
-              className="w-full accent-[#3B6CFF] h-2 bg-[#05070D] rounded-lg cursor-pointer"
+              className="w-full accent-[#7C3AED] h-2 bg-[#E7E2DA] rounded-lg cursor-pointer"
             />
-            <div className="flex justify-between text-[10px] font-mono text-[#6B7488]">
+            <div className="flex justify-between text-[10px] font-mono text-[#767092]">
               <span>0 mm (Normal)</span>
               <span>200 mm (Severe)</span>
               <span>400 mm (Extreme Flood)</span>
@@ -223,13 +223,13 @@ export function RiskMatrixView() {
           </div>
 
           {/* Slider 2: Storm Surge Tide Height */}
-          <div className="space-y-2.5 p-3.5 rounded-xl bg-[#161D2E]/50 border border-white/5">
+          <div className="space-y-2.5 p-3.5 rounded-xl bg-[#FAF8F5] border border-[#E7E2DA]">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-[#F5F7FB] flex items-center gap-2">
-                <Waves className="w-4 h-4 text-[#3B6CFF]" />
+              <span className="text-xs font-semibold text-[#1C1929] flex items-center gap-2">
+                <Waves className="w-4 h-4 text-[#7C3AED]" />
                 Tidal Surge Crest Height
               </span>
-              <span className="font-mono text-xs font-bold text-[#3B6CFF] px-2 py-0.5 rounded-full bg-[#3B6CFF]/15 border border-[#3B6CFF]/30">
+              <span className="font-mono text-xs font-bold text-[#7C3AED] px-2 py-0.5 rounded-full bg-[#7C3AED]/15 border border-[#7C3AED]/30">
                 {simulationTideHeightM.toFixed(1)} m
               </span>
             </div>
@@ -240,9 +240,9 @@ export function RiskMatrixView() {
               step="0.2"
               value={simulationTideHeightM}
               onChange={(e) => setSimulationParam("simulationTideHeightM", Number(e.target.value))}
-              className="w-full accent-[#3B6CFF] h-2 bg-[#05070D] rounded-lg cursor-pointer"
+              className="w-full accent-[#7C3AED] h-2 bg-[#E7E2DA] rounded-lg cursor-pointer"
             />
-            <div className="flex justify-between text-[10px] font-mono text-[#6B7488]">
+            <div className="flex justify-between text-[10px] font-mono text-[#767092]">
               <span>0.0 m (Baseline)</span>
               <span>4.0 m (Embankment Top)</span>
               <span>8.0 m (Catastrophic Breach)</span>
@@ -256,7 +256,7 @@ export function RiskMatrixView() {
             type="button"
             onClick={runSimulation}
             disabled={isSimulating}
-            className="px-5 py-2.5 rounded-xl bg-[#3B6CFF] hover:bg-[#2F5BD8] text-white font-bold text-xs flex items-center gap-2 transition-all shadow-[0_0_16px_rgba(59,108,255,0.4)] cursor-pointer disabled:opacity-50"
+            className="px-5 py-2.5 rounded-xl bg-[#7C3AED] hover:bg-[#6D28D9] text-white font-bold text-xs flex items-center gap-2 transition-all shadow-[0_4px_16px_rgba(124,58,237,0.3)] cursor-pointer disabled:opacity-50"
           >
             {isSimulating ? (
               <>

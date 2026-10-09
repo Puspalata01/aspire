@@ -429,10 +429,10 @@ export function RealEarthMap({
           const html = `
             <div class="flex items-center gap-1 px-1.5 py-0.5 rounded-full backdrop-blur-md border shadow-sm cursor-pointer transition-transform hover:scale-110 whitespace-nowrap ${
               isSelected
-                ? "bg-[#3B6CFF] text-white border-white/60 shadow-[0_0_10px_rgba(59,108,255,0.6)]"
+                ? "bg-[#7C3AED] text-white border-white/60 shadow-[0_0_10px_rgba(124,58,237,0.6)]"
                 : hasHazards
-                ? "bg-[#101624]/90 text-[#FF4D5E] border-[#FF4D5E]/40"
-                : "bg-[#101624]/75 text-[#9AA3B8] border-white/10"
+                ? "bg-white/95 text-rose-600 border-rose-300"
+                : "bg-white/95 text-[#5D5775] border-[#E7E2DA]"
             }">
               <span class="w-1 h-1 rounded-full ${
                 hasHazards ? "bg-[#FF4D5E]" : "bg-[#2FD07F]"
@@ -494,15 +494,15 @@ export function RealEarthMap({
           const cat = (d as any).metadata?.category || "LIVE";
 
           const html = `
-            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#101624]/95 border ${
-              isCrit ? "border-[#FF4D5E] shadow-[0_0_12px_rgba(255,77,94,0.6)]" : "border-[#FF8A3D] shadow-[0_0_8px_rgba(255,138,61,0.4)]"
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/95 border ${
+              isCrit ? "border-rose-400 shadow-md text-rose-700" : "border-amber-400 shadow-sm text-amber-800"
             } cursor-pointer hover:scale-105 transition-transform whitespace-nowrap select-none">
               <span class="w-2 h-2 rounded-full ${
-                isCrit ? "bg-[#FF4D5E] animate-pulse" : "bg-[#FF8A3D]"
+                isCrit ? "bg-rose-500 animate-pulse" : "bg-amber-500"
               } shrink-0"></span>
-              <span class="text-[11px] font-bold text-white tracking-tight leading-none">${cleanName}</span>
+              <span class="text-[11px] font-bold text-[#1C1929] tracking-tight leading-none">${cleanName}</span>
               <span class="px-1.5 py-0.2 rounded text-[8.5px] font-mono font-bold ${
-                isCrit ? "bg-[#FF4D5E] text-white" : "bg-[#FF8A3D] text-white"
+                isCrit ? "bg-rose-500 text-white" : "bg-amber-500 text-white"
               } shrink-0">
                 ${cat}
               </span>
@@ -533,9 +533,9 @@ export function RealEarthMap({
           if (!pos || isNaN(pos.lat) || isNaN(pos.lng)) return;
 
           const html = `
-            <div class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#101624]/90 border border-[#2FD07F]/60 text-[#2FD07F] shadow-md cursor-pointer hover:scale-110 transition-transform">
-              <span class="w-1.5 h-1.5 rounded-full bg-[#2FD07F]"></span>
-              <span class="text-[9px] font-bold text-white">${sh.name.split(" ")[0]} Hub</span>
+            <div class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/95 border border-emerald-300 text-emerald-700 shadow-sm cursor-pointer hover:scale-110 transition-transform">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              <span class="text-[9px] font-bold text-[#1C1929]">${sh.name.split(" ")[0]} Hub</span>
             </div>
           `;
 
@@ -562,9 +562,9 @@ export function RealEarthMap({
           if (!pos || isNaN(pos.lat) || isNaN(pos.lng)) return;
 
           const html = `
-            <div class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#101624]/90 border border-[#3B6CFF]/60 text-[#3B6CFF] shadow-md cursor-pointer hover:scale-110 transition-transform">
-              <span class="w-1.5 h-1.5 rounded-full bg-[#3B6CFF]"></span>
-              <span class="text-[9px] font-bold text-white">${hosp.name.split(" ")[0]} ICU</span>
+            <div class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white/95 border border-purple-300 text-[#7C3AED] shadow-sm cursor-pointer hover:scale-110 transition-transform">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#7C3AED]"></span>
+              <span class="text-[9px] font-bold text-[#1C1929]">${hosp.name.split(" ")[0]} ICU</span>
             </div>
           `;
 
@@ -1014,7 +1014,7 @@ export function RealEarthMap({
 
   return (
     <div
-      className="relative w-full h-full overflow-hidden bg-[#05070D] select-none flex flex-col"
+      className="relative w-full h-full overflow-hidden bg-[#F5F3ED] select-none flex flex-col"
       style={{ height }}
     >
       {/* ─────────────────────────────────────────────────────────────
@@ -1023,14 +1023,14 @@ export function RealEarthMap({
       {showTopBar && (
         <div className="absolute top-3 left-4 right-4 z-[400] flex flex-wrap items-center justify-between gap-2 pointer-events-none">
           {/* Left: 3D Globe / 2D Tactical Pill Bar */}
-          <div className="flex items-center gap-1.5 p-1 rounded-full bg-[#101624]/90 border border-white/10 backdrop-blur-xl shadow-lg pointer-events-auto">
+          <div className="flex items-center gap-1.5 p-1 rounded-full bg-white/95 border border-[#E7E2DA] backdrop-blur-xl shadow-[0_8px_20px_rgba(124,58,237,0.08)] pointer-events-auto">
             <button
               type="button"
               onClick={() => setMode("2d")}
               className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
                 mode === "2d"
-                  ? "bg-[#3B6CFF] text-white shadow-[0_0_15px_rgba(59,108,255,0.5)] border border-[#3B6CFF]"
-                  : "text-[#8E99AF] hover:text-white"
+                  ? "bg-[#7C3AED] text-white shadow-[0_0_15px_rgba(124,58,237,0.4)] border border-[#7C3AED]"
+                  : "text-[#5D5775] hover:text-[#1C1929] hover:bg-[#F3E8FF]"
               }`}
             >
               <Layers className="w-3.5 h-3.5" />
@@ -1042,8 +1042,8 @@ export function RealEarthMap({
               onClick={() => setMode("globe")}
               className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
                 mode === "globe"
-                  ? "bg-[#3B6CFF] text-white shadow-[0_0_15px_rgba(59,108,255,0.5)] border border-[#3B6CFF]"
-                  : "text-[#8E99AF] hover:text-white"
+                  ? "bg-[#7C3AED] text-white shadow-[0_0_15px_rgba(124,58,237,0.4)] border border-[#7C3AED]"
+                  : "text-[#5D5775] hover:text-[#1C1929] hover:bg-[#F3E8FF]"
               }`}
             >
               <Globe className="w-3.5 h-3.5" />
@@ -1054,14 +1054,14 @@ export function RealEarthMap({
           {/* Center/Right: Satellite vs Dark Theme + Layer Toggles */}
           <div className="flex items-center gap-2 pointer-events-auto">
             {/* Tile Layer Style Toggle */}
-            <div className="flex items-center gap-1 p-1 rounded-full bg-[#101624]/90 border border-white/10 backdrop-blur-xl shadow-lg">
+            <div className="flex items-center gap-1 p-1 rounded-full bg-white/95 border border-[#E7E2DA] backdrop-blur-xl shadow-[0_8px_20px_rgba(124,58,237,0.08)]">
               <button
                 type="button"
                 onClick={() => setTheme("satellite")}
                 className={`px-2.5 py-1 rounded-full text-[11px] font-bold transition-all cursor-pointer ${
                   theme === "satellite"
-                    ? "bg-[#2FD07F]/20 text-[#2FD07F] border border-[#2FD07F]/40"
-                    : "text-[#8E99AF] hover:text-white"
+                    ? "bg-[#059669]/15 text-[#059669] border border-[#059669]/30"
+                    : "text-[#5D5775] hover:text-[#1C1929]"
                 }`}
               >
                 Satellite
@@ -1071,19 +1071,19 @@ export function RealEarthMap({
                 onClick={() => setTheme("dark")}
                 className={`px-2.5 py-1 rounded-full text-[11px] font-bold transition-all cursor-pointer ${
                   theme === "dark"
-                    ? "bg-[#3B6CFF]/20 text-[#4FB3FF] border border-[#3B6CFF]/40"
-                    : "text-[#8E99AF] hover:text-white"
+                    ? "bg-[#7C3AED]/15 text-[#7C3AED] border border-[#7C3AED]/30"
+                    : "text-[#5D5775] hover:text-[#1C1929]"
                 }`}
               >
-                Dark Matrix
+                Light Vector
               </button>
               <button
                 type="button"
                 onClick={() => setTheme("osm")}
                 className={`px-2.5 py-1 rounded-full text-[11px] font-bold transition-all cursor-pointer ${
                   theme === "osm"
-                    ? "bg-white/20 text-white border border-white/40"
-                    : "text-[#8E99AF] hover:text-white"
+                    ? "bg-[#7C3AED] text-white shadow-sm"
+                    : "text-[#5D5775] hover:text-[#1C1929]"
                 }`}
               >
                 Streets
@@ -1091,12 +1091,12 @@ export function RealEarthMap({
             </div>
 
             {/* Quick Layer Filter Badges */}
-            <div className="hidden lg:flex items-center gap-1.5 p-1 rounded-full bg-[#101624]/90 border border-white/10 backdrop-blur-xl shadow-lg text-[10px]">
+            <div className="hidden lg:flex items-center gap-1.5 p-1 rounded-full bg-white/95 border border-[#E7E2DA] backdrop-blur-xl shadow-[0_8px_20px_rgba(124,58,237,0.08)] text-[10px]">
               <button
                 type="button"
                 onClick={() => toggleLayer("hazards")}
                 className={`px-2 py-0.5 rounded-full font-bold transition-all cursor-pointer ${
-                  visibleLayers.hazards ? "bg-[#FF4D5E]/20 text-[#FF4D5E]" : "text-[#6B7488]"
+                  visibleLayers.hazards ? "bg-[#DC2626]/15 text-[#DC2626]" : "text-[#767092] hover:text-[#1C1929]"
                 }`}
               >
                 Hazards
@@ -1105,7 +1105,7 @@ export function RealEarthMap({
                 type="button"
                 onClick={() => toggleLayer("shelters")}
                 className={`px-2 py-0.5 rounded-full font-bold transition-all cursor-pointer ${
-                  visibleLayers.shelters ? "bg-[#2FD07F]/20 text-[#2FD07F]" : "text-[#6B7488]"
+                  visibleLayers.shelters ? "bg-[#059669]/15 text-[#059669]" : "text-[#767092] hover:text-[#1C1929]"
                 }`}
               >
                 Shelters
@@ -1114,7 +1114,7 @@ export function RealEarthMap({
                 type="button"
                 onClick={() => toggleLayer("hospitals")}
                 className={`px-2 py-0.5 rounded-full font-bold transition-all cursor-pointer ${
-                  visibleLayers.hospitals ? "bg-[#3B6CFF]/20 text-[#4FB3FF]" : "text-[#6B7488]"
+                  visibleLayers.hospitals ? "bg-[#7C3AED]/15 text-[#7C3AED]" : "text-[#767092] hover:text-[#1C1929]"
                 }`}
               >
                 Hospitals
@@ -1123,7 +1123,7 @@ export function RealEarthMap({
                 type="button"
                 onClick={() => toggleLayer("resources")}
                 className={`px-2 py-0.5 rounded-full font-bold transition-all cursor-pointer ${
-                  visibleLayers.resources ? "bg-[#FF8A3D]/20 text-[#FF8A3D]" : "text-[#6B7488]"
+                  visibleLayers.resources ? "bg-[#EA580C]/15 text-[#EA580C]" : "text-[#767092] hover:text-[#1C1929]"
                 }`}
               >
                 NDRF Fleets
@@ -1139,7 +1139,7 @@ export function RealEarthMap({
       {/* A. Leaflet 2D Tactical GIS Surface */}
       <div
         ref={containerRef}
-        className={`absolute inset-0 w-full h-full bg-[#05070D] transition-opacity duration-200 ${
+        className={`absolute inset-0 w-full h-full bg-[#F5F3ED] transition-opacity duration-200 ${
           mode === "2d" ? "opacity-100 z-10 pointer-events-auto" : "opacity-0 pointer-events-none z-0"
         }`}
       />
@@ -1147,7 +1147,7 @@ export function RealEarthMap({
       {/* B. Three.js 3D Real Earth Globe Surface */}
       <div
         ref={globeContainerRef}
-        className={`absolute inset-0 w-full h-full bg-[#05070D] flex items-center justify-center cursor-grab active:cursor-grabbing transition-opacity duration-200 ${
+        className={`absolute inset-0 w-full h-full bg-[#030612] flex items-center justify-center cursor-grab active:cursor-grabbing transition-opacity duration-200 ${
           mode === "globe" ? "opacity-100 z-10 pointer-events-auto" : "opacity-0 pointer-events-none z-0"
         }`}
       />
@@ -1160,7 +1160,7 @@ export function RealEarthMap({
           <button
             type="button"
             onClick={handleZoomIn}
-            className="w-9 h-9 rounded-xl bg-[#101624]/90 text-[#9AA3B8] hover:text-white flex items-center justify-center transition-all border border-white/10 backdrop-blur-md shadow-lg cursor-pointer"
+            className="w-9 h-9 rounded-xl bg-white/95 text-[#5D5775] hover:text-[#7C3AED] hover:bg-[#F3E8FF] flex items-center justify-center transition-all border border-[#E7E2DA] backdrop-blur-md shadow-[0_8px_20px_rgba(124,58,237,0.08)] cursor-pointer"
             title="Zoom In"
           >
             <ZoomIn className="w-4 h-4" />
@@ -1168,7 +1168,7 @@ export function RealEarthMap({
           <button
             type="button"
             onClick={handleZoomOut}
-            className="w-9 h-9 rounded-xl bg-[#101624]/90 text-[#9AA3B8] hover:text-white flex items-center justify-center transition-all border border-white/10 backdrop-blur-md shadow-lg cursor-pointer"
+            className="w-9 h-9 rounded-xl bg-white/95 text-[#5D5775] hover:text-[#7C3AED] hover:bg-[#F3E8FF] flex items-center justify-center transition-all border border-[#E7E2DA] backdrop-blur-md shadow-[0_8px_20px_rgba(124,58,237,0.08)] cursor-pointer"
             title="Zoom Out"
           >
             <ZoomOut className="w-4 h-4" />
@@ -1176,7 +1176,7 @@ export function RealEarthMap({
           <button
             type="button"
             onClick={handleResetCamera}
-            className="w-9 h-9 rounded-xl bg-[#101624]/90 text-[#3B6CFF] hover:text-white hover:bg-[#3B6CFF] flex items-center justify-center transition-all border border-white/10 backdrop-blur-md shadow-lg cursor-pointer"
+            className="w-9 h-9 rounded-xl bg-white/95 text-[#7C3AED] hover:text-white hover:bg-[#7C3AED] flex items-center justify-center transition-all border border-[#E7E2DA] backdrop-blur-md shadow-[0_8px_20px_rgba(124,58,237,0.08)] cursor-pointer"
             title="Reset Camera to India"
           >
             <Compass className="w-4 h-4" />
@@ -1188,11 +1188,11 @@ export function RealEarthMap({
           4. BOTTOM GIS TELEMETRY READOUT
          ───────────────────────────────────────────────────────────── */}
       {showTelemetryBar && (
-        <div className="absolute bottom-4 left-4 z-[400] flex items-center gap-2.5 text-[11px] font-mono text-[#9AA3B8] bg-[#101624]/90 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/10 shadow-lg pointer-events-none">
+        <div className="absolute bottom-4 left-4 z-[400] flex items-center gap-2.5 text-[11px] font-mono text-[#5D5775] bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-[#E7E2DA] shadow-[0_8px_20px_rgba(124,58,237,0.08)] pointer-events-none">
           <span>LAT: {coords.lat.toFixed(4)}°N</span>
           <span>LON: {coords.lng.toFixed(4)}°E</span>
           <span>ZOOM: {coords.zoom.toFixed(1)}</span>
-          <span className="text-[#2FD07F] font-semibold">● WGS-84 ACTIVE</span>
+          <span className="text-[#059669] font-bold">● WGS-84 ACTIVE</span>
         </div>
       )}
 
@@ -1200,20 +1200,20 @@ export function RealEarthMap({
           5. CLICKED ENTITY INSPECTOR DRAWER (Modal on Pin Click)
          ───────────────────────────────────────────────────────────── */}
       {selectedEntity && (
-        <div className="absolute top-16 left-4 z-[500] max-w-sm rounded-[22px] border border-white/15 bg-[#101624]/95 backdrop-blur-2xl p-4 text-[#F5F7FB] shadow-[0_20px_50px_rgba(0,0,0,0.8)] animate-in fade-in slide-in-from-top-2">
-          <div className="flex items-start justify-between gap-3 pb-2 border-b border-white/10">
+        <div className="absolute top-16 left-4 z-[500] max-w-sm rounded-[22px] border border-[#E7E2DA] bg-white/98 backdrop-blur-2xl p-4 text-[#1C1929] shadow-[0_20px_50px_rgba(124,58,237,0.14)] animate-in fade-in slide-in-from-top-2">
+          <div className="flex items-start justify-between gap-3 pb-2 border-b border-[#E7E2DA]">
             <div>
-              <span className="text-[10px] font-mono uppercase tracking-wider text-[#3B6CFF] font-bold">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-[#7C3AED] font-bold">
                 GIS Entity Telemetry
               </span>
-              <h4 className="text-sm font-bold text-white mt-0.5">
+              <h4 className="text-sm font-bold text-[#1C1929] mt-0.5">
                 {selectedEntity.name || selectedEntity.requesterName || selectedEntity.id}
               </h4>
             </div>
             <button
               type="button"
               onClick={() => setSelectedEntity(null)}
-              className="w-6 h-6 rounded-full bg-white/10 hover:bg-white/20 text-[#8E99AF] hover:text-white flex items-center justify-center text-xs transition-colors cursor-pointer"
+              className="w-6 h-6 rounded-full bg-[#F8F7F4] hover:bg-[#F3E8FF] text-[#5D5775] hover:text-[#7C3AED] flex items-center justify-center text-xs transition-colors cursor-pointer"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -1222,20 +1222,20 @@ export function RealEarthMap({
           <div className="mt-2.5 space-y-2 text-xs">
             {selectedEntity.type && (
               <div className="flex justify-between text-[11px]">
-                <span className="text-[#8E99AF]">Type:</span>
-                <span className="font-semibold text-white capitalize">{selectedEntity.type}</span>
+                <span className="text-[#5D5775]">Type:</span>
+                <span className="font-semibold text-[#1C1929] capitalize">{selectedEntity.type}</span>
               </div>
             )}
             {selectedEntity.severity && (
               <div className="flex justify-between text-[11px]">
-                <span className="text-[#8E99AF]">Severity:</span>
+                <span className="text-[#5D5775]">Severity:</span>
                 <span
                   className={`font-bold uppercase ${
                     selectedEntity.severity === "critical"
-                      ? "text-[#FF4D5E]"
+                      ? "text-[#DC2626]"
                       : selectedEntity.severity === "high"
-                      ? "text-[#FF8A3D]"
-                      : "text-[#2FD07F]"
+                      ? "text-[#EA580C]"
+                      : "text-[#059669]"
                   }`}
                 >
                   {selectedEntity.severity}
@@ -1244,16 +1244,16 @@ export function RealEarthMap({
             )}
             {(selectedEntity.affectedPopulation || selectedEntity.affected_population) && (
               <div className="flex justify-between text-[11px]">
-                <span className="text-[#8E99AF]">Affected Pop:</span>
-                <span className="font-mono font-bold text-white">
+                <span className="text-[#5D5775]">Affected Pop:</span>
+                <span className="font-mono font-bold text-[#1C1929]">
                   {(selectedEntity.affectedPopulation || selectedEntity.affected_population).toLocaleString()}
                 </span>
               </div>
             )}
             {selectedEntity.capacity && (
               <div className="flex justify-between text-[11px]">
-                <span className="text-[#8E99AF]">Occupancy:</span>
-                <span className="font-mono text-[#2FD07F] font-bold">
+                <span className="text-[#5D5775]">Occupancy:</span>
+                <span className="font-mono text-[#059669] font-bold">
                   {selectedEntity.currentOccupancy ?? selectedEntity.current_occupancy ?? 0} /{" "}
                   {selectedEntity.capacity}
                 </span>
@@ -1261,15 +1261,15 @@ export function RealEarthMap({
             )}
             {extractLatLng(selectedEntity) && (
               <div className="flex justify-between text-[11px]">
-                <span className="text-[#8E99AF]">Coordinates:</span>
-                <span className="font-mono text-[#4FB3FF]">
+                <span className="text-[#5D5775]">Coordinates:</span>
+                <span className="font-mono text-[#7C3AED] font-semibold">
                   {extractLatLng(selectedEntity)!.lat.toFixed(4)}°N,{" "}
                   {extractLatLng(selectedEntity)!.lng.toFixed(4)}°E
                 </span>
               </div>
             )}
             {selectedEntity.description && (
-              <p className="text-[11px] text-[#8E99AF] pt-1 border-t border-white/5">
+              <p className="text-[11px] text-[#5D5775] pt-1 border-t border-[#E7E2DA]">
                 {selectedEntity.description}
               </p>
             )}

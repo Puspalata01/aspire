@@ -33,7 +33,7 @@ export function CitizenNav() {
   return (
     <>
       {/* Desktop Top Sub-Nav */}
-      <nav className="hidden md:flex items-center justify-center gap-2 border-b border-white/10 bg-[#0A101D]/80 backdrop-blur-xl px-4 py-2.5 sticky top-16 z-20">
+      <nav className="hidden md:flex items-center justify-center gap-2 border-b border-[#E7E2DA] bg-white/90 backdrop-blur-xl px-4 py-2.5 sticky top-16 z-20 shadow-xs">
         {CITIZEN_NAV_ITEMS.map((item) => {
           const Icon = ICON_MAP[item.icon] || Home;
           const isActive = pathname === item.href;
@@ -45,10 +45,10 @@ export function CitizenNav() {
               className={cn(
                 "flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-160 cursor-pointer",
                 item.highlight
-                  ? "bg-[#FF4D5E]/20 text-[#FF4D5E] border border-[#FF4D5E]/40 shadow-[0_0_12px_rgba(255,77,94,0.3)] font-bold animate-pulse"
+                  ? "bg-red-50 text-[#DC2626] border border-red-200 shadow-[0_0_12px_rgba(220,38,38,0.2)] font-bold animate-pulse"
                   : isActive
-                  ? "bg-[#3B6CFF] text-white shadow-[0_0_15px_rgba(59,108,255,0.45)]"
-                  : "text-[#8E99AF] hover:text-white hover:bg-white/5"
+                  ? "bg-[#7C3AED] text-white shadow-[0_4px_14px_rgba(124,58,237,0.3)] font-bold"
+                  : "text-[#5D5775] hover:text-[#1C1929] hover:bg-[#F3E8FF]/60"
               )}
             >
               <Icon className="w-4 h-4" />
@@ -59,7 +59,7 @@ export function CitizenNav() {
       </nav>
 
       {/* Mobile Bottom Navigation Bar */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#060A13]/90 border-t border-white/10 backdrop-blur-2xl px-3 py-2 flex items-center justify-around">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 border-t border-[#E7E2DA] backdrop-blur-2xl px-3 py-2 flex items-center justify-around shadow-lg">
         {CITIZEN_NAV_ITEMS.slice(0, 5).map((item) => {
           const Icon = ICON_MAP[item.icon] || Home;
           const isActive = pathname === item.href;
@@ -71,20 +71,20 @@ export function CitizenNav() {
               className={cn(
                 "flex flex-col items-center justify-center py-1.5 px-3 rounded-2xl text-[10px] font-semibold transition-all duration-160 relative",
                 item.highlight
-                  ? "text-[#FF4D5E] font-bold"
+                  ? "text-[#DC2626] font-bold"
                   : isActive
-                  ? "text-white"
-                  : "text-[#8E99AF] hover:text-white"
+                  ? "text-[#7C3AED] font-bold"
+                  : "text-[#5D5775] hover:text-[#1C1929]"
               )}
             >
               <div
                 className={cn(
                   "p-2 rounded-xl transition-all duration-160",
                   item.highlight
-                    ? "bg-[#FF4D5E]/20 text-[#FF4D5E] border border-[#FF4D5E]/40"
+                    ? "bg-red-50 text-[#DC2626] border border-red-200"
                     : isActive
-                    ? "bg-[#3B6CFF] text-white shadow-md"
-                    : "bg-white/5 text-[#8E99AF]"
+                    ? "bg-[#7C3AED] text-white shadow-md"
+                    : "bg-[#F8F7F4] text-[#5D5775]"
                 )}
               >
                 <Icon className="w-4 h-4" />

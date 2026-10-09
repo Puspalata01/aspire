@@ -1,134 +1,138 @@
 @import "tailwindcss";
 
 @theme {
-  /* ─── ASPIRE Dark Globe Theme Palette ─── */
-  --color-bg-0: #05070D;
-  --color-bg-1: #0A0E17;
-  --color-rail: #1B1A33;
-  --color-panel: rgba(16, 22, 36, 0.72);
-  --color-panel-solid: #101624;
-  --color-panel-2: #161D2E;
-  --color-border-subtle: rgba(255, 255, 255, 0.08);
-  --color-border-hi: rgba(255, 255, 255, 0.14);
+  /* ─── ASPIRE Luxury White / Cream & Royal Purple Palette ─── */
+  --color-bg-0: #F8F7F4;
+  --color-bg-1: #FFFFFF;
+  --color-rail: #EFECE6;
+  --color-panel: rgba(255, 255, 255, 0.88);
+  --color-panel-solid: #FFFFFF;
+  --color-panel-2: #F5F3EE;
+  --color-border-subtle: rgba(124, 58, 237, 0.08);
+  --color-border-hi: rgba(124, 58, 237, 0.18);
 
-  --color-text-main: #F5F7FB;
-  --color-text-muted: #9AA3B8;
-  --color-text-caption: #6B7488;
+  --color-text-main: #1C1929;
+  --color-text-muted: #4C4662;
+  --color-text-caption: #767092;
 
-  --color-accent-blue: #3B6CFF;
-  --color-accent-atmos: #4FB3FF;
-  --color-accent-purple: #6C63FF;
+  --color-accent-blue: #7C3AED;
+  --color-accent-atmos: #8B5CF6;
+  --color-accent-purple: #7C3AED;
 
-  --color-severity-low: #2FD07F;
-  --color-severity-medium: #F5C542;
-  --color-severity-high: #FF8A3D;
-  --color-severity-critical: #FF4D5E;
+  --color-severity-low: #10B981;
+  --color-severity-medium: #F59E0B;
+  --color-severity-high: #F97316;
+  --color-severity-critical: #EF4444;
 
-  /* ─── Neumorphic Palette (Compatibility) ─── */
-  --color-surface: #E9E9E7;
-  --color-surface-raised: #F1F1EF;
-  --color-surface-sunken: #E2E2E0;
-  --color-edge: #D4D4D1;
+  /* ─── Neumorphic & Surface Palette ─── */
+  --color-surface: #F8F7F4;
+  --color-surface-raised: #FFFFFF;
+  --color-surface-sunken: #EDEBE6;
+  --color-edge: #E2DFD7;
 
-  --color-ink: #1D1D1F;
-  --color-ink-soft: #4A4A4F;
-  --color-ink-mute: #8A8A90;
+  --color-ink: #1C1929;
+  --color-ink-soft: #4C4662;
+  --color-ink-mute: #767092;
 
-  --color-action: #8E8E93;
-  --color-action-hover: #9C9CA1;
-  --color-action-dark: #6F6F75;
+  --color-action: #6B7280;
+  --color-action-hover: #4B5563;
+  --color-action-dark: #374151;
 
-  --color-accent: #2F6FE0;
-  --color-accent-soft: #DCE7FB;
+  --color-accent: #7C3AED;
+  --color-accent-soft: #F3E8FF;
 
-  --color-status-error: #D64545;
-  --color-status-success: #2E9E6B;
-  --color-status-warning: #D99A1E;
+  --color-status-error: #EF4444;
+  --color-status-success: #10B981;
+  --color-status-warning: #F59E0B;
   --color-status-orange: #F97316;
 
   /* Shadows */
-  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  --shadow-glow-blue: 0 0 0 1px #3B6CFF, 0 0 24px rgba(59, 108, 255, 0.40);
-  --shadow-raise-1: 3px 3px 6px rgba(150,150,146,0.55), -3px -3px 6px rgba(255,255,255,0.95);
-  --shadow-raise-2: 6px 6px 12px rgba(150,150,146,0.55), -6px -6px 12px rgba(255,255,255,0.95);
-  --shadow-raise-3: 10px 10px 22px rgba(150,150,146,0.55), -10px -10px 22px rgba(255,255,255,0.95);
-  --shadow-sink-1: inset 2px 2px 4px rgba(150,150,146,0.55), inset -2px -2px 4px rgba(255,255,255,0.95);
-  --shadow-sink-2: inset 4px 4px 8px rgba(150,150,146,0.55), inset -4px -4px 8px rgba(255,255,255,0.95);
+  --shadow-card: 0 10px 30px rgba(124, 58, 237, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-glow-purple: 0 0 0 1px #7C3AED, 0 0 20px rgba(124, 58, 237, 0.35);
+  --shadow-raise-1: 3px 3px 8px rgba(0, 0, 0, 0.04), -3px -3px 8px rgba(255, 255, 255, 0.9);
+  --shadow-raise-2: 6px 6px 14px rgba(0, 0, 0, 0.05), -6px -6px 14px rgba(255, 255, 255, 0.9);
+  --shadow-raise-3: 10px 10px 24px rgba(0, 0, 0, 0.06), -10px -10px 24px rgba(255, 255, 255, 0.95);
+  --shadow-sink-1: inset 2px 2px 5px rgba(0, 0, 0, 0.04), inset -2px -2px 5px rgba(255, 255, 255, 0.9);
+  --shadow-sink-2: inset 4px 4px 10px rgba(0, 0, 0, 0.06), inset -4px -4px 10px rgba(255, 255, 255, 0.9);
 }
 
 :root {
   /* Surfaces */
-  --bg-0: #05070D;
-  --bg-1: #0A0E17;
-  --rail: #1B1A33;
-  --panel: rgba(16, 22, 36, 0.72);
-  --panel-solid: #101624;
-  --panel-2: #161D2E;
-  --border: rgba(255, 255, 255, 0.08);
-  --border-hi: rgba(255, 255, 255, 0.14);
+  --bg-0: #F8F7F4;
+  --bg-1: #FFFFFF;
+  --rail: #EFECE6;
+  --panel: rgba(255, 255, 255, 0.88);
+  --panel-solid: #FFFFFF;
+  --panel-2: #F5F3EE;
+  --border: rgba(124, 58, 237, 0.08);
+  --border-hi: rgba(124, 58, 237, 0.18);
 
   /* Text */
-  --text: #F5F7FB;
-  --text-2: #9AA3B8;
-  --text-3: #6B7488;
+  --text: #1C1929;
+  --text-2: #4C4662;
+  --text-3: #767092;
 
   /* Accent */
-  --blue: #3B6CFF;
-  --blue-soft: rgba(59, 108, 255, 0.18);
-  --blue-glow: rgba(59, 108, 255, 0.40);
-  --atmos: #4FB3FF;
-  --purple: #6C63FF;
+  --blue: #7C3AED;
+  --blue-soft: rgba(124, 58, 237, 0.12);
+  --blue-glow: rgba(124, 58, 237, 0.30);
+  --atmos: #8B5CF6;
+  --purple: #7C3AED;
 
   /* Severity */
-  --low: #2FD07F;
-  --medium: #F5C542;
-  --high: #FF8A3D;
-  --critical: #FF4D5E;
+  --low: #10B981;
+  --medium: #F59E0B;
+  --high: #F97316;
+  --critical: #EF4444;
 
   /* Effects */
-  --blur: blur(18px) saturate(140%);
-  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  --glow-active: 0 0 0 1px #3B6CFF, 0 0 24px rgba(59, 108, 255, 0.40);
+  --blur: blur(20px) saturate(160%);
+  --shadow-card: 0 10px 30px rgba(124, 58, 237, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+  --glow-active: 0 0 0 1px #7C3AED, 0 0 20px rgba(124, 58, 237, 0.35);
 
   /* Neumorphic variables */
-  --surface: #E9E9E7;
-  --raised: #F1F1EF;
-  --sunken: #E2E2E0;
-  --edge: #D4D4D1;
-  --ink: #1D1D1F;
-  --ink-soft: #4A4A4F;
-  --ink-mute: #8A8A90;
-  --accent: #2F6FE0;
+  --surface: #F8F7F4;
+  --raised: #FFFFFF;
+  --sunken: #EDEBE6;
+  --edge: #E2DFD7;
+  --ink: #1C1929;
+  --ink-soft: #4C4662;
+  --ink-mute: #767092;
+  --accent: #7C3AED;
 }
 
 /* ─── Glass & Animation Utilities ─── */
 @layer utilities {
   .glass-card {
     border-radius: 18px;
-    border: 1px solid rgba(255, 255, 255, 0.10);
-    background: rgba(16, 22, 36, 0.72);
-    backdrop-filter: blur(18px) saturate(140%);
-    -webkit-backdrop-filter: blur(18px) saturate(140%);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    box-shadow: 0 10px 30px rgba(124, 58, 237, 0.06), 0 1px 3px rgba(0, 0, 0, 0.03);
   }
 
   .glass-card-interactive {
     border-radius: 18px;
-    border: 1px solid rgba(255, 255, 255, 0.10);
-    background: rgba(16, 22, 36, 0.72);
-    backdrop-filter: blur(18px) saturate(140%);
-    -webkit-backdrop-filter: blur(18px) saturate(140%);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.90);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    box-shadow: 0 10px 30px rgba(124, 58, 237, 0.06), 0 1px 3px rgba(0, 0, 0, 0.03);
     transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .glass-card-interactive:hover {
-    border-color: rgba(255, 255, 255, 0.18);
+    border-color: rgba(124, 58, 237, 0.25);
     transform: translateY(-2px);
-    box-shadow: 0 12px 38px rgba(0, 0, 0, 0.55), 0 0 20px rgba(59, 108, 255, 0.15);
+    box-shadow: 0 14px 36px rgba(124, 58, 237, 0.12), 0 0 20px rgba(124, 58, 237, 0.08);
   }
 
   .glow-blue {
-    box-shadow: 0 0 0 1px #3B6CFF, 0 0 24px rgba(59, 108, 255, 0.40);
+    box-shadow: 0 0 0 1px #7C3AED, 0 0 20px rgba(124, 58, 237, 0.30);
+  }
+
+  .glow-purple {
+    box-shadow: 0 0 0 1px #7C3AED, 0 0 24px rgba(124, 58, 237, 0.35);
   }
 
   .pulse-beacon::before, .pulse-beacon::after {
@@ -136,7 +140,7 @@
     position: absolute;
     inset: -6px;
     border-radius: 50%;
-    border: 1.5px solid rgba(255, 255, 255, 0.8);
+    border: 1.5px solid rgba(124, 58, 237, 0.8);
     animation: beacon-ping 2.4s ease-out infinite;
   }
   .pulse-beacon::after {
@@ -155,33 +159,33 @@
   }
 
   .shadow-raise-1 {
-    box-shadow: 3px 3px 6px rgba(150,150,146,0.55), -3px -3px 6px rgba(255,255,255,0.95);
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.04), -3px -3px 8px rgba(255, 255, 255, 0.9);
   }
   .shadow-raise-2 {
-    box-shadow: 6px 6px 12px rgba(150,150,146,0.55), -6px -6px 12px rgba(255,255,255,0.95);
+    box-shadow: 6px 6px 14px rgba(0, 0, 0, 0.05), -6px -6px 14px rgba(255, 255, 255, 0.9);
   }
   .shadow-raise-3 {
-    box-shadow: 10px 10px 22px rgba(150,150,146,0.55), -10px -10px 22px rgba(255,255,255,0.95);
+    box-shadow: 10px 10px 24px rgba(0, 0, 0, 0.06), -10px -10px 24px rgba(255, 255, 255, 0.95);
   }
   .shadow-sink-1 {
-    box-shadow: inset 2px 2px 4px rgba(150,150,146,0.55), inset -2px -2px 4px rgba(255,255,255,0.95);
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.04), inset -2px -2px 5px rgba(255, 255, 255, 0.9);
   }
   .shadow-sink-2 {
-    box-shadow: inset 4px 4px 8px rgba(150,150,146,0.55), inset -4px -4px 8px rgba(255,255,255,0.95);
+    box-shadow: inset 4px 4px 10px rgba(0, 0, 0, 0.06), inset -4px -4px 10px rgba(255, 255, 255, 0.9);
   }
 }
 
 /* ─── Global Base Settings ─── */
 body {
-  background-color: #05070D;
-  color: #F5F7FB;
+  background-color: #F8F7F4;
+  color: #1C1929;
   font-family: var(--font-sans, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
 }
 
 /* Focus state */
 :focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px #05070D, 0 0 0 4px #3B6CFF;
+  box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #7C3AED;
 }
 
 /* Respect prefers-reduced-motion */
@@ -197,18 +201,29 @@ body {
   }
 }
 
-/* Dark Theme Scrollbars */
+/* Luxury Light & Purple Theme Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0A0E17;
+  background: #F1EFEA;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1B1A33;
+  background: #D8D2C6;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3B6CFF;
+  background: #7C3AED;
+}
+
+/* Hide scrollbar utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+.no-scrollbar {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
 }

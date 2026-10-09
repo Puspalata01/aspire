@@ -108,30 +108,30 @@ export default function AuthorityMapPage() {
 
   if (!mounted) {
     return (
-      <div className="w-full flex-1 flex flex-col min-h-0 bg-[#060A13] text-[#F5F7FB] select-none font-sans relative overflow-hidden">
-        <header className="h-[58px] px-5 bg-[#060A13]/90 backdrop-blur-xl border-b border-white/10 flex items-center justify-between gap-4 z-20 shrink-0">
+      <div className="w-full flex-1 flex flex-col min-h-0 bg-[#F8F7F4] text-[#1C1929] select-none font-sans relative overflow-hidden">
+        <header className="h-[58px] px-5 bg-white/95 backdrop-blur-xl border-b border-[#E7E2DA] flex items-center justify-between gap-4 z-20 shrink-0">
           <div className="flex flex-col">
-            <span className="text-[10px] text-[#6B7488] font-medium leading-none">
+            <span className="text-[10px] text-[#767092] font-medium leading-none">
               Authority / Map
             </span>
             <div className="flex items-center gap-2 mt-0.5">
-              <h1 className="text-base font-bold tracking-tight text-[#F5F7FB] leading-none">
+              <h1 className="text-base font-bold tracking-tight text-[#1C1929] leading-none">
                 Disaster Monitoring
               </h1>
-              <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#2FD07F]/15 border border-[#2FD07F]/30 text-[#2FD07F] text-[10px] font-semibold">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#2FD07F] animate-pulse" />
+              <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#10B981]/15 border border-[#10B981]/30 text-[#059669] text-[10px] font-semibold">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse" />
                 <span>Live</span>
               </div>
             </div>
-            <p className="text-[10px] text-[#8E99AF] font-medium leading-none mt-0.5 hidden sm:block">
+            <p className="text-[10px] text-[#5D5775] font-medium leading-none mt-0.5 hidden sm:block">
               Real-time multi-hazard tracking and impact intelligence
             </p>
           </div>
         </header>
-        <div className="flex-1 w-full relative overflow-hidden bg-[#05070D] flex items-center justify-center">
+        <div className="flex-1 w-full relative overflow-hidden bg-[#F8F7F4] flex items-center justify-center">
           <div className="flex flex-col items-center gap-3">
-            <div className="w-8 h-8 rounded-full border-2 border-[#3B6CFF] border-t-transparent animate-spin" />
-            <span className="text-xs text-[#8E99AF] font-mono tracking-wider uppercase">Loading GIS Tactical Map...</span>
+            <div className="w-8 h-8 rounded-full border-2 border-[#7C3AED] border-t-transparent animate-spin" />
+            <span className="text-xs text-[#767092] font-mono tracking-wider uppercase">Loading GIS Tactical Map...</span>
           </div>
         </div>
       </div>
@@ -139,41 +139,41 @@ export default function AuthorityMapPage() {
   }
 
   return (
-    <div className="w-full flex-1 flex flex-col min-h-0 bg-[#060A13] text-[#F5F7FB] select-none font-sans relative overflow-hidden">
+    <div className="w-full flex-1 flex flex-col min-h-0 bg-[#F8F7F4] text-[#1C1929] select-none font-sans relative overflow-hidden">
       {/* ─────────────────────────────────────────────────────────────
-          TOP HEADER BAR (Exact Match to Reference Image)
+          TOP HEADER BAR (Luxury White/Cream & Royal Purple)
          ───────────────────────────────────────────────────────────── */}
-      <header className="h-[58px] px-5 bg-[#060A13]/90 backdrop-blur-xl border-b border-white/10 flex items-center justify-between gap-4 z-20 shrink-0">
+      <header className="h-[58px] px-5 bg-white/95 backdrop-blur-xl border-b border-[#E7E2DA] flex items-center justify-between gap-4 z-20 shrink-0">
         {/* Left: Breadcrumb + Title + Subtitle */}
         <div className="flex flex-col">
-          <span className="text-[10px] text-[#6B7488] font-medium leading-none">
+          <span className="text-[10px] text-[#767092] font-medium leading-none">
             Authority / Map
           </span>
           <div className="flex items-center gap-2 mt-0.5">
-            <h1 className="text-base font-bold tracking-tight text-[#F5F7FB] leading-none">
+            <h1 className="text-base font-bold tracking-tight text-[#1C1929] leading-none">
               Disaster Monitoring
             </h1>
             {/* Green Live Pill */}
-            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#2FD07F]/15 border border-[#2FD07F]/30 text-[#2FD07F] text-[10px] font-semibold">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#2FD07F] animate-pulse" />
+            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#10B981]/15 border border-[#10B981]/30 text-[#059669] text-[10px] font-semibold">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] animate-pulse" />
               <span>Live</span>
             </div>
           </div>
-          <p className="text-[10px] text-[#8E99AF] font-medium leading-none mt-0.5 hidden sm:block">
+          <p className="text-[10px] text-[#5D5775] font-medium leading-none mt-0.5 hidden sm:block">
             Real-time multi-hazard tracking and impact intelligence
           </p>
         </div>
 
         {/* Center: Search Field */}
         <div className="hidden md:flex items-center relative flex-1 max-w-sm mx-4">
-          <Search className="w-3.5 h-3.5 text-[#6B7488] absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-3.5 h-3.5 text-[#767092] absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Search location, district, facility..."
-            className="w-full bg-[#101624]/80 border border-white/10 rounded-full pl-9 pr-14 py-1.5 text-xs text-[#F5F7FB] placeholder-[#6B7488] focus:border-[#3B6CFF] focus:outline-none focus:ring-1 focus:ring-[#3B6CFF] transition-all"
+            className="w-full bg-[#F5F3ED] border border-[#E4DFD5] rounded-full pl-9 pr-14 py-1.5 text-xs text-[#1C1929] placeholder-[#767092] focus:border-[#7C3AED] focus:outline-none focus:ring-1 focus:ring-[#7C3AED] transition-all"
             suppressHydrationWarning
           />
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/10 text-[#8E99AF] border border-white/5">
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-mono px-1.5 py-0.5 rounded bg-white text-[#5D5775] border border-[#E4DFD5]">
             ⌘ K
           </span>
         </div>
@@ -183,23 +183,23 @@ export default function AuthorityMapPage() {
           {/* Bell Icon */}
           <Link
             href="/authority/sos"
-            className="relative w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-[#9AA3B8] hover:text-white transition-colors"
+            className="relative w-8 h-8 rounded-full bg-[#F5F3ED] hover:bg-white border border-[#E4DFD5] flex items-center justify-center text-[#5D5775] hover:text-[#7C3AED] transition-colors"
             title="Alerts"
           >
             <Bell className="w-4 h-4" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#FF4D5E] ring-2 ring-[#060A13]" />
+            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#EF4444] ring-2 ring-white" />
           </Link>
 
           {/* Profile Avatar Pill */}
           <div className="flex items-center gap-2 pl-1">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#3B6CFF] to-[#1D4ED8] ring-1 ring-white/20 flex items-center justify-center text-xs font-bold text-white shadow-sm">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#7C3AED] to-[#6D28D9] ring-1 ring-purple-300 flex items-center justify-center text-xs font-bold text-white shadow-sm">
               AD
             </div>
             <div className="hidden lg:flex flex-col text-left">
-              <span className="text-xs font-semibold text-[#F5F7FB] leading-none">
+              <span className="text-xs font-semibold text-[#1C1929] leading-none">
                 Authority User
               </span>
-              <span className="text-[10px] text-[#8E99AF] leading-tight mt-0.5">
+              <span className="text-[10px] text-[#767092] leading-tight mt-0.5">
                 State Emergency Ops
               </span>
             </div>
@@ -241,8 +241,8 @@ export default function AuthorityMapPage() {
             onClick={() => setActiveTool("2d")}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
               activeTool === "2d"
-                ? "bg-[#3B6CFF] text-white shadow-md border border-[#3B6CFF]"
-                : "bg-[#101624]/85 text-[#8E99AF] hover:text-white border border-white/10"
+                ? "bg-[#7C3AED] text-white shadow-[0_4px_16px_rgba(124,58,237,0.35)] border border-[#7C3AED]"
+                : "bg-white/95 text-[#5D5775] hover:text-[#1C1929] border border-[#E7E2DA] shadow-sm"
             }`}
           >
             <Globe className="w-3.5 h-3.5" />
@@ -255,26 +255,26 @@ export default function AuthorityMapPage() {
             onClick={() => setActiveTool("3d")}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
               activeTool === "3d"
-                ? "bg-[#3B6CFF] text-white shadow-[0_0_15px_rgba(59,108,255,0.5)] border border-[#3B6CFF]"
-                : "bg-[#101624]/85 text-[#8E99AF] hover:text-white border border-white/10"
+                ? "bg-[#7C3AED] text-white shadow-[0_4px_16px_rgba(124,58,237,0.35)] border border-[#7C3AED]"
+                : "bg-white/95 text-[#5D5775] hover:text-[#1C1929] border border-[#E7E2DA] shadow-sm"
             }`}
           >
             <Box className="w-3.5 h-3.5" />
             <span>3D Real Earth</span>
           </button>
 
-            {/* 3. Satellite vs Dark Theme Toggle */}
+            {/* 3. Satellite vs Light Theme Toggle */}
             <button
               type="button"
               onClick={() => toggleLayer("satelliteImagery")}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer ${
                 layers.satelliteImagery
-                  ? "bg-[#2FD07F]/20 text-[#2FD07F] border border-[#2FD07F]/40"
-                  : "bg-[#101624]/85 text-[#8E99AF] hover:text-white border border-white/10"
+                  ? "bg-[#10B981]/15 text-[#059669] border border-[#10B981]/40"
+                  : "bg-white/95 text-[#5D5775] hover:text-[#1C1929] border border-[#E7E2DA] shadow-sm"
               }`}
             >
               <Layers className="w-3.5 h-3.5" />
-              <span>{layers.satelliteImagery ? "Satellite Active" : "Dark GIS"}</span>
+              <span>{layers.satelliteImagery ? "Satellite Active" : "Light GIS"}</span>
             </button>
 
             {/* 4. Measure */}
@@ -286,8 +286,8 @@ export default function AuthorityMapPage() {
               }}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer ${
                 activeTool === "measure"
-                  ? "bg-[#3B6CFF] text-white shadow-md border border-[#3B6CFF]"
-                  : "bg-[#101624]/85 text-[#8E99AF] hover:text-white border border-white/10"
+                  ? "bg-[#7C3AED] text-white shadow-md border border-[#7C3AED]"
+                  : "bg-white/95 text-[#5D5775] hover:text-[#1C1929] border border-[#E7E2DA] shadow-sm"
               }`}
             >
               <Ruler className="w-3.5 h-3.5" />
@@ -298,7 +298,7 @@ export default function AuthorityMapPage() {
             <button
               type="button"
               onClick={() => setIsFullscreen(!isFullscreen)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-[#101624]/85 text-[#8E99AF] hover:text-white border border-white/10 transition-all cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-white/95 text-[#5D5775] hover:text-[#1C1929] border border-[#E7E2DA] shadow-sm transition-all cursor-pointer"
             >
               {isFullscreen ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
               <span>Fullscreen</span>
@@ -311,16 +311,16 @@ export default function AuthorityMapPage() {
           {showLeftPanel ? (
             <div className="absolute top-3 left-3 z-20 w-[260px] flex flex-col gap-2 max-h-[calc(100vh-140px)] overflow-y-auto pointer-events-auto transition-all">
               {/* ── CARD 1: ACTIVE HAZARDS ── */}
-              <div className="rounded-[16px] bg-[#101624]/85 border border-white/10 p-2.5 backdrop-blur-2xl shadow-[0_16px_36px_rgba(0,0,0,0.6)] space-y-1.5 shrink-0">
+              <div className="rounded-[16px] bg-white/95 border border-[#E7E2DA] p-2.5 backdrop-blur-2xl shadow-[0_12px_32px_rgba(124,58,237,0.06)] space-y-1.5 shrink-0">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5 text-xs font-bold text-[#F5F7FB]">
-                    <AlertTriangle className="w-3.5 h-3.5 text-[#FF4D5E]" />
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-[#1C1929]">
+                    <AlertTriangle className="w-3.5 h-3.5 text-[#EF4444]" />
                     <span>Active Hazards</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Link
                       href="/authority/risk"
-                      className="text-[11px] font-semibold text-[#3B6CFF] hover:underline flex items-center gap-0.5"
+                      className="text-[11px] font-semibold text-[#7C3AED] hover:underline flex items-center gap-0.5"
                     >
                       <span>All</span>
                       <ArrowRight className="w-3 h-3" />
@@ -328,7 +328,7 @@ export default function AuthorityMapPage() {
                     <button
                       type="button"
                       onClick={() => setShowLeftPanel(false)}
-                      className="text-[#8E99AF] hover:text-white p-0.5 rounded hover:bg-white/10 transition-colors cursor-pointer"
+                      className="text-[#767092] hover:text-[#1C1929] p-0.5 rounded hover:bg-[#F3EFE8] transition-colors cursor-pointer"
                       title="Hide Panel"
                     >
                       <PanelLeftClose className="w-3.5 h-3.5" />
@@ -337,33 +337,33 @@ export default function AuthorityMapPage() {
                 </div>
 
               {/* Hero Cyclone Box */}
-              <div className="p-2.5 rounded-xl bg-[#161D2E]/80 border border-[#FF4D5E]/30 space-y-2">
+              <div className="p-2.5 rounded-xl bg-purple-50/70 border border-purple-200/80 space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 rounded-lg bg-[#FF4D5E]/20 flex items-center justify-center text-[#FF4D5E]">
+                    <div className="w-6 h-6 rounded-lg bg-purple-100 flex items-center justify-center text-[#7C3AED]">
                       <Wind className="w-3.5 h-3.5 animate-spin" style={{ animationDuration: "6s" }} />
                     </div>
-                    <span className="text-xs font-bold text-[#F5F7FB] truncate max-w-[140px]">
+                    <span className="text-xs font-bold text-[#1C1929] truncate max-w-[140px]">
                       {activeDisaster?.name || "Cyclone Dana • Severe"}
                     </span>
                   </div>
-                  <span className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase font-mono bg-[#FF4D5E]/20 text-[#FF4D5E] border border-[#FF4D5E]/40">
+                  <span className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase font-mono bg-purple-100 text-[#7C3AED] border border-purple-300">
                     {activeDisaster?.severity || "Critical"}
                   </span>
                 </div>
 
-                <div className="grid grid-cols-3 gap-1 pt-1 border-t border-white/5 text-center">
+                <div className="grid grid-cols-3 gap-1 pt-1 border-t border-purple-200/60 text-center">
                   <div>
-                    <span className="text-[8px] text-[#8E99AF] block">Wind Speed</span>
-                    <span className="font-mono text-xs font-bold text-[#F5F7FB]">185 km/h</span>
+                    <span className="text-[8px] text-[#767092] block">Wind Speed</span>
+                    <span className="font-mono text-xs font-bold text-[#1C1929]">185 km/h</span>
                   </div>
                   <div>
-                    <span className="text-[8px] text-[#8E99AF] block">Landfall (est.)</span>
-                    <span className="font-mono text-xs font-bold text-[#F5F7FB]">in 14 hrs</span>
+                    <span className="text-[8px] text-[#767092] block">Landfall (est.)</span>
+                    <span className="font-mono text-xs font-bold text-[#1C1929]">in 14 hrs</span>
                   </div>
                   <div>
-                    <span className="text-[8px] text-[#8E99AF] block">Affected Districts</span>
-                    <span className="font-mono text-xs font-bold text-[#F5F7FB]">
+                    <span className="text-[8px] text-[#767092] block">Affected Districts</span>
+                    <span className="font-mono text-xs font-bold text-[#1C1929]">
                       {activeDisaster?.zones?.length ? activeDisaster.zones.length * 3 : 6}
                     </span>
                   </div>
@@ -373,34 +373,34 @@ export default function AuthorityMapPage() {
               {/* Sub-hazards List */}
               <div className="space-y-1 text-xs">
                 {/* Coastal Inundation */}
-                <div className="flex items-center justify-between p-1.5 rounded-lg bg-[#161D2E]/60 border border-white/5">
+                <div className="flex items-center justify-between p-1.5 rounded-lg bg-[#F8F7F4] border border-[#E7E2DA]">
                   <div className="flex items-center gap-2">
-                    <Waves className="w-3 h-3 text-[#3B6CFF]" />
-                    <span className="text-[10px] font-medium text-[#F5F7FB]">Coastal Inundation</span>
+                    <Waves className="w-3 h-3 text-[#7C3AED]" />
+                    <span className="text-[10px] font-medium text-[#1C1929]">Coastal Inundation</span>
                   </div>
-                  <span className="px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-[#FF8A3D]/20 text-[#FF8A3D] border border-[#FF8A3D]/40">
+                  <span className="px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-[#F97316]/15 text-[#C2410C] border border-[#F97316]/30">
                     High
                   </span>
                 </div>
 
                 {/* Heavy Rainfall */}
-                <div className="flex items-center justify-between p-1.5 rounded-lg bg-[#161D2E]/60 border border-white/5">
+                <div className="flex items-center justify-between p-1.5 rounded-lg bg-[#F8F7F4] border border-[#E7E2DA]">
                   <div className="flex items-center gap-2">
-                    <CloudRain className="w-3 h-3 text-[#4FB3FF]" />
-                    <span className="text-[10px] font-medium text-[#F5F7FB]">Heavy Rainfall</span>
+                    <CloudRain className="w-3 h-3 text-[#8B5CF6]" />
+                    <span className="text-[10px] font-medium text-[#1C1929]">Heavy Rainfall</span>
                   </div>
-                  <span className="px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-[#FF8A3D]/20 text-[#FF8A3D] border border-[#FF8A3D]/40">
+                  <span className="px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-[#F97316]/15 text-[#C2410C] border border-[#F97316]/30">
                     High
                   </span>
                 </div>
 
                 {/* Flood Risk */}
-                <div className="flex items-center justify-between p-1.5 rounded-lg bg-[#161D2E]/60 border border-white/5">
+                <div className="flex items-center justify-between p-1.5 rounded-lg bg-[#F8F7F4] border border-[#E7E2DA]">
                   <div className="flex items-center gap-2">
-                    <Droplets className="w-3 h-3 text-[#2FD07F]" />
-                    <span className="text-[10px] font-medium text-[#F5F7FB]">Flood Risk</span>
+                    <Droplets className="w-3 h-3 text-[#10B981]" />
+                    <span className="text-[10px] font-medium text-[#1C1929]">Flood Risk</span>
                   </div>
-                  <span className="px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-[#F5C542]/20 text-[#F5C542] border border-[#F5C542]/40">
+                  <span className="px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-[#F59E0B]/15 text-[#B45309] border border-[#F59E0B]/30">
                     Medium
                   </span>
                 </div>
@@ -408,71 +408,71 @@ export default function AuthorityMapPage() {
             </div>
 
             {/* ── CARD 2: KEY STATISTICS ── */}
-            <div className="rounded-[16px] bg-[#101624]/85 border border-white/10 p-3 backdrop-blur-2xl shadow-[0_16px_36px_rgba(0,0,0,0.6)] space-y-1.5 shrink-0">
+            <div className="rounded-[16px] bg-white/95 border border-[#E7E2DA] p-3 backdrop-blur-2xl shadow-[0_12px_32px_rgba(124,58,237,0.06)] space-y-1.5 shrink-0">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-[#F5F7FB]">
-                  <Sparkles className="w-3.5 h-3.5 text-[#3B6CFF]" />
+                <div className="flex items-center gap-1.5 text-xs font-bold text-[#1C1929]">
+                  <Sparkles className="w-3.5 h-3.5 text-[#7C3AED]" />
                   <span>Key Statistics</span>
                 </div>
-                <span className="text-[9px] text-[#6B7488]">Last 24 hours</span>
+                <span className="text-[9px] text-[#767092]">Last 24 hours</span>
               </div>
 
               <div className="grid grid-cols-2 gap-1.5 pt-0.5">
                 {/* People at Risk */}
-                <div className="p-2 rounded-xl bg-[#161D2E]/70 border border-white/5 flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-lg bg-[#3B6CFF]/15 text-[#3B6CFF] flex items-center justify-center shrink-0">
+                <div className="p-2 rounded-xl bg-[#F8F7F4] border border-[#E7E2DA] flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-lg bg-purple-100 text-[#7C3AED] flex items-center justify-center shrink-0">
                     <Users className="w-3.5 h-3.5" />
                   </div>
                   <div>
-                    <span className="text-sm font-bold font-mono text-[#F5F7FB] leading-none block">
+                    <span className="text-sm font-bold font-mono text-[#1C1929] leading-none block">
                       {kpis?.totalAffected ? (kpis.totalAffected >= 1000000 ? `${(kpis.totalAffected / 1000000).toFixed(1)}M` : `${Math.round(kpis.totalAffected / 1000)}k`) : "2.4M"}
                     </span>
-                    <span className="text-[8px] text-[#8E99AF] leading-none mt-0.5 block">
+                    <span className="text-[8px] text-[#767092] leading-none mt-0.5 block">
                       People at Risk
                     </span>
                   </div>
                 </div>
 
                 {/* Villages */}
-                <div className="p-2 rounded-xl bg-[#161D2E]/70 border border-white/5 flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-lg bg-[#FF4D5E]/15 text-[#FF4D5E] flex items-center justify-center shrink-0">
+                <div className="p-2 rounded-xl bg-[#F8F7F4] border border-[#E7E2DA] flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-lg bg-rose-100 text-[#EF4444] flex items-center justify-center shrink-0">
                     <Home className="w-3.5 h-3.5" />
                   </div>
                   <div>
-                    <span className="text-sm font-bold font-mono text-[#F5F7FB] leading-none block">
+                    <span className="text-sm font-bold font-mono text-[#1C1929] leading-none block">
                       {kpis?.activeSheltersCount ? kpis.activeSheltersCount * 7 : 642}
                     </span>
-                    <span className="text-[8px] text-[#8E99AF] leading-none mt-0.5 block">
+                    <span className="text-[8px] text-[#767092] leading-none mt-0.5 block">
                       Villages
                     </span>
                   </div>
                 </div>
 
                 {/* Critical Facilities */}
-                <div className="p-2 rounded-xl bg-[#161D2E]/70 border border-white/5 flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-lg bg-[#FF4D5E]/15 text-[#FF4D5E] flex items-center justify-center shrink-0">
+                <div className="p-2 rounded-xl bg-[#F8F7F4] border border-[#E7E2DA] flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-lg bg-rose-100 text-[#EF4444] flex items-center justify-center shrink-0">
                     <Building className="w-3.5 h-3.5" />
                   </div>
                   <div>
-                    <span className="text-sm font-bold font-mono text-[#F5F7FB] leading-none block">
+                    <span className="text-sm font-bold font-mono text-[#1C1929] leading-none block">
                       {kpis?.deployedNDRFTeams ? kpis.deployedNDRFTeams - 14 : 128}
                     </span>
-                    <span className="text-[8px] text-[#8E99AF] leading-none mt-0.5 block">
+                    <span className="text-[8px] text-[#767092] leading-none mt-0.5 block">
                       Critical Facilities
                     </span>
                   </div>
                 </div>
 
                 {/* 12 Districts */}
-                <div className="p-2 rounded-xl bg-[#161D2E]/70 border border-white/5 flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-lg bg-[#2FD07F]/15 text-[#2FD07F] flex items-center justify-center shrink-0">
+                <div className="p-2 rounded-xl bg-[#F8F7F4] border border-[#E7E2DA] flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-lg bg-emerald-100 text-[#10B981] flex items-center justify-center shrink-0">
                     <Shield className="w-3.5 h-3.5" />
                   </div>
                   <div>
-                    <span className="text-sm font-bold font-mono text-[#F5F7FB] leading-none block">
+                    <span className="text-sm font-bold font-mono text-[#1C1929] leading-none block">
                       12
                     </span>
-                    <span className="text-[8px] text-[#8E99AF] leading-none mt-0.5 block">
+                    <span className="text-[8px] text-[#767092] leading-none mt-0.5 block">
                       Districts
                     </span>
                   </div>
@@ -481,15 +481,15 @@ export default function AuthorityMapPage() {
             </div>
 
             {/* ── CARD 3: LIVE UPDATES ── */}
-            <div className="rounded-[16px] bg-[#101624]/85 border border-white/10 p-3 backdrop-blur-2xl shadow-[0_16px_36px_rgba(0,0,0,0.6)] space-y-1.5 shrink-0">
+            <div className="rounded-[16px] bg-white/95 border border-[#E7E2DA] p-3 backdrop-blur-2xl shadow-[0_12px_32px_rgba(124,58,237,0.06)] space-y-1.5 shrink-0">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-[#F5F7FB]">
-                  <span className="w-2 h-2 rounded-full bg-[#2FD07F] animate-pulse" />
+                <div className="flex items-center gap-1.5 text-xs font-bold text-[#1C1929]">
+                  <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse" />
                   <span>Live Updates</span>
                 </div>
                 <Link
                   href="/authority/sos"
-                  className="text-[11px] font-semibold text-[#3B6CFF] hover:underline flex items-center gap-0.5"
+                  className="text-[11px] font-semibold text-[#7C3AED] hover:underline flex items-center gap-0.5"
                 >
                   <span>View All</span>
                   <ArrowRight className="w-3 h-3" />
@@ -509,20 +509,20 @@ export default function AuthorityMapPage() {
                   const isCrit = alt.severity === "critical";
                   const isHigh = alt.severity === "high";
                   return (
-                    <div key={alt.id || idx} className="flex items-start gap-2 py-0.5 border-b border-white/5 last:border-b-0">
-                      <span className="font-mono text-[9px] text-[#8E99AF] shrink-0 mt-0.5">
+                    <div key={alt.id || idx} className="flex items-start gap-2 py-0.5 border-b border-[#E7E2DA]/60 last:border-b-0">
+                      <span className="font-mono text-[9px] text-[#767092] shrink-0 mt-0.5">
                         {`10:0${idx * 5}`}
                       </span>
                       <div className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
-                        isCrit ? "bg-[#FF4D5E]/20 text-[#FF4D5E]" : isHigh ? "bg-[#FF8A3D]/20 text-[#FF8A3D]" : "bg-[#3B6CFF]/20 text-[#3B6CFF]"
+                        isCrit ? "bg-rose-100 text-[#EF4444]" : isHigh ? "bg-orange-100 text-[#F97316]" : "bg-purple-100 text-[#7C3AED]"
                       }`}>
                         {isCrit ? <Wind className="w-2.5 h-2.5" /> : isHigh ? <Waves className="w-2.5 h-2.5" /> : <Shield className="w-2.5 h-2.5" />}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-[10px] font-semibold text-[#F5F7FB] leading-tight truncate">
+                        <p className="text-[10px] font-semibold text-[#1C1929] leading-tight truncate">
                           {alt.title}
                         </p>
-                        <span className="text-[8px] text-[#8E99AF] block truncate">
+                        <span className="text-[8px] text-[#767092] block truncate">
                           {alt.source || alt.message || "Active Alert"}
                         </span>
                       </div>
@@ -536,9 +536,9 @@ export default function AuthorityMapPage() {
           <button
             type="button"
             onClick={() => setShowLeftPanel(true)}
-            className="absolute top-3 left-3 z-20 px-3 py-1.5 rounded-full bg-[#101624]/90 border border-white/10 text-xs text-[#8E99AF] hover:text-white flex items-center gap-1.5 shadow-lg backdrop-blur-xl pointer-events-auto cursor-pointer hover:border-[#3B6CFF]/40 transition-all"
+            className="absolute top-3 left-3 z-20 px-3 py-1.5 rounded-full bg-white/95 border border-[#E7E2DA] text-xs text-[#5D5775] hover:text-[#1C1929] flex items-center gap-1.5 shadow-md backdrop-blur-xl pointer-events-auto cursor-pointer hover:border-[#7C3AED]/50 transition-all"
           >
-            <PanelLeftOpen className="w-3.5 h-3.5 text-[#3B6CFF]" />
+            <PanelLeftOpen className="w-3.5 h-3.5 text-[#7C3AED]" />
             <span className="font-medium">Hazards & Stats</span>
           </button>
         )}
@@ -547,16 +547,16 @@ export default function AuthorityMapPage() {
               RIGHT FLOATING LAYERS PANEL (With Collapse Toggle)
              ═══════════════════════════════════════════════════════════ */}
           {showRightPanel ? (
-            <div className="absolute top-3 right-3 z-20 w-[185px] rounded-[16px] bg-[#101624]/85 border border-white/10 p-2.5 backdrop-blur-2xl shadow-[0_16px_36px_rgba(0,0,0,0.6)] space-y-1.5 pointer-events-auto transition-all">
-              <div className="flex items-center justify-between pb-1.5 border-b border-white/10">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-[#F5F7FB]">
-                  <Layers className="w-3.5 h-3.5 text-[#3B6CFF]" />
+            <div className="absolute top-3 right-3 z-20 w-[185px] rounded-[16px] bg-white/95 border border-[#E7E2DA] p-2.5 backdrop-blur-2xl shadow-[0_16px_36px_rgba(124,58,237,0.08)] space-y-1.5 pointer-events-auto transition-all">
+              <div className="flex items-center justify-between pb-1.5 border-b border-[#E7E2DA]">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-[#1C1929]">
+                  <Layers className="w-3.5 h-3.5 text-[#7C3AED]" />
                   <span>Layers</span>
                 </div>
                 <button
                   type="button"
                   onClick={() => setShowRightPanel(false)}
-                  className="text-[#8E99AF] hover:text-white p-0.5 rounded hover:bg-white/10 transition-colors cursor-pointer"
+                  className="text-[#5D5775] hover:text-[#1C1929] p-0.5 rounded hover:bg-[#F3E8FF] transition-colors cursor-pointer"
                   title="Hide Layers"
                 >
                   <PanelRightClose className="w-3.5 h-3.5" />
@@ -566,19 +566,19 @@ export default function AuthorityMapPage() {
             <div className="space-y-1.5 text-xs">
               {/* 1. Hazard Zones */}
               <div className="flex items-center justify-between">
-                <span className="flex items-center gap-2 text-[10px] text-[#CBD5E1]">
-                  <AlertTriangle className="w-3 h-3 text-[#FF4D5E]" />
+                <span className="flex items-center gap-2 text-[10px] text-[#3B354D] font-medium">
+                  <AlertTriangle className="w-3 h-3 text-[#DC2626]" />
                   <span>Hazard Zones</span>
                 </span>
                 <button
                   type="button"
                   onClick={() => toggleLayer("hazardZones")}
                   className={`w-8 h-4.5 rounded-full transition-colors relative cursor-pointer ${
-                    layers.hazardZones ? "bg-[#3B6CFF]" : "bg-white/15"
+                    layers.hazardZones ? "bg-[#7C3AED]" : "bg-[#E4DFD5]"
                   }`}
                 >
                   <span
-                    className={`absolute top-0.5 left-0.5 w-3.5 h-3.5 rounded-full bg-white transition-transform ${
+                    className={`absolute top-0.5 left-0.5 w-3.5 h-3.5 rounded-full bg-white shadow-sm transition-transform ${
                       layers.hazardZones ? "translate-x-3.5" : "translate-x-0"
                     }`}
                   />
@@ -587,19 +587,19 @@ export default function AuthorityMapPage() {
 
               {/* 2. Cyclone Track */}
               <div className="flex items-center justify-between">
-                <span className="flex items-center gap-2 text-[10px] text-[#CBD5E1]">
-                  <Wind className="w-3 h-3 text-[#FF8A3D]" />
+                <span className="flex items-center gap-2 text-[10px] text-[#3B354D] font-medium">
+                  <Wind className="w-3 h-3 text-[#EA580C]" />
                   <span>Cyclone Track</span>
                 </span>
                 <button
                   type="button"
                   onClick={() => toggleLayer("cycloneTrack")}
                   className={`w-8 h-4.5 rounded-full transition-colors relative cursor-pointer ${
-                    layers.cycloneTrack ? "bg-[#3B6CFF]" : "bg-white/15"
+                    layers.cycloneTrack ? "bg-[#7C3AED]" : "bg-[#E4DFD5]"
                   }`}
                 >
                   <span
-                    className={`absolute top-0.5 left-0.5 w-3.5 h-3.5 rounded-full bg-white transition-transform ${
+                    className={`absolute top-0.5 left-0.5 w-3.5 h-3.5 rounded-full bg-white shadow-sm transition-transform ${
                       layers.cycloneTrack ? "translate-x-3.5" : "translate-x-0"
                     }`}
                   />
@@ -608,19 +608,19 @@ export default function AuthorityMapPage() {
 
               {/* 3. Rainfall (Live) */}
               <div className="flex items-center justify-between">
-                <span className="flex items-center gap-2 text-[10px] text-[#CBD5E1]">
-                  <CloudRain className="w-3 h-3 text-[#4FB3FF]" />
+                <span className="flex items-center gap-2 text-[10px] text-[#3B354D] font-medium">
+                  <CloudRain className="w-3 h-3 text-[#0284C7]" />
                   <span>Rainfall (Live)</span>
                 </span>
                 <button
                   type="button"
                   onClick={() => toggleLayer("rainfall")}
                   className={`w-8 h-4.5 rounded-full transition-colors relative cursor-pointer ${
-                    layers.rainfall ? "bg-[#3B6CFF]" : "bg-white/15"
+                    layers.rainfall ? "bg-[#7C3AED]" : "bg-[#E4DFD5]"
                   }`}
                 >
                   <span
-                    className={`absolute top-0.5 left-0.5 w-3.5 h-3.5 rounded-full bg-white transition-transform ${
+                    className={`absolute top-0.5 left-0.5 w-3.5 h-3.5 rounded-full bg-white shadow-sm transition-transform ${
                       layers.rainfall ? "translate-x-3.5" : "translate-x-0"
                     }`}
                   />
@@ -629,19 +629,19 @@ export default function AuthorityMapPage() {
 
               {/* 4. Wind Speed */}
               <div className="flex items-center justify-between">
-                <span className="flex items-center gap-2 text-[10px] text-[#CBD5E1]">
-                  <Gauge className="w-3 h-3 text-[#A855F7]" />
+                <span className="flex items-center gap-2 text-[10px] text-[#3B354D] font-medium">
+                  <Gauge className="w-3 h-3 text-[#7C3AED]" />
                   <span>Wind Speed</span>
                 </span>
                 <button
                   type="button"
                   onClick={() => toggleLayer("windSpeed")}
                   className={`w-8 h-4.5 rounded-full transition-colors relative cursor-pointer ${
-                    layers.windSpeed ? "bg-[#3B6CFF]" : "bg-white/15"
+                    layers.windSpeed ? "bg-[#7C3AED]" : "bg-[#E4DFD5]"
                   }`}
                 >
                   <span
-                    className={`absolute top-0.5 left-0.5 w-3.5 h-3.5 rounded-full bg-white transition-transform ${
+                    className={`absolute top-0.5 left-0.5 w-3.5 h-3.5 rounded-full bg-white shadow-sm transition-transform ${
                       layers.windSpeed ? "translate-x-3.5" : "translate-x-0"
                     }`}
                   />
@@ -650,19 +650,19 @@ export default function AuthorityMapPage() {
 
               {/* 5. Satellite Imagery */}
               <div className="flex items-center justify-between">
-                <span className="flex items-center gap-2 text-[10px] text-[#CBD5E1]">
-                  <Globe className="w-3 h-3 text-[#3B6CFF]" />
+                <span className="flex items-center gap-2 text-[10px] text-[#3B354D] font-medium">
+                  <Globe className="w-3 h-3 text-[#7C3AED]" />
                   <span>Satellite Imagery</span>
                 </span>
                 <button
                   type="button"
                   onClick={() => toggleLayer("satelliteImagery")}
                   className={`w-8 h-4.5 rounded-full transition-colors relative cursor-pointer ${
-                    layers.satelliteImagery ? "bg-[#3B6CFF]" : "bg-white/15"
+                    layers.satelliteImagery ? "bg-[#7C3AED]" : "bg-[#E4DFD5]"
                   }`}
                 >
                   <span
-                    className={`absolute top-0.5 left-0.5 w-3.5 h-3.5 rounded-full bg-white transition-transform ${
+                    className={`absolute top-0.5 left-0.5 w-3.5 h-3.5 rounded-full bg-white shadow-sm transition-transform ${
                       layers.satelliteImagery ? "translate-x-3.5" : "translate-x-0"
                     }`}
                   />
@@ -671,19 +671,19 @@ export default function AuthorityMapPage() {
 
               {/* 6. District Boundaries */}
               <div className="flex items-center justify-between">
-                <span className="flex items-center gap-2 text-[10px] text-[#8E99AF]">
-                  <Box className="w-3 h-3 text-[#8E99AF]" />
+                <span className="flex items-center gap-2 text-[10px] text-[#5D5775] font-medium">
+                  <Box className="w-3 h-3 text-[#767092]" />
                   <span>District Boundaries</span>
                 </span>
                 <button
                   type="button"
                   onClick={() => toggleLayer("districtBoundaries")}
                   className={`w-8 h-4.5 rounded-full transition-colors relative cursor-pointer ${
-                    layers.districtBoundaries ? "bg-[#3B6CFF]" : "bg-white/15"
+                    layers.districtBoundaries ? "bg-[#7C3AED]" : "bg-[#E4DFD5]"
                   }`}
                 >
                   <span
-                    className={`absolute top-0.5 left-0.5 w-3.5 h-3.5 rounded-full bg-white transition-transform ${
+                    className={`absolute top-0.5 left-0.5 w-3.5 h-3.5 rounded-full bg-white shadow-sm transition-transform ${
                       layers.districtBoundaries ? "translate-x-3.5" : "translate-x-0"
                     }`}
                   />
@@ -692,19 +692,19 @@ export default function AuthorityMapPage() {
 
               {/* 7. Road Network */}
               <div className="flex items-center justify-between">
-                <span className="flex items-center gap-2 text-[10px] text-[#8E99AF]">
-                  <Radio className="w-3 h-3 text-[#8E99AF]" />
+                <span className="flex items-center gap-2 text-[10px] text-[#5D5775] font-medium">
+                  <Radio className="w-3 h-3 text-[#767092]" />
                   <span>Road Network</span>
                 </span>
                 <button
                   type="button"
                   onClick={() => toggleLayer("roadNetwork")}
                   className={`w-8 h-4.5 rounded-full transition-colors relative cursor-pointer ${
-                    layers.roadNetwork ? "bg-[#3B6CFF]" : "bg-white/15"
+                    layers.roadNetwork ? "bg-[#7C3AED]" : "bg-[#E4DFD5]"
                   }`}
                 >
                   <span
-                    className={`absolute top-0.5 left-0.5 w-3.5 h-3.5 rounded-full bg-white transition-transform ${
+                    className={`absolute top-0.5 left-0.5 w-3.5 h-3.5 rounded-full bg-white shadow-sm transition-transform ${
                       layers.roadNetwork ? "translate-x-3.5" : "translate-x-0"
                     }`}
                   />
@@ -713,19 +713,19 @@ export default function AuthorityMapPage() {
 
               {/* 8. Shelters */}
               <div className="flex items-center justify-between">
-                <span className="flex items-center gap-2 text-[10px] text-[#CBD5E1]">
-                  <Home className="w-3 h-3 text-[#2FD07F]" />
+                <span className="flex items-center gap-2 text-[10px] text-[#3B354D] font-medium">
+                  <Home className="w-3 h-3 text-[#059669]" />
                   <span>Shelters</span>
                 </span>
                 <button
                   type="button"
                   onClick={() => toggleLayer("shelters")}
                   className={`w-8 h-4.5 rounded-full transition-colors relative cursor-pointer ${
-                    layers.shelters ? "bg-[#3B6CFF]" : "bg-white/15"
+                    layers.shelters ? "bg-[#7C3AED]" : "bg-[#E4DFD5]"
                   }`}
                 >
                   <span
-                    className={`absolute top-0.5 left-0.5 w-3.5 h-3.5 rounded-full bg-white transition-transform ${
+                    className={`absolute top-0.5 left-0.5 w-3.5 h-3.5 rounded-full bg-white shadow-sm transition-transform ${
                       layers.shelters ? "translate-x-3.5" : "translate-x-0"
                     }`}
                   />
@@ -734,8 +734,8 @@ export default function AuthorityMapPage() {
 
               {/* 9. Hospitals */}
               <div className="flex items-center justify-between">
-                <span className="flex items-center gap-2 text-[10px] text-[#CBD5E1]">
-                  <span className="w-3 h-3 rounded-full bg-[#3B6CFF] text-white flex items-center justify-center font-bold text-[8px]">
+                <span className="flex items-center gap-2 text-[10px] text-[#3B354D] font-medium">
+                  <span className="w-3 h-3 rounded-full bg-[#7C3AED] text-white flex items-center justify-center font-bold text-[8px]">
                     +
                   </span>
                   <span>Hospitals</span>
@@ -744,11 +744,11 @@ export default function AuthorityMapPage() {
                   type="button"
                   onClick={() => toggleLayer("hospitals")}
                   className={`w-8 h-4.5 rounded-full transition-colors relative cursor-pointer ${
-                    layers.hospitals ? "bg-[#3B6CFF]" : "bg-white/15"
+                    layers.hospitals ? "bg-[#7C3AED]" : "bg-[#E4DFD5]"
                   }`}
                 >
                   <span
-                    className={`absolute top-0.5 left-0.5 w-3.5 h-3.5 rounded-full bg-white transition-transform ${
+                    className={`absolute top-0.5 left-0.5 w-3.5 h-3.5 rounded-full bg-white shadow-sm transition-transform ${
                       layers.hospitals ? "translate-x-3.5" : "translate-x-0"
                     }`}
                   />
@@ -757,19 +757,19 @@ export default function AuthorityMapPage() {
 
               {/* 10. Relief Assets */}
               <div className="flex items-center justify-between">
-                <span className="flex items-center gap-2 text-[10px] text-[#CBD5E1]">
-                  <Package className="w-3 h-3 text-[#F5C542]" />
+                <span className="flex items-center gap-2 text-[10px] text-[#3B354D] font-medium">
+                  <Package className="w-3 h-3 text-[#D97706]" />
                   <span>Relief Assets</span>
                 </span>
                 <button
                   type="button"
                   onClick={() => toggleLayer("reliefAssets")}
                   className={`w-8 h-4.5 rounded-full transition-colors relative cursor-pointer ${
-                    layers.reliefAssets ? "bg-[#3B6CFF]" : "bg-white/15"
+                    layers.reliefAssets ? "bg-[#7C3AED]" : "bg-[#E4DFD5]"
                   }`}
                 >
                   <span
-                    className={`absolute top-0.5 left-0.5 w-3.5 h-3.5 rounded-full bg-white transition-transform ${
+                    className={`absolute top-0.5 left-0.5 w-3.5 h-3.5 rounded-full bg-white shadow-sm transition-transform ${
                       layers.reliefAssets ? "translate-x-3.5" : "translate-x-0"
                     }`}
                   />
@@ -781,9 +781,9 @@ export default function AuthorityMapPage() {
           <button
             type="button"
             onClick={() => setShowRightPanel(true)}
-            className="absolute top-3 right-3 z-20 px-3 py-1.5 rounded-full bg-[#101624]/90 border border-white/10 text-xs text-[#8E99AF] hover:text-white flex items-center gap-1.5 shadow-lg backdrop-blur-xl pointer-events-auto cursor-pointer hover:border-[#3B6CFF]/40 transition-all"
+            className="absolute top-3 right-3 z-20 px-3 py-1.5 rounded-full bg-white/95 border border-[#E7E2DA] text-xs text-[#5D5775] hover:text-[#7C3AED] flex items-center gap-1.5 shadow-lg backdrop-blur-xl pointer-events-auto cursor-pointer hover:border-[#7C3AED]/40 transition-all"
           >
-            <PanelRightOpen className="w-3.5 h-3.5 text-[#3B6CFF]" />
+            <PanelRightOpen className="w-3.5 h-3.5 text-[#7C3AED]" />
             <span className="font-medium">Layers</span>
           </button>
         )}
@@ -792,22 +792,22 @@ export default function AuthorityMapPage() {
               BOTTOM FLOATING PANELS (Positioned cleanly above bottom dock)
              ═══════════════════════════════════════════════════════════ */}
           {/* ── BOTTOM CENTER-LEFT: CYCLONE FORECAST TRACK ── */}
-          <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 w-[92%] max-w-[540px] rounded-[16px] bg-[#101624]/90 border border-white/10 p-2.5 backdrop-blur-2xl shadow-[0_16px_36px_rgba(0,0,0,0.6)] space-y-1.5 pointer-events-auto">
+          <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 w-[92%] max-w-[540px] rounded-[16px] bg-white/95 border border-[#E7E2DA] p-2.5 backdrop-blur-2xl shadow-[0_16px_36px_rgba(124,58,237,0.08)] space-y-1.5 pointer-events-auto">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Wind className="w-3.5 h-3.5 text-[#F43F5E]" />
-                <h3 className="text-xs font-bold text-[#F5F7FB]">Cyclone Forecast Track</h3>
+                <Wind className="w-3.5 h-3.5 text-[#DC2626]" />
+                <h3 className="text-xs font-bold text-[#1C1929]">Cyclone Forecast Track</h3>
               </div>
 
               <div className="flex items-center gap-1.5">
-                <div className="flex items-center gap-1 px-2 py-0.5 rounded-lg bg-white/5 border border-white/10 text-[10px] font-medium text-[#F5F7FB] cursor-pointer hover:bg-white/10">
+                <div className="flex items-center gap-1 px-2 py-0.5 rounded-lg bg-[#F8F7F4] border border-[#E7E2DA] text-[10px] font-medium text-[#1C1929] cursor-pointer hover:bg-purple-50 hover:border-[#7C3AED]/30 transition-colors">
                   <span>IMD Forecast</span>
-                  <ChevronDown className="w-3 h-3 text-[#8E99AF]" />
+                  <ChevronDown className="w-3 h-3 text-[#5D5775]" />
                 </div>
                 <button
                   type="button"
                   onClick={() => toast.success("IMD Bulletin #14 opened in advisory view")}
-                  className="p-1 rounded-lg hover:bg-white/5 text-[#8E99AF] hover:text-white"
+                  className="p-1 rounded-lg hover:bg-[#F3E8FF] text-[#5D5775] hover:text-[#7C3AED] transition-colors"
                   title="External Link"
                 >
                   <ExternalLink className="w-3 h-3" />
@@ -818,7 +818,7 @@ export default function AuthorityMapPage() {
             {/* 5-Stage Trajectory Track Timeline */}
             <div className="relative pt-1 pb-1">
               {/* Horizontal Track Bar */}
-              <div className="absolute top-[16px] left-4 right-4 h-[2px] bg-gradient-to-r from-[#FF4D5E] via-[#FF8A3D] to-[#3B6CFF] opacity-60" />
+              <div className="absolute top-[16px] left-4 right-4 h-[2px] bg-gradient-to-r from-[#DC2626] via-[#EA580C] to-[#7C3AED] opacity-70" />
 
               <div className="grid grid-cols-5 relative z-10 text-center">
                 {/* Point 1: Current */}
@@ -826,14 +826,14 @@ export default function AuthorityMapPage() {
                   onClick={() => setSelectedMilestone(0)}
                   className="flex flex-col items-center cursor-pointer group"
                 >
-                  <div className="w-6 h-6 rounded-full bg-[#FF4D5E]/20 border-2 border-[#FF4D5E] flex items-center justify-center mb-1 group-hover:scale-110 transition-transform">
-                    <span className="w-2 h-2 rounded-full bg-[#FF4D5E] animate-ping" />
+                  <div className="w-6 h-6 rounded-full bg-[#DC2626]/10 border-2 border-[#DC2626] flex items-center justify-center mb-1 group-hover:scale-110 transition-transform">
+                    <span className="w-2 h-2 rounded-full bg-[#DC2626] animate-ping" />
                   </div>
-                  <span className="text-[9px] font-bold text-[#FF4D5E] leading-tight">Current</span>
-                  <span className="font-mono text-[10px] font-bold text-[#F5F7FB] leading-tight mt-0.5">
+                  <span className="text-[9px] font-bold text-[#DC2626] leading-tight">Current</span>
+                  <span className="font-mono text-[10px] font-bold text-[#1C1929] leading-tight mt-0.5">
                     185 km/h
                   </span>
-                  <span className="font-mono text-[8px] text-[#6B7488] leading-tight">
+                  <span className="font-mono text-[8px] text-[#767092] leading-tight">
                     16.1°N, 88.9°E
                   </span>
                 </div>
@@ -843,14 +843,14 @@ export default function AuthorityMapPage() {
                   onClick={() => setSelectedMilestone(1)}
                   className="flex flex-col items-center cursor-pointer group"
                 >
-                  <div className="w-6 h-6 rounded-full bg-[#FF4D5E]/20 border-2 border-[#FF4D5E] flex items-center justify-center mb-1 group-hover:scale-110 transition-transform">
-                    <Wind className="w-2.5 h-2.5 text-[#FF4D5E]" />
+                  <div className="w-6 h-6 rounded-full bg-[#DC2626]/10 border-2 border-[#DC2626] flex items-center justify-center mb-1 group-hover:scale-110 transition-transform">
+                    <Wind className="w-2.5 h-2.5 text-[#DC2626]" />
                   </div>
-                  <span className="text-[9px] font-bold text-[#8E99AF] leading-tight">6 hrs</span>
-                  <span className="font-mono text-[10px] font-bold text-[#F5F7FB] leading-tight mt-0.5">
+                  <span className="text-[9px] font-bold text-[#5D5775] leading-tight">6 hrs</span>
+                  <span className="font-mono text-[10px] font-bold text-[#1C1929] leading-tight mt-0.5">
                     190 km/h
                   </span>
-                  <span className="font-mono text-[8px] text-[#6B7488] leading-tight">
+                  <span className="font-mono text-[8px] text-[#767092] leading-tight">
                     17.2°N, 87.8°E
                   </span>
                 </div>
@@ -860,14 +860,14 @@ export default function AuthorityMapPage() {
                   onClick={() => setSelectedMilestone(2)}
                   className="flex flex-col items-center cursor-pointer group"
                 >
-                  <div className="w-6 h-6 rounded-full bg-[#FF8A3D]/20 border-2 border-[#FF8A3D] flex items-center justify-center mb-1 group-hover:scale-110 transition-transform">
-                    <span className="w-2 h-2 rounded-full bg-[#FF8A3D]" />
+                  <div className="w-6 h-6 rounded-full bg-[#EA580C]/10 border-2 border-[#EA580C] flex items-center justify-center mb-1 group-hover:scale-110 transition-transform">
+                    <span className="w-2 h-2 rounded-full bg-[#EA580C]" />
                   </div>
-                  <span className="text-[9px] font-bold text-[#8E99AF] leading-tight">12 hrs</span>
-                  <span className="font-mono text-[10px] font-bold text-[#F5F7FB] leading-tight mt-0.5">
+                  <span className="text-[9px] font-bold text-[#5D5775] leading-tight">12 hrs</span>
+                  <span className="font-mono text-[10px] font-bold text-[#1C1929] leading-tight mt-0.5">
                     160 km/h
                   </span>
-                  <span className="font-mono text-[8px] text-[#6B7488] leading-tight">
+                  <span className="font-mono text-[8px] text-[#767092] leading-tight">
                     19.0°N, 86.5°E
                   </span>
                 </div>
@@ -877,14 +877,14 @@ export default function AuthorityMapPage() {
                   onClick={() => setSelectedMilestone(3)}
                   className="flex flex-col items-center cursor-pointer group"
                 >
-                  <div className="w-6 h-6 rounded-full bg-[#3B6CFF]/20 border-2 border-[#3B6CFF] flex items-center justify-center mb-1 group-hover:scale-110 transition-transform">
-                    <span className="w-2 h-2 rounded-full bg-[#3B6CFF]" />
+                  <div className="w-6 h-6 rounded-full bg-[#7C3AED]/10 border-2 border-[#7C3AED] flex items-center justify-center mb-1 group-hover:scale-110 transition-transform">
+                    <span className="w-2 h-2 rounded-full bg-[#7C3AED]" />
                   </div>
-                  <span className="text-[9px] font-bold text-[#8E99AF] leading-tight">18 hrs</span>
-                  <span className="font-mono text-[10px] font-bold text-[#F5F7FB] leading-tight mt-0.5">
+                  <span className="text-[9px] font-bold text-[#5D5775] leading-tight">18 hrs</span>
+                  <span className="font-mono text-[10px] font-bold text-[#1C1929] leading-tight mt-0.5">
                     120 km/h
                   </span>
-                  <span className="font-mono text-[8px] text-[#6B7488] leading-tight">
+                  <span className="font-mono text-[8px] text-[#767092] leading-tight">
                     20.1°N, 85.2°E
                   </span>
                 </div>
@@ -894,14 +894,14 @@ export default function AuthorityMapPage() {
                   onClick={() => setSelectedMilestone(4)}
                   className="flex flex-col items-center cursor-pointer group"
                 >
-                  <div className="w-6 h-6 rounded-full bg-white/10 border-2 border-white/30 flex items-center justify-center mb-1 group-hover:scale-110 transition-transform">
-                    <span className="w-2 h-2 rounded-full bg-white/50" />
+                  <div className="w-6 h-6 rounded-full bg-[#F3E8FF] border-2 border-[#D8B4FE] flex items-center justify-center mb-1 group-hover:scale-110 transition-transform">
+                    <span className="w-2 h-2 rounded-full bg-[#7C3AED]" />
                   </div>
-                  <span className="text-[9px] font-bold text-[#8E99AF] leading-tight">24 hrs</span>
-                  <span className="font-mono text-[10px] font-bold text-[#F5F7FB] leading-tight mt-0.5">
+                  <span className="text-[9px] font-bold text-[#5D5775] leading-tight">24 hrs</span>
+                  <span className="font-mono text-[10px] font-bold text-[#1C1929] leading-tight mt-0.5">
                     80 km/h
                   </span>
-                  <span className="font-mono text-[8px] text-[#6B7488] leading-tight">
+                  <span className="font-mono text-[8px] text-[#767092] leading-tight">
                     21.0°N, 84.1°E
                   </span>
                 </div>
@@ -910,14 +910,14 @@ export default function AuthorityMapPage() {
           </div>
 
           {/* ── BOTTOM RIGHT: WEATHER NOW ── */}
-          <div className="hidden 2xl:block absolute bottom-24 right-4 z-20 w-[195px] rounded-[16px] bg-[#101624]/90 border border-white/10 p-2.5 backdrop-blur-2xl shadow-[0_16px_36px_rgba(0,0,0,0.6)] space-y-1.5 pointer-events-auto">
+          <div className="hidden 2xl:block absolute bottom-24 right-4 z-20 w-[195px] rounded-[16px] bg-white/95 border border-[#E7E2DA] p-2.5 backdrop-blur-2xl shadow-[0_16px_36px_rgba(124,58,237,0.08)] space-y-1.5 pointer-events-auto">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-[#F5F7FB]">
-                <CloudRain className="w-3.5 h-3.5 text-[#3B6CFF]" />
+              <div className="flex items-center gap-1.5 text-xs font-bold text-[#1C1929]">
+                <CloudRain className="w-3.5 h-3.5 text-[#7C3AED]" />
                 <span>Weather Now</span>
               </div>
-              <div className="flex items-center gap-1 text-[10px] text-[#8E99AF]">
-                <MapPin className="w-3 h-3 text-[#FF4D5E]" />
+              <div className="flex items-center gap-1 text-[10px] text-[#5D5775]">
+                <MapPin className="w-3 h-3 text-[#DC2626]" />
                 <span>Puri</span>
               </div>
             </div>
@@ -925,36 +925,36 @@ export default function AuthorityMapPage() {
             {/* Main Temp & Cloud Graphic */}
             <div className="flex items-center justify-between py-0.5">
               <div>
-                <span className="text-2xl font-extrabold font-mono text-[#F5F7FB] leading-none">
+                <span className="text-2xl font-extrabold font-mono text-[#1C1929] leading-none">
                   28°C
                 </span>
-                <p className="text-[10px] text-[#CBD5E1] font-semibold mt-0.5">
+                <p className="text-[10px] text-[#5D5775] font-semibold mt-0.5">
                   Heavy Rain
                 </p>
               </div>
 
-              <div className="w-10 h-10 flex items-center justify-center text-[#4FB3FF]">
+              <div className="w-10 h-10 flex items-center justify-center text-[#7C3AED]">
                 <CloudRain className="w-8 h-8 animate-bounce" style={{ animationDuration: "3s" }} />
               </div>
             </div>
 
             {/* 4 Metrics in a Row */}
-            <div className="grid grid-cols-4 gap-1 pt-1 border-t border-white/5 text-center">
+            <div className="grid grid-cols-4 gap-1 pt-1 border-t border-[#E7E2DA] text-center">
               <div>
-                <span className="text-[7px] text-[#6B7488] block">Wind</span>
-                <span className="font-mono text-[9px] font-bold text-[#F5F7FB] block">62 km/h</span>
+                <span className="text-[7px] text-[#767092] block">Wind</span>
+                <span className="font-mono text-[9px] font-bold text-[#1C1929] block">62 km/h</span>
               </div>
               <div>
-                <span className="text-[7px] text-[#6B7488] block">Humidity</span>
-                <span className="font-mono text-[9px] font-bold text-[#F5F7FB] block">92%</span>
+                <span className="text-[7px] text-[#767092] block">Humidity</span>
+                <span className="font-mono text-[9px] font-bold text-[#1C1929] block">92%</span>
               </div>
               <div>
-                <span className="text-[7px] text-[#6B7488] block">Pressure</span>
-                <span className="font-mono text-[9px] font-bold text-[#F5F7FB] block">982 hPa</span>
+                <span className="text-[7px] text-[#767092] block">Pressure</span>
+                <span className="font-mono text-[9px] font-bold text-[#1C1929] block">982 hPa</span>
               </div>
               <div>
-                <span className="text-[7px] text-[#6B7488] block">Visibility</span>
-                <span className="font-mono text-[9px] font-bold text-[#F5F7FB] block">2.4 km</span>
+                <span className="text-[7px] text-[#767092] block">Visibility</span>
+                <span className="font-mono text-[9px] font-bold text-[#1C1929] block">2.4 km</span>
               </div>
             </div>
           </div>

@@ -52,13 +52,12 @@ export function ResourceOverview() {
     return r.type === filterType;
   });
 
-
   return (
     <div className="space-y-4 select-none">
       {/* Type Filter Bar */}
-      <div className="flex items-center justify-between bg-[#101624]/75 p-3 rounded-[16px] border border-white/10 backdrop-blur-xl">
+      <div className="flex items-center justify-between bg-white/95 p-3 rounded-[16px] border border-[#E7E2DA] shadow-[0_8px_20px_rgba(124,58,237,0.04)] backdrop-blur-xl">
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-xs text-[#9AA3B8]">Fleet Category:</span>
+          <span className="text-xs text-[#5D5775]">Fleet Category:</span>
           {[
             { id: "all", label: "All Assets (5)" },
             { id: "rescue_boat", label: "Boats 🚤" },
@@ -72,8 +71,8 @@ export function ResourceOverview() {
               onClick={() => setFilterType(tab.id)}
               className={`px-3 py-1 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 filterType === tab.id
-                  ? "bg-[#3B6CFF] text-white shadow-[0_0_12px_rgba(59,108,255,0.4)]"
-                  : "bg-[#161D2E] text-[#9AA3B8] hover:text-white"
+                  ? "bg-[#7C3AED] text-white shadow-[0_4px_14px_rgba(124,58,237,0.3)]"
+                  : "bg-[#F8F7F4] text-[#5D5775] hover:text-[#1C1929]"
               }`}
             >
               {tab.label}
@@ -81,10 +80,10 @@ export function ResourceOverview() {
           ))}
         </div>
 
-        <div className="hidden sm:flex items-center gap-3 text-xs text-[#6B7488] font-mono">
+        <div className="hidden sm:flex items-center gap-3 text-xs text-[#767092] font-mono">
           <span>🟢 Deployed</span>
           <span>🟡 In Transit</span>
-          <span>🔵 Available</span>
+          <span>🟣 Available</span>
         </div>
       </div>
 
@@ -99,19 +98,19 @@ export function ResourceOverview() {
           return (
             <div
               key={res.id}
-              className="p-5 rounded-[18px] bg-[#101624]/75 border border-white/10 backdrop-blur-xl shadow-lg flex flex-col justify-between gap-4 hover:border-white/20 transition-all"
+              className="p-5 rounded-[18px] bg-white/95 border border-[#E7E2DA] backdrop-blur-xl shadow-[0_8px_24px_rgba(124,58,237,0.04)] flex flex-col justify-between gap-4 hover:border-[#7C3AED]/30 transition-all"
             >
               {/* Header */}
               <div className="flex items-start justify-between gap-2">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-[#3B6CFF] shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-[#F8F7F4] border border-[#E7E2DA] flex items-center justify-center text-[#7C3AED] shrink-0">
                     <Icon className="w-5 h-5" />
                   </div>
                   <div>
-                    <h4 className="text-xs font-bold text-[#F5F7FB] leading-tight">
+                    <h4 className="text-xs font-bold text-[#1C1929] leading-tight">
                       {res.name}
                     </h4>
-                    <p className="text-[10px] text-[#6B7488] font-mono mt-0.5">
+                    <p className="text-[10px] text-[#767092] font-mono mt-0.5">
                       Assigned: {res.assignedTo}
                     </p>
                   </div>
@@ -120,48 +119,48 @@ export function ResourceOverview() {
                 <span
                   className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase font-mono border shrink-0 ${
                     res.status === "deployed"
-                      ? "bg-[#2FD07F]/20 text-[#2FD07F] border-[#2FD07F]/40"
+                      ? "bg-emerald-50 text-[#059669] border-emerald-200"
                       : res.status === "in_transit"
-                      ? "bg-[#F5C542]/20 text-[#F5C542] border-[#F5C542]/40"
-                      : "bg-[#3B6CFF]/20 text-[#3B6CFF] border-[#3B6CFF]/40"
+                      ? "bg-amber-50 text-[#D97706] border-amber-200"
+                      : "bg-purple-50 text-[#7C3AED] border-purple-200"
                   }`}
                 >
                   {res.status.replace("_", " ")}
                 </span>
               </div>
 
-              {/* Visual Logistics Details (Show Don't Tell) */}
-              <div className="bg-[#161D2E]/80 p-3.5 rounded-[14px] border border-white/5 space-y-2.5 text-xs">
+              {/* Visual Logistics Details */}
+              <div className="bg-[#F8F7F4] p-3.5 rounded-[14px] border border-[#E7E2DA] space-y-2.5 text-xs">
                 {/* Capacity */}
-                <div className="flex items-center justify-between text-[#9AA3B8]">
+                <div className="flex items-center justify-between text-[#5D5775]">
                   <span className="text-[11px] flex items-center gap-1.5">
-                    <Users className="w-3.5 h-3.5 text-[#3B6CFF]" /> Load Payload:
+                    <Users className="w-3.5 h-3.5 text-[#7C3AED]" /> Load Payload:
                   </span>
-                  <span className="font-bold text-[#F5F7FB]">{res.capacity}</span>
+                  <span className="font-bold text-[#1C1929]">{res.capacity}</span>
                 </div>
 
                 {/* Visual Battery / Fuel Tank Meter */}
                 <div className="space-y-1">
                   <div className="flex justify-between items-center text-[11px]">
-                    <span className="text-[#9AA3B8] flex items-center gap-1.5">
-                      <Fuel className="w-3.5 h-3.5 text-[#F5C542]" /> Fuel / Battery:
+                    <span className="text-[#5D5775] flex items-center gap-1.5">
+                      <Fuel className="w-3.5 h-3.5 text-[#D97706]" /> Fuel / Battery:
                     </span>
                     <span className={`font-mono font-bold ${
-                      isLowFuel ? "text-[#FF4D5E]" : isMidFuel ? "text-[#F5C542]" : "text-[#2FD07F]"
+                      isLowFuel ? "text-[#DC2626]" : isMidFuel ? "text-[#D97706]" : "text-[#059669]"
                     }`}>
                       {fuel}%
                     </span>
                   </div>
 
                   {/* Segmented Fuel Bar */}
-                  <div className="h-2 w-full bg-[#101624] rounded-full overflow-hidden p-0.5 border border-white/5">
+                  <div className="h-2 w-full bg-[#E4DFD5] rounded-full overflow-hidden p-0.5">
                     <div
                       className={`h-full rounded-full transition-all ${
                         isLowFuel
-                          ? "bg-[#FF4D5E] shadow-[0_0_8px_#FF4D5E]"
+                          ? "bg-[#DC2626]"
                           : isMidFuel
-                          ? "bg-[#F5C542]"
-                          : "bg-[#2FD07F] shadow-[0_0_8px_#2FD07F]"
+                          ? "bg-[#D97706]"
+                          : "bg-[#059669]"
                       }`}
                       style={{ width: `${fuel}%` }}
                     />
@@ -169,12 +168,12 @@ export function ResourceOverview() {
                 </div>
 
                 {/* Telemetry Ping */}
-                <div className="flex justify-between items-center text-[10px] text-[#6B7488] pt-1 border-t border-white/5">
+                <div className="flex justify-between items-center text-[10px] text-[#767092] pt-1 border-t border-[#E7E2DA]">
                   <span className="flex items-center gap-1">
-                    <Clock className="w-3 h-3 text-[#3B6CFF]" /> GPS Ping: {res.lastPing}
+                    <Clock className="w-3 h-3 text-[#7C3AED]" /> GPS Ping: {res.lastPing}
                   </span>
-                  <span className="text-[#2FD07F] font-mono flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#2FD07F] animate-pulse" />
+                  <span className="text-[#059669] font-mono flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#059669] animate-pulse" />
                     Live Link
                   </span>
                 </div>
@@ -184,7 +183,7 @@ export function ResourceOverview() {
               <button
                 type="button"
                 onClick={() => handleDeploy(res.name)}
-                className="w-full py-2 rounded-xl bg-white/5 hover:bg-[#3B6CFF] text-[#F5F7FB] text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer border border-white/10 hover:border-transparent"
+                className="w-full py-2 rounded-xl bg-[#F8F7F4] hover:bg-[#7C3AED] text-[#1C1929] hover:text-white text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer border border-[#E7E2DA] hover:border-transparent shadow-xs"
               >
                 <Send className="w-3.5 h-3.5" />
                 <span>

@@ -46,7 +46,7 @@ export default function AuthoritySheltersPage() {
 
 
   return (
-    <div className="w-full min-h-screen bg-[#05070D] text-[#F5F7FB] flex flex-col select-none">
+    <div className="w-full min-h-screen bg-[#F8F7F4] text-[#1C1929] flex flex-col select-none">
       {/* Top Standard Authority Header */}
       <AuthorityHeader pageTitle="Cyclone & Flood Shelter Network" />
 
@@ -59,12 +59,12 @@ export default function AuthoritySheltersPage() {
           {/* Left: Title & Subtitle */}
           <div className="lg:col-span-4 flex flex-col justify-center gap-1">
             <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-[#2FD07F] animate-pulse" />
-              <h2 className="text-xl lg:text-2xl font-bold tracking-tight text-[#F5F7FB]">
+              <span className="w-3 h-3 rounded-full bg-[#16A34A] animate-pulse" />
+              <h2 className="text-xl lg:text-2xl font-bold tracking-tight text-[#1C1929]">
                 Shelter Command Network
               </h2>
             </div>
-            <p className="text-xs text-[#9AA3B8] leading-snug">
+            <p className="text-xs text-[#5D5775] leading-snug">
               Real-time evacuee intake capacity, generator power reserves, potable water purifiers, and ration supplies.
             </p>
           </div>
@@ -72,45 +72,45 @@ export default function AuthoritySheltersPage() {
           {/* Right: 4 Visual KPI Cards */}
           <div className="lg:col-span-8 grid grid-cols-2 sm:grid-cols-4 gap-3">
             {/* KPI 1: Active Shelters */}
-            <div className="rounded-[16px] bg-[#101624]/75 border border-white/10 p-3 flex items-center gap-3 backdrop-blur-xl shadow-md">
-              <div className="w-10 h-10 rounded-xl bg-[#2FD07F]/20 border border-[#2FD07F]/40 flex items-center justify-center text-[#2FD07F] shrink-0">
+            <div className="rounded-[16px] bg-white/95 border border-[#E7E2DA] p-3 flex items-center gap-3 backdrop-blur-xl shadow-[0_8px_24px_rgba(124,58,237,0.04)]">
+              <div className="w-10 h-10 rounded-xl bg-[#16A34A]/15 border border-[#16A34A]/30 flex items-center justify-center text-[#16A34A] shrink-0">
                 <Home className="w-5 h-5" />
               </div>
               <div>
-                <span className="text-[11px] text-[#9AA3B8] block leading-tight">Active Shelters</span>
+                <span className="text-[11px] text-[#5D5775] block leading-tight">Active Shelters</span>
                 <div className="flex items-baseline gap-1.5">
-                  <span className="text-2xl font-bold font-mono text-[#F5F7FB]">86</span>
-                  <span className="text-[10px] font-bold text-[#2FD07F]">/ 120 Total</span>
+                  <span className="text-2xl font-bold font-mono text-[#1C1929]">86</span>
+                  <span className="text-[10px] font-bold text-[#16A34A]">/ 120 Total</span>
                 </div>
-                <span className="text-[9px] text-[#6B7488]">34 Pre-staged</span>
+                <span className="text-[9px] text-[#767092]">34 Pre-staged</span>
               </div>
             </div>
 
             {/* KPI 2: Total Sheltered Citizens */}
-            <div className="rounded-[16px] bg-[#101624]/75 border border-white/10 p-3 flex items-center gap-3 backdrop-blur-xl shadow-md">
-              <div className="w-10 h-10 rounded-xl bg-[#3B6CFF]/20 border border-[#3B6CFF]/40 flex items-center justify-center text-[#3B6CFF] shrink-0">
+            <div className="rounded-[16px] bg-white/95 border border-[#E7E2DA] p-3 flex items-center gap-3 backdrop-blur-xl shadow-[0_8px_24px_rgba(124,58,237,0.04)]">
+              <div className="w-10 h-10 rounded-xl bg-[#7C3AED]/15 border border-[#7C3AED]/30 flex items-center justify-center text-[#7C3AED] shrink-0">
                 <Users className="w-5 h-5" />
               </div>
               <div>
-                <span className="text-[11px] text-[#9AA3B8] block leading-tight">Total Sheltered</span>
+                <span className="text-[11px] text-[#5D5775] block leading-tight">Total Sheltered</span>
                 <div className="flex items-baseline gap-1.5">
-                  <span className="text-2xl font-bold font-mono text-[#F5F7FB]">32,450</span>
-                  <span className="text-[10px] font-mono text-[#2FD07F]">Safe</span>
+                  <span className="text-2xl font-bold font-mono text-[#1C1929]">32,450</span>
+                  <span className="text-[10px] font-mono text-[#16A34A]">Safe</span>
                 </div>
-                <span className="text-[9px] text-[#6B7488]">Zero casualties</span>
+                <span className="text-[9px] text-[#767092]">Zero casualties</span>
               </div>
             </div>
 
             {/* KPI 3: Network Capacity Dial */}
-            <div className="rounded-[16px] bg-[#101624]/75 border border-white/10 p-3 flex items-center gap-3 backdrop-blur-xl shadow-md">
+            <div className="rounded-[16px] bg-white/95 border border-[#E7E2DA] p-3 flex items-center gap-3 backdrop-blur-xl shadow-[0_8px_24px_rgba(124,58,237,0.04)]">
               <div className="relative w-10 h-10 shrink-0 flex items-center justify-center">
                 <svg className="w-10 h-10 -rotate-90" viewBox="0 0 40 40">
-                  <circle cx="20" cy="20" r="16" stroke="rgba(255,255,255,0.1)" strokeWidth="4" fill="none" />
+                  <circle cx="20" cy="20" r="16" stroke="rgba(0,0,0,0.08)" strokeWidth="4" fill="none" />
                   <circle
                     cx="20"
                     cy="20"
                     r="16"
-                    stroke="#F5C542"
+                    stroke="#D97706"
                     strokeWidth="4"
                     strokeDasharray={2 * Math.PI * 16}
                     strokeDashoffset={2 * Math.PI * 16 * (1 - overallPct / 100)}
@@ -118,40 +118,40 @@ export default function AuthoritySheltersPage() {
                     fill="none"
                   />
                 </svg>
-                <span className="absolute inset-0 flex items-center justify-center text-[10px] font-mono font-bold text-[#F5F7FB]">
+                <span className="absolute inset-0 flex items-center justify-center text-[10px] font-mono font-bold text-[#1C1929]">
                   {overallPct}%
                 </span>
               </div>
               <div>
-                <span className="text-[11px] text-[#9AA3B8] block leading-tight">Network Load</span>
-                <span className="text-xs font-bold text-[#F5C542] block">
+                <span className="text-[11px] text-[#5D5775] block leading-tight">Network Load</span>
+                <span className="text-xs font-bold text-[#D97706] block">
                   {totalOcc.toLocaleString()} / {totalCap.toLocaleString()}
                 </span>
-                <span className="text-[9px] text-[#6B7488]">Beds available</span>
+                <span className="text-[9px] text-[#767092]">Beds available</span>
               </div>
             </div>
 
             {/* KPI 4: Ration & Water Reserves */}
-            <div className="rounded-[16px] bg-[#101624]/75 border border-white/10 p-3 flex items-center gap-3 backdrop-blur-xl shadow-md">
-              <div className="w-10 h-10 rounded-xl bg-[#4FB3FF]/20 border border-[#4FB3FF]/40 flex items-center justify-center text-[#4FB3FF] shrink-0">
+            <div className="rounded-[16px] bg-white/95 border border-[#E7E2DA] p-3 flex items-center gap-3 backdrop-blur-xl shadow-[0_8px_24px_rgba(124,58,237,0.04)]">
+              <div className="w-10 h-10 rounded-xl bg-[#7C3AED]/15 border border-[#7C3AED]/30 flex items-center justify-center text-[#7C3AED] shrink-0">
                 <Droplets className="w-5 h-5" />
               </div>
               <div>
-                <span className="text-[11px] text-[#9AA3B8] block leading-tight">Ration Reserve</span>
+                <span className="text-[11px] text-[#5D5775] block leading-tight">Ration Reserve</span>
                 <div className="flex items-baseline gap-1.5">
-                  <span className="text-2xl font-bold font-mono text-[#F5F7FB]">4.5d</span>
-                  <span className="text-[10px] font-bold text-[#2FD07F]">Stocked</span>
+                  <span className="text-2xl font-bold font-mono text-[#1C1929]">4.5d</span>
+                  <span className="text-[10px] font-bold text-[#16A34A]">Stocked</span>
                 </div>
-                <span className="text-[9px] text-[#6B7488]">RO Purified & Dry food</span>
+                <span className="text-[9px] text-[#767092]">RO Purified & Dry food</span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Filter Bar */}
-        <div className="flex items-center justify-between bg-[#101624]/75 p-3 rounded-[16px] border border-white/10 backdrop-blur-xl">
+        <div className="flex items-center justify-between bg-white/95 p-3 rounded-[16px] border border-[#E7E2DA] backdrop-blur-xl shadow-sm">
           <div className="flex items-center gap-2">
-            <span className="text-xs text-[#9AA3B8]">Filter Capacity:</span>
+            <span className="text-xs text-[#5D5775]">Filter Capacity:</span>
             <div className="flex gap-1.5">
               {(["all", "open", "full"] as const).map((tab) => (
                 <button
@@ -160,8 +160,8 @@ export default function AuthoritySheltersPage() {
                   onClick={() => setFilter(tab)}
                   className={`px-3 py-1 rounded-xl text-xs font-bold capitalize transition-all cursor-pointer ${
                     filter === tab
-                      ? "bg-[#3B6CFF] text-white shadow-[0_0_12px_rgba(59,108,255,0.4)]"
-                      : "bg-[#161D2E] text-[#9AA3B8] hover:text-white"
+                      ? "bg-[#7C3AED] text-white shadow-[0_2px_8px_rgba(124,58,237,0.3)]"
+                      : "bg-[#FAF8F5] text-[#5D5775] hover:text-[#1C1929] border border-[#E7E2DA]"
                   }`}
                 >
                   {tab === "all" ? "All Shelters (4)" : tab === "open" ? "Open & Available" : "Full / At Capacity"}
@@ -170,7 +170,7 @@ export default function AuthoritySheltersPage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-3 text-xs text-[#6B7488] font-mono">
+          <div className="flex items-center gap-3 text-xs text-[#767092] font-mono font-medium">
             <span>🟢 Normal (&lt;70%)</span>
             <span>🟡 High (70-85%)</span>
             <span>🔴 Full (&gt;85%)</span>
@@ -190,30 +190,30 @@ export default function AuthoritySheltersPage() {
             return (
               <div
                 key={sh.id}
-                className="p-5 rounded-[18px] bg-[#101624]/75 border border-white/10 backdrop-blur-xl shadow-lg flex flex-col justify-between gap-4 hover:border-white/20 transition-all"
+                className="p-5 rounded-[18px] bg-white/95 border border-[#E7E2DA] backdrop-blur-xl shadow-[0_8px_24px_rgba(124,58,237,0.04)] flex flex-col justify-between gap-4 hover:border-[#7C3AED]/40 hover:shadow-[0_8px_24px_rgba(124,58,237,0.08)] transition-all"
               >
                 {/* Header: Shelter Title & Capacity Ring */}
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-[#2FD07F] shrink-0 mt-0.5">
+                    <div className="w-10 h-10 rounded-xl bg-[#FAF8F5] border border-[#E7E2DA] flex items-center justify-center text-[#16A34A] shrink-0 mt-0.5">
                       <Home className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-bold text-[#F5F7FB] leading-snug">
+                      <h3 className="text-sm font-bold text-[#1C1929] leading-snug">
                         {sh.name}
                       </h3>
-                      <p className="text-xs text-[#9AA3B8] flex items-center gap-1 mt-0.5">
-                        <MapPin className="w-3.5 h-3.5 text-[#FF4D5E] shrink-0" />
+                      <p className="text-xs text-[#5D5775] flex items-center gap-1 mt-0.5">
+                        <MapPin className="w-3.5 h-3.5 text-[#EF4444] shrink-0" />
                         <span>{sh.address}</span>
                       </p>
-                      <div className="flex items-center gap-3 text-[11px] text-[#6B7488] mt-1">
+                      <div className="flex items-center gap-3 text-[11px] text-[#767092] mt-1">
                         <span className="flex items-center gap-1">
-                          <Compass className="w-3 h-3 text-[#3B6CFF]" />
+                          <Compass className="w-3 h-3 text-[#7C3AED]" />
                           <span>{sh.distanceKm} km away</span>
                         </span>
                         <span>•</span>
                         <span className="flex items-center gap-1 font-mono">
-                          <Phone className="w-3 h-3 text-[#2FD07F]" />
+                          <Phone className="w-3 h-3 text-[#16A34A]" />
                           <span>{sh.contactPhone}</span>
                         </span>
                       </div>
@@ -228,7 +228,7 @@ export default function AuthoritySheltersPage() {
                           cx="26"
                           cy="26"
                           r="22"
-                          stroke="rgba(255,255,255,0.08)"
+                          stroke="rgba(0,0,0,0.08)"
                           strokeWidth="4.5"
                           fill="none"
                         />
@@ -236,7 +236,7 @@ export default function AuthoritySheltersPage() {
                           cx="26"
                           cy="26"
                           r="22"
-                          stroke={isFull ? "#FF4D5E" : isWarning ? "#FF8A3D" : "#2FD07F"}
+                          stroke={isFull ? "#EF4444" : isWarning ? "#F97316" : "#16A34A"}
                           strokeWidth="4.5"
                           strokeDasharray={2 * Math.PI * 22}
                           strokeDashoffset={2 * Math.PI * 22 * (1 - pct / 100)}
@@ -244,17 +244,17 @@ export default function AuthoritySheltersPage() {
                           fill="none"
                         />
                       </svg>
-                      <span className="absolute inset-0 flex items-center justify-center font-mono font-bold text-xs text-[#F5F7FB]">
+                      <span className="absolute inset-0 flex items-center justify-center font-mono font-bold text-xs text-[#1C1929]">
                         {pct}%
                       </span>
                     </div>
                     <span
                       className={`text-[9px] font-bold uppercase mt-1 px-2 py-0.2 rounded-full border ${
                         isFull
-                          ? "bg-[#FF4D5E]/20 text-[#FF4D5E] border-[#FF4D5E]/40"
+                          ? "bg-[#EF4444]/15 text-[#EF4444] border-[#EF4444]/30"
                           : isWarning
-                          ? "bg-[#FF8A3D]/20 text-[#FF8A3D] border-[#FF8A3D]/40"
-                          : "bg-[#2FD07F]/20 text-[#2FD07F] border-[#2FD07F]/40"
+                          ? "bg-[#F97316]/15 text-[#F97316] border-[#F97316]/30"
+                          : "bg-[#16A34A]/15 text-[#16A34A] border-[#16A34A]/30"
                       }`}
                     >
                       {isFull ? "FULL" : "OPEN"}
@@ -271,60 +271,60 @@ export default function AuthoritySheltersPage() {
                 />
 
                 {/* Visual Amenity Inventory Badges (Show Don't Tell) */}
-                <div className="bg-[#161D2E]/80 p-3 rounded-[14px] border border-white/5 space-y-2">
-                  <div className="flex items-center justify-between text-[11px] text-[#9AA3B8]">
+                <div className="bg-[#FAF8F5] p-3 rounded-[14px] border border-[#E7E2DA] space-y-2">
+                  <div className="flex items-center justify-between text-[11px] text-[#5D5775]">
                     <span className="font-semibold">Facility Operational Readiness:</span>
-                    <span className="text-[#2FD07F] font-mono font-bold flex items-center gap-1">
+                    <span className="text-[#16A34A] font-mono font-bold flex items-center gap-1">
                       <CheckCircle2 className="w-3.5 h-3.5" /> 100% Operational
                     </span>
                   </div>
 
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-                    <div className="p-2 rounded-xl bg-white/5 flex items-center gap-2 border border-white/5">
-                      <Droplets className="w-4 h-4 text-[#4FB3FF] shrink-0" />
+                    <div className="p-2 rounded-xl bg-white flex items-center gap-2 border border-[#E7E2DA] shadow-xs">
+                      <Droplets className="w-4 h-4 text-[#2563EB] shrink-0" />
                       <div>
-                        <span className="text-[10px] text-[#6B7488] block">RO Water</span>
-                        <span className="font-bold text-[#F5F7FB] text-[11px]">88% Full</span>
+                        <span className="text-[10px] text-[#767092] block">RO Water</span>
+                        <span className="font-bold text-[#1C1929] text-[11px]">88% Full</span>
                       </div>
                     </div>
 
-                    <div className="p-2 rounded-xl bg-white/5 flex items-center gap-2 border border-white/5">
-                      <Utensils className="w-4 h-4 text-[#F5C542] shrink-0" />
+                    <div className="p-2 rounded-xl bg-white flex items-center gap-2 border border-[#E7E2DA] shadow-xs">
+                      <Utensils className="w-4 h-4 text-[#D97706] shrink-0" />
                       <div>
-                        <span className="text-[10px] text-[#6B7488] block">Rations</span>
-                        <span className="font-bold text-[#F5F7FB] text-[11px]">5 Days</span>
+                        <span className="text-[10px] text-[#767092] block">Rations</span>
+                        <span className="font-bold text-[#1C1929] text-[11px]">5 Days</span>
                       </div>
                     </div>
 
-                    <div className="p-2 rounded-xl bg-white/5 flex items-center gap-2 border border-white/5">
-                      <Zap className="w-4 h-4 text-[#2FD07F] shrink-0" />
+                    <div className="p-2 rounded-xl bg-white flex items-center gap-2 border border-[#E7E2DA] shadow-xs">
+                      <Zap className="w-4 h-4 text-[#16A34A] shrink-0" />
                       <div>
-                        <span className="text-[10px] text-[#6B7488] block">Genset</span>
-                        <span className="font-bold text-[#F5F7FB] text-[11px]">Active</span>
+                        <span className="text-[10px] text-[#767092] block">Genset</span>
+                        <span className="font-bold text-[#1C1929] text-[11px]">Active</span>
                       </div>
                     </div>
 
-                    <div className="p-2 rounded-xl bg-white/5 flex items-center gap-2 border border-white/5">
-                      <HeartPulse className="w-4 h-4 text-[#FF4D5E] shrink-0" />
+                    <div className="p-2 rounded-xl bg-white flex items-center gap-2 border border-[#E7E2DA] shadow-xs">
+                      <HeartPulse className="w-4 h-4 text-[#EF4444] shrink-0" />
                       <div>
-                        <span className="text-[10px] text-[#6B7488] block">Medic</span>
-                        <span className="font-bold text-[#F5F7FB] text-[11px]">On Duty</span>
+                        <span className="text-[10px] text-[#767092] block">Medic</span>
+                        <span className="font-bold text-[#1C1929] text-[11px]">On Duty</span>
                       </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Footer Action Buttons */}
-                <div className="flex items-center justify-between gap-3 pt-1 border-t border-white/5">
-                  <div className="text-[11px] text-[#6B7488]">
+                <div className="flex items-center justify-between gap-3 pt-1 border-t border-[#E7E2DA]">
+                  <div className="text-[11px] text-[#767092]">
                     <span>Remaining capacity: </span>
-                    <strong className="text-[#F5F7FB]">{Math.max(sh.capacity - occ, 0)} slots</strong>
+                    <strong className="text-[#1C1929]">{Math.max(sh.capacity - occ, 0)} slots</strong>
                   </div>
 
                   <button
                     type="button"
                     onClick={() => toast.success(`Evacuation convoy route generated for ${sh.name}!`)}
-                    className="px-4 py-1.5 rounded-xl bg-[#3B6CFF] hover:bg-[#325bd4] text-xs font-bold text-white shadow-[0_0_12px_rgba(59,108,255,0.3)] flex items-center gap-1.5 cursor-pointer transition-all"
+                    className="px-4 py-1.5 rounded-xl bg-[#7C3AED] hover:bg-[#6D28D9] text-xs font-bold text-white shadow-[0_4px_16px_rgba(124,58,237,0.3)] flex items-center gap-1.5 cursor-pointer transition-all"
                   >
                     <Navigation className="w-3.5 h-3.5" />
                     <span>Route Convoys</span>

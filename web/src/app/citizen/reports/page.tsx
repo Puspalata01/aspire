@@ -99,30 +99,30 @@ export default function CitizenReportsPage() {
   };
 
   return (
-    <div className="max-w-xl mx-auto space-y-6 pb-28 text-[#F5F7FB] font-sans">
+    <div className="max-w-xl mx-auto space-y-6 pb-28 text-[#1C1929] font-sans">
       <div>
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-[#FF4D5E] animate-ping" />
-          <h1 className="text-2xl font-extrabold text-white tracking-tight">
+          <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
+          <h1 className="text-2xl font-extrabold text-[#1C1929] tracking-tight">
             Submit Incident Report
           </h1>
         </div>
-        <p className="text-xs text-[#8E99AF] mt-1">
+        <p className="text-xs text-[#5D5775] mt-1">
           Crowdsourced ground intelligence verifies radar and satellite models to dispatch relief fleets.
         </p>
       </div>
 
       {submitted ? (
-        <div className="p-8 rounded-[24px] bg-[#101624] border border-[#2FD07F]/40 shadow-2xl text-center space-y-4 animate-in fade-in">
-          <div className="w-16 h-16 mx-auto rounded-full bg-[#2FD07F]/20 text-[#2FD07F] flex items-center justify-center border border-[#2FD07F]/40 shadow-[0_0_25px_rgba(47,208,127,0.4)]">
+        <div className="p-8 rounded-[24px] bg-white/95 border border-emerald-200 shadow-sm text-center space-y-4 animate-in fade-in">
+          <div className="w-16 h-16 mx-auto rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-200 shadow-sm">
             <CheckCircle2 className="w-8 h-8" />
           </div>
           <div>
-            <span className="text-xs font-mono font-bold text-[#4FB3FF] px-2.5 py-1 rounded bg-[#3B6CFF]/20 border border-[#3B6CFF]/30">
+            <span className="text-xs font-mono font-bold text-[#7C3AED] px-2.5 py-1 rounded bg-[#F3E8FF] border border-[#DDD6FE]">
               TICKET #{reportId}
             </span>
-            <h3 className="text-lg font-bold text-white mt-2">Intelligence Uploaded</h3>
-            <p className="text-xs text-[#8E99AF] max-w-sm mx-auto mt-1 leading-relaxed">
+            <h3 className="text-lg font-bold text-[#1C1929] mt-2">Intelligence Uploaded</h3>
+            <p className="text-xs text-[#5D5775] max-w-sm mx-auto mt-1 leading-relaxed">
               Your geotagged photo report has been routed to the District Emergency Operations Center.
             </p>
           </div>
@@ -135,7 +135,7 @@ export default function CitizenReportsPage() {
               setLandmark("");
               setImagePreview(null);
             }}
-            className="px-6 py-2.5 rounded-full bg-[#3B6CFF] hover:bg-[#2F6FE0] text-white font-bold text-xs shadow-md transition-all cursor-pointer"
+            className="px-6 py-2.5 rounded-full bg-[#7C3AED] hover:bg-[#6D28D9] text-white font-bold text-xs shadow-sm transition-all cursor-pointer"
           >
             Submit Another Report
           </button>
@@ -143,30 +143,30 @@ export default function CitizenReportsPage() {
       ) : (
         <form
           onSubmit={handleSubmit}
-          className="space-y-4 bg-[#101624]/90 p-6 rounded-[24px] border border-white/10 shadow-2xl backdrop-blur-2xl text-xs"
+          className="space-y-4 bg-white/95 p-6 rounded-[24px] border border-[#E7E2DA] shadow-sm backdrop-blur-2xl text-xs"
         >
           {/* GPS Coordinates Tag Bar */}
-          <div className="p-3.5 rounded-xl bg-[#161D2E] border border-white/10 space-y-2.5">
+          <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#E7E2DA] space-y-2.5">
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-[#FF4D5E] shrink-0" />
+                <MapPin className="w-4 h-4 text-rose-500 shrink-0" />
                 <div>
-                  <span className="font-bold text-white block">{locationName}</span>
-                  <span className="font-mono text-[10px] text-[#8E99AF]">
+                  <span className="font-bold text-[#1C1929] block">{locationName}</span>
+                  <span className="font-mono text-[10px] text-[#767092]">
                     {citizenLat.toFixed(4)}°N, {citizenLng.toFixed(4)}°E
                   </span>
                 </div>
               </div>
-              <span className="text-[10px] font-mono text-[#2FD07F] font-semibold bg-[#2FD07F]/15 px-2 py-0.5 rounded">
+              <span className="text-[10px] font-mono text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
                 {isGPS ? "● GPS REAL-TIME" : "● SECTOR TAGGED"}
               </span>
             </div>
 
-            <div className="flex items-center gap-2 pt-1 border-t border-white/10">
+            <div className="flex items-center gap-2 pt-1 border-t border-[#E7E2DA]">
               <select
                 value={sectorId}
                 onChange={(e) => setSector(e.target.value)}
-                className="flex-1 bg-[#101624] border border-white/10 rounded-lg px-2.5 py-1 text-[11px] text-white focus:outline-none focus:border-[#3B6CFF]"
+                className="flex-1 bg-white border border-[#E7E2DA] rounded-lg px-2.5 py-1 text-[11px] text-[#1C1929] focus:outline-none focus:border-[#7C3AED] shadow-sm"
               >
                 {CITIZEN_SECTORS.map((s) => (
                   <option key={s.id} value={s.id}>
@@ -179,7 +179,7 @@ export default function CitizenReportsPage() {
                 type="button"
                 onClick={() => detectGPS()}
                 disabled={isLocating}
-                className="px-3 py-1 rounded-lg bg-[#3B6CFF] hover:bg-[#2F6FE0] text-white font-bold text-[11px] flex items-center gap-1 shadow-sm cursor-pointer disabled:opacity-50 shrink-0"
+                className="px-3 py-1 rounded-lg bg-[#7C3AED] hover:bg-[#6D28D9] text-white font-bold text-[11px] flex items-center gap-1 shadow-sm cursor-pointer disabled:opacity-50 shrink-0"
               >
                 <LocateFixed className="w-3 h-3" />
                 <span>{isLocating ? "Acquiring..." : "Detect GPS"}</span>
@@ -189,7 +189,7 @@ export default function CitizenReportsPage() {
 
           {/* Incident Category */}
           <div>
-            <label className="font-bold text-white block mb-1.5">Incident Category</label>
+            <label className="font-bold text-[#1C1929] block mb-1.5">Incident Category</label>
             <div className="grid grid-cols-2 gap-2">
               {[
                 { id: "flooding", label: "Water Level / Breach", icon: Waves },
@@ -206,8 +206,8 @@ export default function CitizenReportsPage() {
                     onClick={() => setReportType(c.id)}
                     className={`p-2.5 rounded-xl border text-left flex items-center gap-2 transition-all cursor-pointer ${
                       isSelected
-                        ? "bg-[#3B6CFF] border-[#4FB3FF] text-white shadow-md font-bold"
-                        : "bg-white/5 border-white/10 text-[#8E99AF] hover:bg-white/10 hover:text-white"
+                        ? "bg-[#7C3AED] border-[#7C3AED] text-white shadow-sm font-bold"
+                        : "bg-[#FAF8F5] border-[#E7E2DA] text-[#5D5775] hover:bg-purple-50 hover:text-[#7C3AED]"
                     }`}
                   >
                     <Icon className="w-4 h-4 shrink-0" />
@@ -220,7 +220,7 @@ export default function CitizenReportsPage() {
 
           {/* Landmark */}
           <div>
-            <label className="font-bold text-white block mb-1">
+            <label className="font-bold text-[#1C1929] block mb-1">
               Landmark or Street (Optional)
             </label>
             <input
@@ -228,14 +228,14 @@ export default function CitizenReportsPage() {
               value={landmark}
               onChange={(e) => setLandmark(e.target.value)}
               placeholder="e.g. Near Sea Beach Police Station, Marine Drive Road..."
-              className="w-full bg-[#161D2E] border border-white/10 rounded-xl px-3.5 py-2 text-xs text-white placeholder-[#6B7488] focus:border-[#3B6CFF] focus:outline-none focus:ring-1 focus:ring-[#3B6CFF]"
+              className="w-full bg-[#FAF8F5] border border-[#E7E2DA] rounded-xl px-3.5 py-2 text-xs text-[#1C1929] placeholder-[#767092] focus:border-[#7C3AED] focus:outline-none focus:ring-1 focus:ring-[#7C3AED]"
             />
           </div>
 
           {/* Description */}
           <div>
-            <label className="font-bold text-white block mb-1">
-              Description & Current Conditions <span className="text-[#FF4D5E]">*</span>
+            <label className="font-bold text-[#1C1929] block mb-1">
+              Description & Current Conditions <span className="text-rose-500">*</span>
             </label>
             <textarea
               rows={3}
@@ -243,15 +243,15 @@ export default function CitizenReportsPage() {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="e.g. Daya canal breach near Gop market bridge, water chest deep, road cut off..."
-              className="w-full bg-[#161D2E] border border-white/10 rounded-xl p-3 text-xs text-white placeholder-[#6B7488] focus:border-[#3B6CFF] focus:outline-none focus:ring-1 focus:ring-[#3B6CFF] resize-none"
+              className="w-full bg-[#FAF8F5] border border-[#E7E2DA] rounded-xl p-3 text-xs text-[#1C1929] placeholder-[#767092] focus:border-[#7C3AED] focus:outline-none focus:ring-1 focus:ring-[#7C3AED] resize-none"
             />
           </div>
 
           {/* Photo Upload with Real Camera / File Picker */}
           <div>
-            <label className="font-bold text-white block mb-1.5 flex items-center justify-between">
+            <label className="font-bold text-[#1C1929] block mb-1.5 flex items-center justify-between">
               <span>Attach Geotagged Photo</span>
-              <span className="text-[10px] text-[#8E99AF] font-normal">Max 10MB</span>
+              <span className="text-[10px] text-[#767092] font-normal">Max 10MB</span>
             </label>
 
             <input
@@ -264,15 +264,15 @@ export default function CitizenReportsPage() {
             />
 
             {imagePreview ? (
-              <div className="relative rounded-2xl border border-white/20 bg-black/40 overflow-hidden p-2 flex items-center gap-3">
+              <div className="relative rounded-2xl border border-[#E7E2DA] bg-[#FAF8F5] overflow-hidden p-2 flex items-center gap-3">
                 <img
                   src={imagePreview}
                   alt="Uploaded incident"
-                  className="w-20 h-20 object-cover rounded-xl border border-white/10"
+                  className="w-20 h-20 object-cover rounded-xl border border-[#E7E2DA]"
                 />
                 <div className="flex-1 min-w-0">
-                  <p className="font-bold text-white truncate text-xs">{imageName || "incident.jpg"}</p>
-                  <span className="text-[10px] text-[#2FD07F] font-mono block mt-0.5">
+                  <p className="font-bold text-[#1C1929] truncate text-xs">{imageName || "incident.jpg"}</p>
+                  <span className="text-[10px] text-emerald-700 font-mono block mt-0.5">
                     ✓ Geotag EXIF Preserved
                   </span>
                   <button
@@ -281,7 +281,7 @@ export default function CitizenReportsPage() {
                       setImagePreview(null);
                       setImageName(null);
                     }}
-                    className="mt-1 text-[11px] text-[#FF4D5E] hover:underline cursor-pointer font-semibold"
+                    className="mt-1 text-[11px] text-rose-600 hover:underline cursor-pointer font-semibold"
                   >
                     Remove Photo
                   </button>
@@ -290,15 +290,15 @@ export default function CitizenReportsPage() {
             ) : (
               <div
                 onClick={() => fileInputRef.current?.click()}
-                className="p-5 rounded-2xl border border-dashed border-white/20 hover:border-[#3B6CFF] bg-[#161D2E]/50 hover:bg-[#161D2E] text-center space-y-1.5 cursor-pointer transition-all group"
+                className="p-5 rounded-2xl border border-dashed border-[#DDD6FE] hover:border-[#7C3AED] bg-[#FAF8F5] hover:bg-purple-50/50 text-center space-y-1.5 cursor-pointer transition-all group"
               >
-                <div className="w-10 h-10 mx-auto rounded-xl bg-white/5 group-hover:bg-[#3B6CFF]/20 text-[#8E99AF] group-hover:text-[#4FB3FF] flex items-center justify-center transition-colors">
+                <div className="w-10 h-10 mx-auto rounded-xl bg-[#F3E8FF] text-[#7C3AED] flex items-center justify-center transition-colors">
                   <Camera className="w-5 h-5" />
                 </div>
-                <span className="font-bold text-white block text-xs">
+                <span className="font-bold text-[#1C1929] block text-xs">
                   Click to Take Photo or Browse Images
                 </span>
-                <span className="text-[10px] text-[#6B7488] block">
+                <span className="text-[10px] text-[#767092] block">
                   Camera and photo gallery supported
                 </span>
               </div>
@@ -309,7 +309,7 @@ export default function CitizenReportsPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-3.5 rounded-full bg-[#3B6CFF] hover:bg-[#2F6FE0] disabled:opacity-50 text-white font-extrabold text-xs shadow-[0_0_20px_rgba(59,108,255,0.4)] flex items-center justify-center gap-2 transition-all cursor-pointer"
+            className="w-full py-3.5 rounded-full bg-[#7C3AED] hover:bg-[#6D28D9] disabled:opacity-50 text-white font-extrabold text-xs shadow-sm flex items-center justify-center gap-2 transition-all cursor-pointer"
           >
             {isSubmitting ? (
               <>

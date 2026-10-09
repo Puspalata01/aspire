@@ -53,7 +53,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body
-        className="h-full bg-[#E9E9E7] text-[#4A4A4F] antialiased selection:bg-[#DCE7FB] selection:text-[#1D1D1F]"
+        className="h-full bg-[#F8F7F4] text-[#1C1929] antialiased selection:bg-[#7C3AED] selection:text-white"
         suppressHydrationWarning
       >
         {children}
@@ -62,12 +62,12 @@ export default function RootLayout({
           theme="light"
           toastOptions={{
             style: {
-              background: "#F1F1EF",
-              boxShadow: "10px 10px 22px rgba(150,150,146,0.55), -10px -10px 22px rgba(255,255,255,0.95)",
-              border: "1px solid #D4D4D1",
-              borderRadius: "24px",
-              color: "#1D1D1F",
-              padding: "16px 20px",
+              background: "#FFFFFF",
+              boxShadow: "0 10px 30px rgba(124, 58, 237, 0.08), 0 1px 4px rgba(0,0,0,0.05)",
+              border: "1px solid rgba(124, 58, 237, 0.15)",
+              borderRadius: "16px",
+              color: "#1C1929",
+              padding: "14px 18px",
             },
           }}
         />

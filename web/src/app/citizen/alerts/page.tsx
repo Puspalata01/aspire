@@ -162,19 +162,19 @@ export default function CitizenAlertsPage() {
   }, [distanceToHazardKm, locationName]);
 
   return (
-    <div className="space-y-6 pb-28 text-[#F5F7FB] font-sans select-none">
+    <div className="space-y-6 pb-28 text-[#1C1929] font-sans select-none">
       {/* ─────────────────────────────────────────────────────────────
           1. HEADER & CONTROLS
          ───────────────────────────────────────────────────────────── */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#FF4D5E] animate-ping" />
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+            <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping" />
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1C1929] tracking-tight">
               Emergency Warnings & Geo-Alerts
             </h1>
           </div>
-          <p className="text-xs text-[#8E99AF] mt-1 max-w-xl">
+          <p className="text-xs text-[#5D5775] mt-1 max-w-xl">
             Live satellite broadcasts from IMD, Central Water Commission, and State Disaster Management Authority tailored to your coordinates.
           </p>
         </div>
@@ -184,20 +184,20 @@ export default function CitizenAlertsPage() {
           <button
             type="button"
             onClick={playTestSiren}
-            className="px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-white flex items-center gap-1.5 transition-all cursor-pointer"
+            className="px-3 py-2 rounded-xl bg-white hover:bg-[#FAF8F5] border border-[#E7E2DA] text-xs font-semibold text-[#1C1929] flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
             title="Test alert tone"
           >
-            <Volume2 className="w-4 h-4 text-[#F5C542]" />
+            <Volume2 className="w-4 h-4 text-amber-600" />
             <span>Test Siren</span>
           </button>
 
           <button
             type="button"
             onClick={handleToggleNotifications}
-            className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer border ${
+            className={`px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer border shadow-sm ${
               notificationsEnabled
-                ? "bg-[#2FD07F]/20 text-[#2FD07F] border-[#2FD07F]/40 shadow-[0_0_15px_rgba(47,208,127,0.3)]"
-                : "bg-[#3B6CFF] text-white border-[#3B6CFF] shadow-md hover:bg-[#2F6FE0]"
+                ? "bg-emerald-50 text-emerald-700 border-emerald-300"
+                : "bg-[#7C3AED] text-white border-[#7C3AED] hover:bg-[#6D28D9]"
             }`}
           >
             <BellRing className="w-4 h-4" />
@@ -209,19 +209,19 @@ export default function CitizenAlertsPage() {
       {/* ─────────────────────────────────────────────────────────────
           2. CITIZEN AREA & GPS ACQUISITION CONTROL BAR
          ───────────────────────────────────────────────────────────── */}
-      <div className="p-4 rounded-[22px] bg-[#101624]/90 border border-white/10 backdrop-blur-2xl shadow-xl flex flex-wrap items-center justify-between gap-3">
+      <div className="p-4 rounded-[22px] bg-white/95 border border-[#E7E2DA] backdrop-blur-2xl shadow-sm flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[#3B6CFF]/20 text-[#4FB3FF] border border-[#3B6CFF]/40 flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-[#F3E8FF] text-[#7C3AED] border border-[#DDD6FE] flex items-center justify-center shrink-0">
             <Compass className="w-5 h-5 animate-spin" style={{ animationDuration: "25s" }} />
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-white">RECEIVING BULLETINS FOR:</span>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#3B6CFF]/20 text-[#4FB3FF] border border-[#3B6CFF]/30">
+              <span className="text-xs font-bold text-[#1C1929]">RECEIVING BULLETINS FOR:</span>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#F3E8FF] text-[#7C3AED] border border-[#DDD6FE]">
                 {isGPS ? "REAL-TIME GPS" : "DESIGNATED SECTOR"}
               </span>
             </div>
-            <p className="font-mono text-[11px] text-[#8E99AF]">
+            <p className="font-mono text-[11px] text-[#5D5775]">
               {locationName} ({citizenLat.toFixed(4)}°N, {citizenLng.toFixed(4)}°E) • Landfall Core: {distanceToHazardKm} km
             </p>
           </div>
@@ -232,7 +232,7 @@ export default function CitizenAlertsPage() {
           <select
             value={sectorId}
             onChange={(e) => setSector(e.target.value)}
-            className="bg-[#161D2E] border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white focus:outline-none focus:border-[#3B6CFF] cursor-pointer"
+            className="bg-[#FAF8F5] border border-[#E7E2DA] rounded-xl px-3 py-1.5 text-xs text-[#1C1929] focus:outline-none focus:border-[#7C3AED] cursor-pointer shadow-sm"
           >
             {CITIZEN_SECTORS.map((sec) => (
               <option key={sec.id} value={sec.id}>
@@ -245,7 +245,7 @@ export default function CitizenAlertsPage() {
             type="button"
             onClick={() => detectGPS()}
             disabled={isLocating}
-            className="px-3 py-1.5 rounded-xl bg-[#3B6CFF] hover:bg-[#2F6FE0] text-white text-xs font-bold flex items-center gap-1.5 shadow-md transition-all cursor-pointer disabled:opacity-50"
+            className="px-3 py-1.5 rounded-xl bg-[#7C3AED] hover:bg-[#6D28D9] text-white text-xs font-bold flex items-center gap-1.5 shadow-sm transition-all cursor-pointer disabled:opacity-50"
             title="Auto-detect current GPS coordinates"
           >
             <LocateFixed className="w-3.5 h-3.5" />
@@ -259,8 +259,8 @@ export default function CitizenAlertsPage() {
          ───────────────────────────────────────────────────────────── */}
       <div className="space-y-3">
         <div className="flex items-center gap-2">
-          <ShieldAlert className="w-4 h-4 text-[#FF4D5E]" />
-          <h3 className="text-xs font-bold uppercase tracking-wider text-white">
+          <ShieldAlert className="w-4 h-4 text-rose-600" />
+          <h3 className="text-xs font-bold uppercase tracking-wider text-[#1C1929]">
             Geo-Targeted Bulletins for Your Specific Coordinates
           </h3>
         </div>
@@ -268,31 +268,31 @@ export default function CitizenAlertsPage() {
         {localizedGeoAlerts.map((geo) => (
           <div
             key={geo.id}
-            className={`p-6 rounded-[24px] border backdrop-blur-2xl shadow-2xl space-y-3 transition-all ${
+            className={`p-6 rounded-[24px] border backdrop-blur-2xl shadow-sm space-y-3 transition-all ${
               geo.severity === "critical"
-                ? "bg-gradient-to-br from-[#1C0D12] via-[#101424] to-[#0A0F1D] border-[#FF4D5E]/50 shadow-[0_10px_35px_rgba(255,77,94,0.25)]"
-                : "bg-gradient-to-br from-[#1A1208] via-[#101624] to-[#0A0F1D] border-[#F5C542]/40"
+                ? "bg-rose-50/70 border-rose-300"
+                : "bg-amber-50/70 border-amber-300"
             }`}
           >
             <div className="flex items-start justify-between gap-3 flex-wrap">
               <div className="flex items-center gap-2">
                 <SeverityBadge severity={geo.severity} />
-                <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-[#3B6CFF]/20 text-[#4FB3FF] border border-[#3B6CFF]/40">
+                <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold bg-[#F3E8FF] text-[#7C3AED] border border-[#DDD6FE]">
                   📍 GEO-LOCATED ({distanceToHazardKm} KM)
                 </span>
               </div>
-              <span className="text-[11px] font-mono text-[#8E99AF]">
+              <span className="text-[11px] font-mono text-[#767092]">
                 {formatDateTime(geo.issuedAt)}
               </span>
             </div>
 
-            <h3 className="text-base font-extrabold text-white leading-snug">{geo.title}</h3>
-            <p className="text-xs text-[#CBD5E1] leading-relaxed">{geo.message}</p>
+            <h3 className="text-base font-extrabold text-[#1C1929] leading-snug">{geo.title}</h3>
+            <p className="text-xs text-[#5D5775] leading-relaxed">{geo.message}</p>
 
-            <div className="pt-2 border-t border-white/10 text-[11px] text-[#8E99AF] flex items-center justify-between">
+            <div className="pt-2 border-t border-black/5 text-[11px] text-[#767092] flex items-center justify-between">
               <span>Authority: {geo.source}</span>
-              <span className="text-[#2FD07F] font-semibold flex items-center gap-1">
-                <CheckCircle2 className="w-3.5 h-3.5" /> High-Priority Flash Broadcast
+              <span className="text-emerald-700 font-semibold flex items-center gap-1">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> High-Priority Flash Broadcast
               </span>
             </div>
           </div>
@@ -304,8 +304,8 @@ export default function CitizenAlertsPage() {
          ───────────────────────────────────────────────────────────── */}
       <div className="space-y-3 pt-4">
         <div className="flex items-center gap-2">
-          <Radio className="w-4 h-4 text-[#3B6CFF]" />
-          <h3 className="text-xs font-bold uppercase tracking-wider text-[#8E99AF]">
+          <Radio className="w-4 h-4 text-[#7C3AED]" />
+          <h3 className="text-xs font-bold uppercase tracking-wider text-[#5D5775]">
             State & National Verified Broadcast Feed
           </h3>
         </div>
@@ -314,26 +314,26 @@ export default function CitizenAlertsPage() {
           {alerts.map((alt) => (
             <div
               key={alt.id}
-              className="p-5 rounded-[22px] border border-white/10 bg-[#101624]/80 shadow-xl space-y-3 backdrop-blur-xl"
+              className="p-5 rounded-[22px] border border-[#E7E2DA] bg-white/95 shadow-sm space-y-3 backdrop-blur-xl"
             >
               <div className="flex items-start justify-between gap-3 flex-wrap">
                 <div className="flex items-center gap-2">
                   <SeverityBadge severity={alt.severity} />
-                  <span className="text-[11px] font-mono text-[#8E99AF] uppercase">
+                  <span className="text-[11px] font-mono text-[#767092] uppercase">
                     {(alt.hazardType || alt.type || "ALERT").toUpperCase()}
                   </span>
                 </div>
-                <span className="text-[11px] font-mono text-[#8E99AF]">
+                <span className="text-[11px] font-mono text-[#767092]">
                   {formatDateTime(alt.issuedAt || alt.created_at || new Date().toISOString())}
                 </span>
               </div>
 
-              <h4 className="text-sm font-bold text-white">{alt.title}</h4>
-              <p className="text-xs text-[#8E99AF] leading-relaxed">{alt.message}</p>
+              <h4 className="text-sm font-bold text-[#1C1929]">{alt.title}</h4>
+              <p className="text-xs text-[#5D5775] leading-relaxed">{alt.message}</p>
 
-              <div className="pt-2 border-t border-white/10 text-[11px] text-[#8E99AF] flex items-center justify-between">
+              <div className="pt-2 border-t border-[#E7E2DA] text-[11px] text-[#767092] flex items-center justify-between">
                 <span>Origin: {alt.source || "SDMA Odisha / ASPIRE Intelligence"}</span>
-                <span className="text-[#2FD07F] font-semibold">● Verified Broadcast</span>
+                <span className="text-emerald-700 font-semibold">● Verified Broadcast</span>
               </div>
             </div>
           ))}
