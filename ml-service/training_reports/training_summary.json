@@ -1,0 +1,135 @@
+{
+  "flood": {
+    "status": "success",
+    "elapsed_s": 412.9,
+    "metrics": {
+      "best_iteration": 456,
+      "n_features": 25,
+      "train": {
+        "label": "flood_train",
+        "threshold": 0.5,
+        "auc_roc": 1.0,
+        "avg_prec": 1.0,
+        "f1": 0.9997,
+        "precision": 0.9993,
+        "recall": 1.0,
+        "tp": 10498,
+        "fp": 7,
+        "fn": 0,
+        "tn": 108495,
+        "n_positive": 10498,
+        "n_negative": 108502
+      },
+      "val": {
+        "label": "flood_val",
+        "threshold": 0.5,
+        "auc_roc": 1.0,
+        "avg_prec": 1.0,
+        "f1": 0.9959,
+        "precision": 0.9919,
+        "recall": 1.0,
+        "tp": 1471,
+        "fp": 12,
+        "fn": 0,
+        "tn": 13392,
+        "n_positive": 1471,
+        "n_negative": 13404
+      },
+      "test": {
+        "label": "flood_test",
+        "threshold": 0.5,
+        "auc_roc": 1.0,
+        "avg_prec": 1.0,
+        "f1": 0.9992,
+        "precision": 1.0,
+        "recall": 0.9984,
+        "tp": 1276,
+        "fp": 0,
+        "fn": 2,
+        "tn": 13597,
+        "n_positive": 1278,
+        "n_negative": 13597
+      },
+      "cv_auc_mean": 0.99999782289054,
+      "cv_auc_std": 4.60365273007795e-06
+    }
+  },
+  "landslide": {
+    "status": "success",
+    "elapsed_s": 89.6,
+    "metrics": {
+      "train": {
+        "label": "landslide_train",
+        "threshold": 0.5,
+        "auc_roc": 1.0,
+        "avg_prec": 1.0,
+        "f1": 0.997,
+        "precision": 0.9989,
+        "recall": 0.9951,
+        "tp": 1812,
+        "fp": 2,
+        "fn": 9,
+        "tn": 3641,
+        "n_positive": 1821,
+        "n_negative": 3643
+      },
+      "cv_auc_mean": 0.9993623212696757,
+      "cv_auc_std": 0.0004802817592652351
+    }
+  },
+  "heatwave": {
+    "status": "success",
+    "elapsed_s": 88.3,
+    "metrics": {
+      "threshold": 0.15047394757002455,
+      "n_features": 18,
+      "train": {
+        "label": "hw_train",
+        "threshold": 0.15047394757002455,
+        "auc_roc": 0.9996,
+        "avg_prec": 0.3912,
+        "f1": 0.0249,
+        "precision": 0.0126,
+        "recall": 1.0,
+        "tp": 538,
+        "fp": 42068,
+        "fn": 0,
+        "tn": 1095714,
+        "n_positive": 538,
+        "n_negative": 1137782
+      },
+      "val": {
+        "label": "hw_val",
+        "threshold": 0.15047394757002455,
+        "auc_roc": 0.9963,
+        "avg_prec": 0.2954,
+        "f1": 0.4488,
+        "precision": 0.2894,
+        "recall": 1.0,
+        "tp": 408,
+        "fp": 1002,
+        "fn": 0,
+        "tn": 140880,
+        "n_positive": 408,
+        "n_negative": 141882
+      },
+      "test": {
+        "label": "hw_test",
+        "threshold": 0.15047394757002455,
+        "auc_roc": 0.998,
+        "avg_prec": 0.2671,
+        "f1": 0.3867,
+        "precision": 0.2397,
+        "recall": 1.0,
+        "tp": 203,
+        "fp": 644,
+        "fn": 0,
+        "tn": 141443,
+        "n_positive": 203,
+        "n_negative": 142087
+      },
+      "cv_auc_mean": NaN,
+      "cv_auc_std": NaN
+    }
+  }
+}

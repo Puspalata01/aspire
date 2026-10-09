@@ -1,0 +1,51 @@
+{
+  "best_iteration": 456,
+  "n_features": 25,
+  "train": {
+    "label": "flood_train",
+    "threshold": 0.5,
+    "auc_roc": 1.0,
+    "avg_prec": 1.0,
+    "f1": 0.9997,
+    "precision": 0.9993,
+    "recall": 1.0,
+    "tp": 10498,
+    "fp": 7,
+    "fn": 0,
+    "tn": 108495,
+    "n_positive": 10498,
+    "n_negative": 108502
+  },
+  "val": {
+    "label": "flood_val",
+    "threshold": 0.5,
+    "auc_roc": 1.0,
+    "avg_prec": 1.0,
+    "f1": 0.9959,
+    "precision": 0.9919,
+    "recall": 1.0,
+    "tp": 1471,
+    "fp": 12,
+    "fn": 0,
+    "tn": 13392,
+    "n_positive": 1471,
+    "n_negative": 13404
+  },
+  "test": {
+    "label": "flood_test",
+    "threshold": 0.5,
+    "auc_roc": 1.0,
+    "avg_prec": 1.0,
+    "f1": 0.9992,
+    "precision": 1.0,
+    "recall": 0.9984,
+    "tp": 1276,
+    "fp": 0,
+    "fn": 2,
+    "tn": 13597,
+    "n_positive": 1278,
+    "n_negative": 13597
+  },
+  "cv_auc_mean": 0.99999782289054,
+  "cv_auc_std": 4.60365273007795e-06
+}

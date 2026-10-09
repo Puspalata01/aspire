@@ -1,0 +1,527 @@
+# =============================================================================
+# Multi-Hazard Disaster Intelligence Platform - dataset registry
+#
+# Source of truth for scripts/download/run_downloads.py.
+# Derived from MULTI_HAZARD_DATASET_DOWNLOAD_MANIFEST.md; endpoints re-checked
+# against the live providers on 2026-10-05 (see "verified" notes per dataset).
+# Nothing here is a secret: credentials come from .env / environment variables.
+# =============================================================================
+
+project:
+  data_root: data            # relative to project root (override: --data-root)
+
+# ---- Area of interest: Odisha + ~0.4 degree buffer (Rule 1: clip early) ------
+aoi:
+  name: odisha_buffered
+  west: 81.0
+  south: 17.4
+  east: 88.0
+  north: 23.0
+
+# ---- Coast + nearshore Bay of Bengal (storm-surge / bathymetry) --------------
+coastal_aoi:
+  name: odisha_coast
+  west: 83.0
+  south: 17.0
+  east: 89.0
+  north: 22.5
+
+# ---- Default training history (override: --years START END) ------------------
+#   2000 = GPM IMERG start (mid-2000);  2023 = last year of IFI-Impacts labels.
+time_range:
+  start_year: 2000
+  end_year: 2023
+
+# ---- Phases (manifest sections 12 and 23). Datasets always run in number order.
+phases:
+  flood_core:   [1, 2, 5, 6, 7, 8, 9, 10, 11]   # manifest 23, first batch
+  flood_extras: [3, 4]                          # manifest 12 / master list "YES"
+  exposure:     [12, 14, 15, 16]                # manifest 23, second batch (+census)
+  mvp:          [flood_core, flood_extras, exposure]
+  optional:     [13]
+  later:        [17, 18, 19, 20, 21, 22, 23, 24]
+  all:          [mvp, optional, later]
+
+# =============================================================================
+# DATASETS  (number = master-list number = raw folder prefix)
+# access: zenodo_api | imdlib | earthaccess | cdsapi | tiled_http | srtm |
+#         direct_http | soilgrids | gdal_remote | sentinel1 | ms_buildings |
+#         chirps | gebco | landslide | manual
+# =============================================================================
+datasets:
+
+  # ---------------------------------------------------------------- FLOOD ----
+  - number: 1
+    id: flood_inventory
+    name: India Flood Inventory with Impacts (IFI-Impacts v4)
+    hazards: [flood]
+    access: zenodo_api
+    source_url: https://zenodo.org/records/16994648
+    version: v4 (record 16994648, published 2025-08-29)
+    license: "CC BY-NC 4.0 (NON-COMMERCIAL - check before commercial use)"
+    auth: none
+    approx_size: "~2 MB"
+    params:
+      record_id: "16994648"
+      fallback_files:            # used only if the API is unreachable
+        - DFSI.csv
+        - District_FloodedArea.csv
+        - District_FloodImpact.csv
+        - India_Flood_Inventory_v3.csv
+    notes: "Files + md5 verified against the record page 2026-10-05."
+
+  - number: 2
+    id: imd_rainfall
+    name: IMD 0.25 degree gridded daily rainfall
+    hazards: [flood, landslide, drought]
+    access: imdlib
+    source_url: https://imdpune.gov.in/cmpg/Griddata/Rainfall_25_NetCDF.html
+    version: IMD RF0p25 (yearly files, 1901-present)
+    license: "IMD data - check IMD terms / cite Pai et al. 2014"
+    auth: none
+    approx_size: "~5 MB per year (all-India binary); clipped NetCDF is smaller"
+    params:
+      variables: [rain]
+      to_netcdf: true            # also write an Odisha-clipped NetCDF
+    notes: >
+      IMD's archive page is a year/file selector with no stable file URL, so the
+      official `imdlib` package (which drives the same IMD download endpoint) is used.
+      It fetches the binary .grd product; the script converts/clips it to NetCDF.
+
+  - number: 3
+    id: imd_merged_rainfall
+    name: IMD merged gauge + GPM rainfall (0.25 degree)
+    hazards: [flood]
+    access: manual
+    source_url: https://imdpune.gov.in/cmpg/Griddata/Rainfall25Merged.html
+    version: n/a
+    license: "IMD - check terms"
+    auth: portal
+    approx_size: "varies"
+    params:
+      steps:
+        - "Open the IMD merged-rainfall archive page (source URL above) in a browser."
+        - "Select each year / file you need (match the training window in config/time_range)."
+        - "Save the downloaded files into THIS folder - do not rename them."
+        - "Re-run the downloader: it will detect the files and mark the dataset 'manual_present'."
+    notes: "Portal/selector driven (manifest section 15). Not automatable without a stable file URL."
+
+  - number: 4
+    id: gpm_imerg
+    name: NASA GPM IMERG Final - daily (V07)
+    hazards: [flood, landslide, lightning]
+    access: earthaccess
+    source_url: https://disc.gsfc.nasa.gov/datasets/GPM_3IMERGDF_07/summary
+    version: GPM_3IMERGDF v07
+    license: "NASA open data (cite DOI 10.5067/GPM/IMERGDF/DAY/07)"
+    auth: earthdata
+    approx_size: "~10-15 MB per GLOBAL daily file (no server-side subsetting here)"
+    params:
+      short_name: GPM_3IMERGDF
+      version: "07"
+      years: [2018, 2023]        # NARROWED on purpose: full 2000-2023 is >100 GB
+      months: [6, 7, 8, 9, 10]   # monsoon season only
+      max_granules: null
+    notes: >
+      Files are global. For AOI-only subsets use GES DISC Subsetter / Harmony instead.
+      30-min product (GPM_3IMERGHH_07) is 48 files/day - set short_name to use it.
+      Run with --dry-run first: it reports granule count and total size via CMR.
+
+  - number: 5
+    id: era5
+    name: ERA5 hourly single levels (Odisha box)
+    hazards: [flood, cyclone, heatwave, landslide, lightning, drought]
+    access: cdsapi
+    source_url: https://cds.climate.copernicus.eu/datasets/reanalysis-era5-single-levels
+    version: reanalysis-era5-single-levels
+    license: "Copernicus licence (attribution required)"
+    auth: cds
+    approx_size: "~10-40 MB per year for 7 variables over the AOI"
+    params:
+      dataset: reanalysis-era5-single-levels
+      variables:
+        - 2m_temperature
+        - 2m_dewpoint_temperature
+        - surface_pressure
+        - 10m_u_component_of_wind
+        - 10m_v_component_of_wind
+        - total_precipitation
+        - surface_solar_radiation_downwards
+      chunk: year                # year | month  (month if CDS rejects size)
+      hours: all
+    notes: "Needs ~/.cdsapirc or CDSAPI_KEY in .env and licence acceptance on the CDS dataset page."
+
+  - number: 6
+    id: cwc_wris
+    name: CWC / India-WRIS river level & discharge
+    hazards: [flood]
+    access: manual
+    source_url: https://indiawris.gov.in/
+    version: n/a
+    license: "Government of India open data (check portal terms)"
+    auth: portal
+    approx_size: "varies by stations"
+    params:
+      steps:
+        - "Open https://indiawris.gov.in/ -> Data / Surface Water -> River Water Level and Discharge."
+        - "Filter State = Odisha; select the CWC gauge stations for the first-model districts."
+        - "Choose the date range matching config/time_range and export CSV."
+        - "Save exports + the station list (with lat/lon, warning/danger levels) into THIS folder."
+        - "CWC reference page: https://cwc.gov.in/hydro-meteorological-observation"
+    notes: "Portal integration, not a static file (manifest 2.6 / 15). Extend later with a scripted India-WRIS client."
+
+  - number: 7
+    id: srtm
+    name: SRTM 30 m DEM (1 arc-second)
+    hazards: [flood, landslide]
+    access: srtm
+    source_url: https://developers.google.com/earth-engine/datasets/catalog/USGS_SRTMGL1_003
+    version: USGS/SRTMGL1_003
+    license: "Public domain (NASA/USGS)"
+    auth: none
+    approx_size: "~0.4 GB for the AOI (aws_skadi); GEE exports to your Drive"
+    params:
+      method: aws_skadi          # aws_skadi (no login) | earthaccess | gee
+      url_template: "https://elevation-tiles-prod.s3.amazonaws.com/skadi/{lat_dir}/{tile}.hgt.gz"
+      gee_asset: USGS/SRTMGL1_003
+    notes: >
+      aws_skadi = AWS Terrain Tiles (SRTM-based 1-arcsec, 1x1 degree .hgt, no account).
+      method: earthaccess uses NASA SRTMGL1 v003 (needs Earthdata login).
+      method: gee writes ready-to-run Earth Engine export script (manifest's preferred route).
+
+  - number: 8
+    id: hydrosheds
+    name: HydroSHEDS v1.1 (Asia) + HydroRIVERS + HydroBASINS
+    hazards: [flood, landslide]
+    access: direct_http
+    source_url: https://www.hydrosheds.org/hydrosheds-core-downloads
+    version: HydroSHEDS v1.1 (GeoTIFF)
+    license: "HydroSHEDS licence (see Technical Documentation); attribution required"
+    auth: none
+    approx_size: "~330 MB at 15 arc-sec; optional 3 arc-sec layers are 3-5 GB each"
+    params:
+      unzip: true
+      files:
+        - {url: "https://data.hydrosheds.org/file/hydrosheds-v1-dem/hyd_as_dem_15s.zip", name: "dem_void_filled/hyd_as_dem_15s.zip"}
+        - {url: "https://data.hydrosheds.org/file/hydrosheds-v1-dir/hyd_as_dir_15s.zip", name: "flow_direction/hyd_as_dir_15s.zip"}
+        - {url: "https://data.hydrosheds.org/file/hydrosheds-v1-acc/hyd_as_acc_15s.zip", name: "flow_accumulation/hyd_as_acc_15s.zip"}
+        - {url: "https://data.hydrosheds.org/file/HydroRIVERS/HydroRIVERS_v10_as_shp.zip", name: "hydrorivers/HydroRIVERS_v10_as_shp.zip"}
+        - {url: "https://data.hydrosheds.org/file/HydroBASINS/standard/hybas_as_lev01-12_v1c.zip", name: "hydrobasins/hybas_as_lev01-12_v1c.zip"}
+        # --- optional high-resolution (3 arc-second) continental layers: enable with --include-optional
+        - {url: "https://data.hydrosheds.org/file/hydrosheds-v1-con/as_con_3s.zip", name: "conditioned_dem_3s/as_con_3s.zip", optional: true}
+        - {url: "https://data.hydrosheds.org/file/hydrosheds-v1-dem/as_dem_3s.zip", name: "dem_void_filled_3s/as_dem_3s.zip", optional: true}
+        - {url: "https://data.hydrosheds.org/file/hydrosheds-v1-dir/as_dir_3s.zip", name: "flow_direction_3s/as_dir_3s.zip", optional: true}
+        - {url: "https://data.hydrosheds.org/file/hydrosheds-v1-acc/as_acc_3s.zip", name: "flow_accumulation_3s/as_acc_3s.zip", optional: true}
+    notes: >
+      verified: the DEM / DIR / ACC URLs were read from the official downloads page.
+      NOT verified (page not fetchable): HydroRIVERS and HydroBASINS URLs follow the
+      long-standing data.hydrosheds.org pattern; a 404 is logged, not fatal.
+      Manifest lists a "Conditioned DEM": it only exists at 3 arc-sec (4.5 GB for Asia).
+
+  - number: 9
+    id: soilgrids
+    name: SoilGrids 2.0 (250 m) - Odisha subset
+    hazards: [flood, landslide, drought]
+    access: soilgrids
+    source_url: https://isric.org/explore/soilgrids
+    version: SoilGrids 2.0 (files.isric.org/soilgrids/latest)
+    license: "CC BY 4.0 (ISRIC)"
+    auth: none
+    approx_size: "~5-20 MB per layer after clipping"
+    params:
+      base_url: https://files.isric.org/soilgrids/latest/data
+      variables: [clay, sand, silt, bdod, soc, phh2o, cec]
+      depths: [0-5cm, 5-15cm, 15-30cm]
+      stat: mean
+      pixel_deg: 0.002246        # ~250 m in EPSG:4326
+    notes: >
+      Uses GDAL (gdalwarp) to window the global VRT over HTTPS - REST API is avoided
+      per manifest. Values keep ISRIC integer scaling (see ISRIC FAQ: e.g. clay g/kg).
+
+  - number: 10
+    id: worldcover
+    name: ESA WorldCover 2021 v200 (10 m) - tiles covering the AOI
+    hazards: [flood, landslide, drought]
+    access: tiled_http
+    source_url: https://esa-worldcover.org/en/data-access
+    version: 2021 / v200
+    license: "CC BY 4.0 (ESA WorldCover project)"
+    auth: none
+    approx_size: "~100-250 MB per 3x3 degree tile"
+    params:
+      scheme: esa3deg
+      url_template: "https://esa-worldcover.s3.eu-central-1.amazonaws.com/v200/2021/map/ESA_WorldCover_10m_2021_v200_{tile}_Map.tif"
+      allow_missing: true        # all-ocean tiles do not exist (HTTP 404)
+    notes: "HTTPS access to the open AWS bucket - no AWS CLI needed. Equivalent to the s3 sync in the manifest, AOI tiles only."
+
+  - number: 11
+    id: sentinel1
+    name: Sentinel-1 SAR GRD (Copernicus Data Space)
+    hazards: [flood]
+    access: sentinel1
+    source_url: https://dataspace.copernicus.eu/data-collections/copernicus-sentinel-missions/sentinel-1
+    version: SENTINEL-1 IW_GRDH_1S
+    license: "Copernicus open access (attribution)"
+    auth: cdse
+    approx_size: "~1 GB per scene. Catalogue query only by default."
+    params:
+      product_type: IW_GRDH_1S
+      download: false            # true = download scenes (needs CDSE_USERNAME/PASSWORD)
+      max_downloads: 5
+      # EXAMPLE windows - replace with dates of real Odisha flood events taken from IFI-Impacts.
+      date_windows:
+        - ["2022-08-01", "2022-09-30"]
+        - ["2023-08-01", "2023-09-30"]
+    notes: "The catalogue query needs no login; downloading does. Always writes s1_catalogue_*.csv."
+
+  # ------------------------------------------------------------- EXPOSURE ----
+  - number: 12
+    id: worldpop
+    name: WorldPop India population counts 2025 (100 m, constrained, R2025A v1)
+    hazards: [exposure]
+    access: gdal_remote
+    source_url: https://hub.worldpop.org/geodata/summary?id=73807
+    version: R2025A v1 (2025)
+    license: "CC BY 4.0"
+    auth: none
+    approx_size: "~0.7 GB full India; a few MB clipped"
+    params:
+      clip: true                 # window via GDAL; falls back to full download if GDAL missing
+      files:
+        - {url: "https://data.worldpop.org/GIS/Population/Global_2015_2030/R2025A/2025/IND/v1/100m/constrained/ind_pop_2025_CN_100m_R2025A_v1.tif", name: "ind_pop_2025_CN_100m_R2025A_v1.tif"}
+    notes: "File path follows the verified WorldPop R2025A directory pattern."
+
+  - number: 13
+    id: worldpop_agesex
+    name: WorldPop India age/sex 2025 - children (<18) and elderly (65+) only
+    hazards: [exposure]
+    access: gdal_remote
+    source_url: https://hub.worldpop.org/geodata/summary?id=104815
+    version: R2025A v1 (2025)
+    license: "CC BY 4.0"
+    auth: none
+    approx_size: "~0.75 GB per age-sex raster; the full archive is 43 GB (NOT downloaded)"
+    params:
+      clip: true
+      files:
+        - {url: "https://data.worldpop.org/GIS/AgeSex_structures/Global_2015_2030/R2025A/2025/IND/v1/100m/constrained_U18/ind_T_Under_18_2025_CN_100m_R2025A_v1.tif", name: "ind_T_Under_18_2025_CN_100m_R2025A_v1.tif"}
+        - {url: "https://data.worldpop.org/GIS/AgeSex_structures/Global_2015_2030/R2025A/2025/IND/v1/100m/constrained/ind_t_65_2025_CN_100m_R2025A_v1.tif", name: "ind_t_65_2025_CN_100m_R2025A_v1.tif"}
+        - {url: "https://data.worldpop.org/GIS/AgeSex_structures/Global_2015_2030/R2025A/2025/IND/v1/100m/constrained/ind_t_70_2025_CN_100m_R2025A_v1.tif", name: "ind_t_70_2025_CN_100m_R2025A_v1.tif"}
+        - {url: "https://data.worldpop.org/GIS/AgeSex_structures/Global_2015_2030/R2025A/2025/IND/v1/100m/constrained/ind_t_75_2025_CN_100m_R2025A_v1.tif", name: "ind_t_75_2025_CN_100m_R2025A_v1.tif"}
+        - {url: "https://data.worldpop.org/GIS/AgeSex_structures/Global_2015_2030/R2025A/2025/IND/v1/100m/constrained/ind_t_80_2025_CN_100m_R2025A_v1.tif", name: "ind_t_80_2025_CN_100m_R2025A_v1.tif"}
+        - {url: "https://data.worldpop.org/GIS/AgeSex_structures/Global_2015_2030/R2025A/2025/IND/v1/100m/constrained/ind_t_85_2025_CN_100m_R2025A_v1.tif", name: "ind_t_85_2025_CN_100m_R2025A_v1.tif"}
+        - {url: "https://data.worldpop.org/GIS/AgeSex_structures/Global_2015_2030/R2025A/2025/IND/v1/100m/constrained/ind_t_90_2025_CN_100m_R2025A_v1.tif", name: "ind_t_90_2025_CN_100m_R2025A_v1.tif"}
+    notes: "File names verified from the WorldPop directory listing (2027 folder; identical naming for 2025). 65+ = age groups 65,70,75,80,85,90."
+
+  - number: 14
+    id: census
+    name: Census of India 2011 (population / demographic tables)
+    hazards: [exposure]
+    access: manual
+    source_url: https://censusindia.gov.in/census.website/en/data/population-finder
+    version: Census 2011
+    license: "Government of India (ORGI) - check terms"
+    auth: portal
+    approx_size: "small"
+    params:
+      steps:
+        - "Open the Census Digital Library: https://censusindia.gov.in/nada/index.php/catalog"
+        - "Manifest entry: catalog/42551 (file 2011-IndiaStateDistSbDistTwnWrd-0000-000000.xlsx)."
+        - "Also useful: catalog/42559 (Basic Population Figures, state/district/sub-district/village) and catalog/42648 (Location Code Directory, PC11_TV_DIR.xlsx)."
+        - "Open each study page -> 'Data Description / Downloads'. The site may ask you to log in (free account)."
+        - "Download the Odisha tables you need (PCA, HH-01 household size, C-14 age/sex) into THIS folder."
+    notes: "Catalogue pages were reachable 2026-10-05; file downloads are behind the NADA site's own login/terms flow."
+
+  - number: 15
+    id: buildings
+    name: Microsoft GlobalML Building Footprints (India tiles intersecting AOI)
+    hazards: [exposure]
+    access: ms_buildings
+    source_url: https://github.com/microsoft/GlobalMLBuildingFootprints
+    version: dataset-links.csv updated 2026-08-13 (discovered at run time)
+    license: "ODbL 1.0"
+    auth: none
+    approx_size: "India total ~12.6 GB / 667 tiles; AOI subset is a fraction of that"
+    params:
+      location: India
+      links_urls:
+        - "https://bfppub.blob.core.windows.net/%24web/2026-08-13/dataset-links.csv"
+        - "https://bfppub.blob.core.windows.net/%24web/2026-07-24/dataset-links.csv"
+        - "https://minedbuildings.z5.web.core.windows.net/global-buildings/dataset-links.csv"
+      readme_url: https://raw.githubusercontent.com/microsoft/GlobalMLBuildingFootprints/main/README.md
+    notes: "The tile manifest is downloaded, dated, filtered by QuadKey bounding box vs the AOI, then only those tiles are fetched."
+
+  - number: 16
+    id: osm
+    name: OpenStreetMap - Geofabrik India (Eastern Zone by default)
+    hazards: [exposure, response]
+    access: direct_http
+    source_url: https://download.geofabrik.de/asia/india.html
+    version: "latest (daily extract)"
+    license: "ODbL 1.0 (c) OpenStreetMap contributors"
+    auth: none
+    approx_size: "Eastern Zone ~230 MB; full India PBF ~1.5 GB"
+    params:
+      files:
+        - url: https://download.geofabrik.de/asia/india/eastern-zone-latest.osm.pbf
+          name: eastern-zone-latest.osm.pbf
+          md5_url: https://download.geofabrik.de/asia/india/eastern-zone-latest.osm.pbf.md5
+        - url: https://download.geofabrik.de/asia/india-latest.osm.pbf
+          name: india-latest.osm.pbf
+          md5_url: https://download.geofabrik.de/asia/india-latest.osm.pbf.md5
+          optional: true
+    notes: >
+      Eastern Zone (Bihar, Jharkhand, Odisha, West Bengal) satisfies "clip early".
+      The manifest's india-latest.osm.pbf is included as optional (--include-optional).
+      Filter to Odisha afterwards with osmium / pyrosm.
+
+  # -------------------------------------------------------------- LATER -----
+  - number: 17
+    id: ibtracs
+    name: NOAA IBTrACS v04r01 (North Indian Ocean)
+    hazards: [cyclone]
+    access: direct_http
+    source_url: https://www.ncei.noaa.gov/products/international-best-track-archive
+    version: v04r01
+    license: "NOAA open data (cite Knapp et al. 2010)"
+    auth: none
+    approx_size: "NI csv ~10 MB; ALL csv ~300 MB (optional)"
+    params:
+      files:
+        - {url: "https://www.ncei.noaa.gov/data/international-best-track-archive-for-climate-stewardship-ibtracs/v04r01/access/csv/ibtracs.NI.list.v04r01.csv", name: "ibtracs.NI.list.v04r01.csv"}
+        - {url: "https://www.ncei.noaa.gov/data/international-best-track-archive-for-climate-stewardship-ibtracs/v04r01/access/netcdf/IBTrACS.NI.v04r01.nc", name: "IBTrACS.NI.v04r01.nc"}
+        - {url: "https://www.ncei.noaa.gov/data/international-best-track-archive-for-climate-stewardship-ibtracs/v04r01/access/csv/ibtracs.ALL.list.v04r01.csv", name: "ibtracs.ALL.list.v04r01.csv", optional: true}
+    notes: "URLs taken verbatim from the manifest (not re-fetched). Data are re-published periodically; the manifest log pins access date."
+
+  - number: 18
+    id: gebco
+    name: GEBCO 2025 grid - coastal Odisha subset
+    hazards: [cyclone, storm_surge]
+    access: gebco
+    source_url: https://www.gebco.net/data-products/gridded-bathymetry-data
+    version: "GEBCO_2025 (note: GEBCO_2026 is already published - bump deliberately)"
+    license: "GEBCO terms (attribution; free to copy/adapt)"
+    auth: portal
+    approx_size: "few MB for the coastal subset (global file is 7+ GB, NOT downloaded)"
+    params:
+      opendap_url: ""            # optional: paste the CEDA OPeNDAP URL of the GEBCO_2025 netCDF to auto-subset
+      variable: elevation
+      steps:
+        - "Open https://www.gebco.net/data-products/gridded-bathymetry-data -> 'Download data for user-defined areas'."
+        - "Enter the bounding box printed in MANUAL_STEPS (coastal AOI), choose GeoTIFF or netCDF, grid GEBCO_2025."
+        - "Save the file into THIS folder and re-run; or set params.opendap_url to subset automatically."
+    notes: "GEBCO moved downloads to its own app/CEDA OPeNDAP; no stable static subset URL was found."
+
+  - number: 19
+    id: imd_temperature
+    name: IMD gridded daily temperature (Tmax / Tmin, 1.0 degree, 1951-present)
+    hazards: [heatwave]
+    access: imdlib
+    source_url: https://imdpune.gov.in/lrfindex.php
+    version: IMD gridded temperature (1.0 deg)
+    license: "IMD - check terms"
+    auth: none
+    approx_size: "~1 MB per year per variable"
+    params:
+      variables: [tmax, tmin]
+      to_netcdf: true
+    notes: >
+      The 0.5-degree products listed in the manifest are the real-time series; fetch them
+      later with imdlib.get_real_data() (not part of this training-history pull).
+
+  - number: 20
+    id: landslide_catalog
+    name: NASA Global Landslide Catalog
+    hazards: [landslide]
+    access: landslide
+    source_url: https://data.nasa.gov/dataset/global-landslide-catalog-export
+    version: "data.nasa.gov export (snapshot as of 2016-03-07) + live GLC service query"
+    license: "NASA open data (cite Kirschbaum et al. 2010/2015)"
+    auth: none
+    approx_size: "~1-2 MB"
+    params:
+      files:
+        - url: "https://data.nasa.gov/api/views/dd9e-wu2v/rows.csv?accessType=DOWNLOAD"
+          name: "Global_Landslide_Catalog_Export.csv"
+          alternates:
+            - "https://data.nasa.gov/docs/legacy/Global_Landslide_Catalog_Export/Global_Landslide_Catalog_Export_rows.csv"
+      live_service: "https://maps.nccs.nasa.gov/server/rest/services/global_landslide_catalog/glc_viewer_service/FeatureServer/0/query"
+    notes: >
+      IMPORTANT: the data.nasa.gov file is a ONE-TIME export current to March 2016.
+      The script also tries NASA's live GLC feature service for the AOI (best effort;
+      layer id unverified). Missing events = unknown, not 'no landslide'.
+
+  - number: 21
+    id: lightning_lis
+    name: NASA LIS on TRMM Science Data V5 (1998-2015)
+    hazards: [lightning]
+    access: earthaccess
+    source_url: https://data.nasa.gov/dataset/lightning-imaging-sensor-lis-on-trmm-science-data-v5
+    version: "LIS TRMM Science V5 (GHRC DAAC concept C4065949828-GHRC_DAAC)"
+    license: "NASA open data (DOI 10.5067/LIS/LIS/DATA201)"
+    auth: earthdata
+    approx_size: "192,598 granules mission-wide; capped by max_granules"
+    params:
+      concept_id: C4065949828-GHRC_DAAC
+      temporal: ["1998-01-01", "2015-04-08"]
+      max_granules: 500          # SAFETY CAP - set null for everything intersecting the AOI
+    notes: "TRMM LIS ends 2015-04-08, so it cannot label recent seasons; ISS-LIS (2017-2023) is a separate GHRC collection."
+
+  - number: 22
+    id: chirps
+    name: CHIRPS v3.0 monthly rainfall
+    hazards: [drought]
+    access: chirps
+    source_url: https://chc.ucsb.edu/data/chirps3
+    version: CHIRPS v3.0 (pinned)
+    license: "Public domain (CC0) - cite CHC"
+    auth: none
+    approx_size: "~5-15 MB per monthly global GeoTIFF; a few hundred KB clipped"
+    params:
+      start_url: https://data.chc.ucsb.edu/products/CHIRPS/v3.0/monthly/global/tifs/
+      fallback_url: https://data.chc.ucsb.edu/products/CHIRPS/v3.0/monthly/
+      years: [1981, 2023]
+      clip: true
+    notes: >
+      Repository layout could not be fetched automatically (CHC blocks robots), so the
+      script discovers files by parsing the Apache directory listing at run time.
+      For daily data use .../v3.0/daily/final/{rnl|sat}/YYYY/ (documented by CHC).
+
+  - number: 23
+    id: smap
+    name: SMAP L3 soil moisture (9 km) - SPL3SMP_E (replaces SPL3SMAP V003)
+    hazards: [drought]
+    access: earthaccess
+    source_url: https://nsidc.org/data/spl3smp_e/versions/1
+    version: "SPL3SMP_E (latest version found in CMR)"
+    license: "NASA open data (cite NSIDC DAAC)"
+    auth: earthdata
+    approx_size: "~30-40 MB per GLOBAL daily file"
+    params:
+      short_name: SPL3SMP_E
+      latest_version_only: true
+      temporal: ["2015-04-01", "2023-12-31"]
+      max_granules: 400          # SAFETY CAP - raise deliberately
+    notes: >
+      CORRECTION to the manifest: SPL3SMAP V003 (radar+radiometer) only covers
+      2015-04-13..2015-07-07 because the SMAP radar failed. SPL3SMP_E is the continuous
+      9 km radiometer daily product from 2015. Set short_name: SPL3SMAP to force the original.
+
+  - number: 24
+    id: modis_ndvi
+    name: MODIS Terra MOD13Q1 V6.1 NDVI/EVI (250 m, 16-day)
+    hazards: [drought]
+    access: earthaccess
+    source_url: https://doi.org/10.5067/MODIS/MOD13Q1.061
+    version: MOD13Q1 v061
+    license: "NASA open data (LP DAAC)"
+    auth: earthdata
+    approx_size: "~25 MB per 10x10 degree HDF tile per 16 days"
+    params:
+      short_name: MOD13Q1
+      version: "061"
+      years: [2015, 2023]        # narrowed; widen deliberately (2000-02 onward available)
+      max_granules: null
+    notes: >
+      Full sinusoidal tiles intersecting the AOI are downloaded (no clipping). For true AOI
+      subsets use AppEEARS (https://appeears.earthdatacloud.nasa.gov/) as the manifest suggests.
