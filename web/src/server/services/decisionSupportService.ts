@@ -47,7 +47,7 @@ export type DecisionSupportInput = {
 export async function supportDecision(input: DecisionSupportInput): Promise<DecisionSupportResult> {
   if (input.priority === "critical") {
     const dispatchPlan = await mlRequest<DispatchPlan[]>(
-      env.ML_SERVICE_URL + "/decision/optimization",
+      "/decision/optimize",
       { method: "POST", body: { ...input, optimize: "dispatch" }, timeout: 20000 }
     ).catch(() => []);
     if (dispatchPlan && dispatchPlan.length > 0) return { dispatch_plan: dispatchPlan, evacuation_plan: [], shelter_allocations: [] };

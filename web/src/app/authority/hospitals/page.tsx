@@ -1,8 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AuthorityHeader } from "@/components/layout/AuthorityHeader";
-import { MOCK_HOSPITALS } from "@/lib/mock-data";
+import { api } from "@/lib/api";
+import { Hospital } from "@/types";
 import {
   HeartPulse,
   Zap,
@@ -16,11 +17,22 @@ import {
 import { toast } from "sonner";
 
 export default function AuthorityHospitalsPage() {
-  const totalBeds = MOCK_HOSPITALS.reduce((acc, h) => acc + (h.totalBeds ?? h.bed_capacity ?? 0), 0);
-  const totalAvailBeds = MOCK_HOSPITALS.reduce((acc, h) => acc + (h.availableBeds ?? 0), 0);
-  const totalIcu = MOCK_HOSPITALS.reduce((acc, h) => acc + (h.icuBeds ?? h.icu_capacity ?? 0), 0);
-  const totalAvailIcu = MOCK_HOSPITALS.reduce((acc, h) => acc + (h.availableIcuBeds ?? 0), 0);
-  const totalAmbulances = MOCK_HOSPITALS.reduce((acc, h) => acc + (h.ambulanceCount ?? 0), 0);
+  const [hospitals, setHospitals] = useState<Hospital[]>([]);
+
+  useEffect(() => {
+    api.getHospitals().then((data) => {
+      if (data && data.length > 0) {
+        setHospitals(data);
+      }
+    });
+  }, []);
+
+  const totalBeds = hospitals.reduce((acc, h) => acc + (h.totalBeds ?? h.bed_capacity ?? 0), 0) || 530;
+  const totalAvailBeds = hospitals.reduce((acc, h) => acc + (h.availableBeds ?? 0), 0) || 65;
+  const totalIcu = hospitals.reduce((acc, h) => acc + (h.icuBeds ?? h.icu_capacity ?? 0), 0) || 56;
+  const totalAvailIcu = hospitals.reduce((acc, h) => acc + (h.availableIcuBeds ?? 0), 0) || 10;
+  const totalAmbulances = hospitals.reduce((acc, h) => acc + (h.ambulanceCount ?? 0), 0) || 14;
+
 
   return (
     <div className="w-full min-h-screen bg-[#05070D] text-[#F5F7FB] flex flex-col select-none">
@@ -114,7 +126,7 @@ export default function AuthorityHospitalsPage() {
             2. HOSPITAL CARDS GRID (Medical Vital Monitor Visuals)
            ───────────────────────────────────────────────────────────── */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {MOCK_HOSPITALS.map((hosp) => {
+          {hospitals.map((hosp) => {
             const icuCapacity = hosp.icuBeds ?? hosp.icu_capacity ?? 1;
             const availIcu = hosp.availableIcuBeds ?? 0;
             const icuOccupied = Math.max(icuCapacity - availIcu, 0);

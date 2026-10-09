@@ -1,8 +1,9 @@
 "use client";
+import React, { useEffect, useState } from "react";
 
-import React, { useState } from "react";
 import { AuthorityHeader } from "@/components/layout/AuthorityHeader";
-import { MOCK_ROADS } from "@/lib/mock-data";
+import { api } from "@/lib/api";
+import { RoadSegment } from "@/types";
 import {
   Navigation,
   AlertTriangle,
@@ -20,11 +21,21 @@ import { toast } from "sonner";
 
 export default function AuthorityEvacuationPage() {
   const [filter, setFilter] = useState<string>("all");
+  const [roads, setRoads] = useState<RoadSegment[]>([]);
 
-  const filteredRoads = MOCK_ROADS.filter((r) => {
+  useEffect(() => {
+    api.getRoads().then((data) => {
+      if (data && data.length > 0) {
+        setRoads(data);
+      }
+    });
+  }, []);
+
+  const filteredRoads = roads.filter((r) => {
     if (filter === "all") return true;
     return r.status === filter;
   });
+
 
   return (
     <div className="w-full min-h-screen bg-[#05070D] text-[#F5F7FB] flex flex-col select-none">

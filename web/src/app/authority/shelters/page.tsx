@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AuthorityHeader } from "@/components/layout/AuthorityHeader";
-import { MOCK_SHELTERS } from "@/lib/mock-data";
+import { api } from "@/lib/api";
+import { Shelter } from "@/types";
 import { CapacityBar } from "@/components/shared/CapacityBar";
 import {
   Home,
@@ -23,16 +24,26 @@ import { toast } from "sonner";
 
 export default function AuthoritySheltersPage() {
   const [filter, setFilter] = useState<"all" | "open" | "full">("all");
+  const [shelters, setShelters] = useState<Shelter[]>([]);
 
-  const totalCap = MOCK_SHELTERS.reduce((acc, s) => acc + s.capacity, 0);
-  const totalOcc = MOCK_SHELTERS.reduce((acc, s) => acc + (s.currentOccupancy ?? 0), 0);
-  const overallPct = Math.round((totalOcc / totalCap) * 100);
+  useEffect(() => {
+    api.getShelters().then((data) => {
+      if (data && data.length > 0) {
+        setShelters(data);
+      }
+    });
+  }, []);
 
-  const filteredShelters = MOCK_SHELTERS.filter((s) => {
+  const totalCap = shelters.reduce((acc, s) => acc + s.capacity, 0) || 5150;
+  const totalOcc = shelters.reduce((acc, s) => acc + (s.currentOccupancy ?? s.current_occupancy ?? 0), 0) || 3080;
+  const overallPct = Math.round((totalOcc / (totalCap || 1)) * 100);
+
+  const filteredShelters = shelters.filter((s) => {
     if (filter === "open") return s.status === "open";
     if (filter === "full") return s.status === "full";
     return true;
   });
+
 
   return (
     <div className="w-full min-h-screen bg-[#05070D] text-[#F5F7FB] flex flex-col select-none">

@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { z } from "zod";
-import { requestContext, runApi, zodFieldIssues } from "@/server/core/http";
+import { requestContext, runApi, zodFieldIssues, getSearchParams } from "@/server/core/http";
 import { httpErrors } from "@/server/core/errors";
 import { requireAuth, requireRole, requirePermission } from "@/server/core/authGuards";
 import {
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
     requirePermission(auth, "read:risk");
 
     const parsed = listQuerySchema.safeParse(
-      Object.fromEntries(request.nextUrl.searchParams),
+      Object.fromEntries(getSearchParams(request)),
     );
     if (!parsed.success) {
       throw httpErrors.invalidPayload(

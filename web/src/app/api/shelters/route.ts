@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
-import { MOCK_SHELTERS } from "@/lib/mock-data";
+import { domainStore } from "@/server/domainStore";
 
 export async function GET() {
-  return NextResponse.json(MOCK_SHELTERS);
+  const shelters = domainStore.getShelters();
+  return NextResponse.json(shelters);
 }
+

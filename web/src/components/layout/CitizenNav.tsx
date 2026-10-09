@@ -33,7 +33,7 @@ export function CitizenNav() {
   return (
     <>
       {/* Desktop Top Sub-Nav */}
-      <nav className="hidden md:flex items-center justify-center gap-2 border-b border-[#D4D4D1] bg-[#E9E9E7] shadow-raise-1 px-4 py-2.5 sticky top-16 z-20">
+      <nav className="hidden md:flex items-center justify-center gap-2 border-b border-white/10 bg-[#0A101D]/80 backdrop-blur-xl px-4 py-2.5 sticky top-16 z-20">
         {CITIZEN_NAV_ITEMS.map((item) => {
           const Icon = ICON_MAP[item.icon] || Home;
           const isActive = pathname === item.href;
@@ -43,12 +43,12 @@ export function CitizenNav() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold transition-all duration-160",
+                "flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-160 cursor-pointer",
                 item.highlight
-                  ? "bg-[#F1F1EF] text-[#D64545] border border-[#D64545]/40 shadow-raise-2 hover:shadow-raise-3 active:shadow-sink-1 font-bold"
+                  ? "bg-[#FF4D5E]/20 text-[#FF4D5E] border border-[#FF4D5E]/40 shadow-[0_0_12px_rgba(255,77,94,0.3)] font-bold animate-pulse"
                   : isActive
-                  ? "bg-[#8E8E93] text-[#1D1D1F] shadow-raise-2"
-                  : "text-[#4A4A4F] hover:bg-[#F1F1EF] hover:shadow-raise-1 active:shadow-sink-1"
+                  ? "bg-[#3B6CFF] text-white shadow-[0_0_15px_rgba(59,108,255,0.45)]"
+                  : "text-[#8E99AF] hover:text-white hover:bg-white/5"
               )}
             >
               <Icon className="w-4 h-4" />
@@ -59,7 +59,7 @@ export function CitizenNav() {
       </nav>
 
       {/* Mobile Bottom Navigation Bar */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#E9E9E7] border-t border-[#D4D4D1] shadow-raise-3 px-3 py-2 flex items-center justify-around">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#060A13]/90 border-t border-white/10 backdrop-blur-2xl px-3 py-2 flex items-center justify-around">
         {CITIZEN_NAV_ITEMS.slice(0, 5).map((item) => {
           const Icon = ICON_MAP[item.icon] || Home;
           const isActive = pathname === item.href;
@@ -71,20 +71,20 @@ export function CitizenNav() {
               className={cn(
                 "flex flex-col items-center justify-center py-1.5 px-3 rounded-2xl text-[10px] font-semibold transition-all duration-160 relative",
                 item.highlight
-                  ? "text-[#D64545] font-bold"
+                  ? "text-[#FF4D5E] font-bold"
                   : isActive
-                  ? "text-[#1D1D1F]"
-                  : "text-[#8A8A90] hover:text-[#4A4A4F]"
+                  ? "text-white"
+                  : "text-[#8E99AF] hover:text-white"
               )}
             >
               <div
                 className={cn(
-                  "p-2 rounded-full transition-all duration-160",
+                  "p-2 rounded-xl transition-all duration-160",
                   item.highlight
-                    ? "bg-[#F1F1EF] text-[#D64545] shadow-raise-1 border border-[#D64545]/30"
+                    ? "bg-[#FF4D5E]/20 text-[#FF4D5E] border border-[#FF4D5E]/40"
                     : isActive
-                    ? "bg-[#8E8E93] text-[#1D1D1F] shadow-raise-2"
-                    : "bg-[#F1F1EF] text-[#8A8A90] shadow-raise-1"
+                    ? "bg-[#3B6CFF] text-white shadow-md"
+                    : "bg-white/5 text-[#8E99AF]"
                 )}
               >
                 <Icon className="w-4 h-4" />

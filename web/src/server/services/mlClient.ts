@@ -104,7 +104,11 @@ export async function mlRequest<T>(
   options: MLClientOptions & { method?: string; body?: unknown } = {}
 ): Promise<T> {
   const { timeout = 10000, retries = 3, retryDelay = 1000, method = "GET", body } = options;
-  const url = `${env.ML_SERVICE_URL}${path}`;
+  const baseUrl = (env.ML_SERVICE_URL || "http://localhost:8000").replace(/\/+$/, "");
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  const url = path.startsWith("http://") || path.startsWith("https://")
+    ? path
+    : `${baseUrl}${normalizedPath}`;
 
   let lastError: Error | null = null;
 

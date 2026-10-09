@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
-import { MOCK_RESOURCES } from "@/lib/mock-data";
+import React, { useEffect, useState } from "react";
+import { api } from "@/lib/api";
+import { Resource } from "@/types";
 import {
   Truck,
   Fuel,
@@ -17,6 +18,15 @@ import { toast } from "sonner";
 
 export function ResourceOverview() {
   const [filterType, setFilterType] = useState<string>("all");
+  const [resources, setResources] = useState<Resource[]>([]);
+
+  useEffect(() => {
+    api.getResources().then((data) => {
+      if (data && data.length > 0) {
+        setResources(data);
+      }
+    });
+  }, []);
 
   const handleDeploy = (name: string) => {
     toast.success(`Priority deployment transmitted: ${name}`);
@@ -37,10 +47,11 @@ export function ResourceOverview() {
     }
   };
 
-  const filtered = MOCK_RESOURCES.filter((r) => {
+  const filtered = resources.filter((r) => {
     if (filterType === "all") return true;
     return r.type === filterType;
   });
+
 
   return (
     <div className="space-y-4 select-none">

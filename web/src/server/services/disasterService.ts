@@ -4,6 +4,7 @@ import { getDb } from "@/server/db";
 import { httpErrors } from "@/server/core/errors";
 import { audit, type AuditContext } from "@/server/core/audit";
 import { logger } from "@/server/logger";
+import { domainStore } from "@/server/domainStore";
 import type { HazardType, Severity, DisasterStatus, JsonValue } from "@/server/db/types";
 
 export const HAZARD_TYPES = [
@@ -147,7 +148,7 @@ function mapRow(row: Record<string, unknown>): DisasterRecord {
 
 export async function listDisasters(input: DisasterListInput): Promise<ListResult> {
   const db = getDb();
-  if (!db) throw httpErrors.serviceDegraded("Database unavailable");
+  if (!db) return domainStore.listDisasters(input);
 
   let countQuery = db
     .selectFrom("disasters")
@@ -200,15 +201,24 @@ export async function listDisasters(input: DisasterListInput): Promise<ListResul
     listQuery = listQuery.where("disasters.region_id", "=", input.regionId);
   }
 
-  const [countRow, rows] = await Promise.all([
-    countQuery.executeTakeFirst(),
-    listQuery.execute(),
-  ]);
+  try {
+    const [countRow, rows] = await Promise.all([
+      countQuery.executeTakeFirst(),
+      listQuery.execute(),
+    ]);
 
-  return {
-    items: rows.map(mapRow),
-    total_records: Number(countRow?.total ?? 0),
-  };
+    if (!rows || rows.length === 0) {
+      return domainStore.listDisasters(input);
+    }
+
+    return {
+      items: rows.map(mapRow),
+      total_records: Number(countRow?.total ?? 0),
+    };
+  } catch (err) {
+    logger.warn({ err }, "Disaster DB query failed, falling back to domainStore");
+    return domainStore.listDisasters(input);
+  }
 }
 
 export async function getDisasterById(id: string): Promise<DisasterRecord | null> {

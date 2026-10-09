@@ -44,6 +44,13 @@ export function getRequestId(request: NextRequest): string {
   return request.headers.get("x-request-id") ?? crypto.randomUUID();
 }
 
+export function getSearchParams(request: NextRequest | Request): URLSearchParams {
+  if (request && "nextUrl" in request && request.nextUrl?.searchParams) {
+    return request.nextUrl.searchParams;
+  }
+  return new URL(request.url).searchParams;
+}
+
 export function requestContext(request: NextRequest): { ip: string | null; userAgent: string | null } {
   const forwarded = request.headers.get("x-forwarded-for");
   const ip = forwarded?.split(",")[0]?.trim() || request.headers.get("x-real-ip") || null;
@@ -90,7 +97,9 @@ function errorResponse(request: NextRequest, error: unknown, requestId: string):
   const code = apiError?.code ?? "INTERNAL_ERROR";
   const message = apiError?.message ?? "Internal server error";
 
-  const logPayload = { err: error, request_id: requestId, method: request.method, path: request.nextUrl.pathname };
+  const pathname = request?.nextUrl?.pathname ?? (request?.url ? new URL(request.url).pathname : "unknown");
+  const method = request?.method ?? "GET";
+  const logPayload = { err: error, request_id: requestId, method, path: pathname };
   if (status >= 500) {
     logger.error(logPayload, "request failed");
   } else {

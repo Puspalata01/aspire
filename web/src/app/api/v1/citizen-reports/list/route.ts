@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { z } from "zod";
-import { runApi, zodFieldIssues } from "@/server/core/http";
+import { runApi, zodFieldIssues, getSearchParams } from "@/server/core/http";
 import { httpErrors } from "@/server/core/errors";
 import { requireAuth, requireRole, requirePermission } from "@/server/core/authGuards";
 import { listCitizenReports, REPORT_TYPES, VERIFICATION_STATUSES, SEVERITIES } from "@/server/services/citizenReportService";
@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
     requireRole(auth, ["authority", "admin", "super_admin"]);
     requirePermission(auth, "manage:alerts");
 
-    const parsed = listQuerySchema.safeParse(Object.fromEntries(request.nextUrl.searchParams));
+    const parsed = listQuerySchema.safeParse(Object.fromEntries(getSearchParams(request)));
     if (!parsed.success) {
       throw httpErrors.invalidPayload(
         "Citizen reports list query failed schema validation",

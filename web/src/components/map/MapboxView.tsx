@@ -1,15 +1,11 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useMapStore } from "@/stores/useMapStore";
-import {
-  MOCK_ACTIVE_DISASTER,
-  MOCK_SOS_REQUESTS,
-  MOCK_SHELTERS,
-  MOCK_HOSPITALS,
-  MOCK_RESOURCES,
-} from "@/lib/mock-data";
+import { api } from "@/lib/api";
+import { SOSRequest, Shelter, Hospital, Resource } from "@/types";
 import { LayerControls } from "./LayerControls";
+
 import {
   ShieldAlert,
   Home,
@@ -25,6 +21,29 @@ import {
 export function MapboxView({ height = "100%" }: { height?: string }) {
   const { center, zoom, layers, setSelectedEntity, setViewport } = useMapStore();
   const [activeItem, setActiveItem] = useState<any>(null);
+  const [sosList, setSosList] = useState<SOSRequest[]>([]);
+  const [shelters, setShelters] = useState<Shelter[]>([]);
+  const [hospitals, setHospitals] = useState<Hospital[]>([]);
+  const [resources, setResources] = useState<Resource[]>([]);
+
+  useEffect(() => {
+    let isMounted = true;
+    Promise.all([
+      api.getSOSRequests(),
+      api.getShelters(),
+      api.getHospitals(),
+      api.getResources(),
+    ]).then(([s, sh, h, r]) => {
+      if (!isMounted) return;
+      if (s && s.length > 0) setSosList(s);
+      if (sh && sh.length > 0) setShelters(sh);
+      if (h && h.length > 0) setHospitals(h);
+      if (r && r.length > 0) setResources(r);
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // Fallback interactive vector canvas coordinates mapping
   // Map bounds: lat [19.65 -> 20.0], lng [85.6 -> 86.15]
@@ -32,6 +51,7 @@ export function MapboxView({ height = "100%" }: { height?: string }) {
   const maxLat = 20.05;
   const minLng = 85.55;
   const maxLng = 86.18;
+
 
   const projectToPct = (lat: number, lng: number) => {
     const x = ((lng - minLng) / (maxLng - minLng)) * 100;
@@ -158,7 +178,7 @@ export function MapboxView({ height = "100%" }: { height?: string }) {
 
         {/* SOS Incident Word-Labelled Pill Markers */}
         {layers.sosMarkers &&
-          MOCK_SOS_REQUESTS.map((sos) => {
+          sosList.map((sos) => {
             const { x, y } = projectToPct(sos.location.lat, sos.location.lng);
 
             return (
@@ -195,7 +215,7 @@ export function MapboxView({ height = "100%" }: { height?: string }) {
 
         {/* Shelter Word-Labelled Pill Markers */}
         {layers.shelters &&
-          MOCK_SHELTERS.map((sh) => {
+          shelters.map((sh) => {
             const { x, y } = projectToPct(sh.location.lat, sh.location.lng);
             return (
               <div
@@ -227,7 +247,7 @@ export function MapboxView({ height = "100%" }: { height?: string }) {
 
         {/* Hospital Word-Labelled Pill Markers */}
         {layers.hospitals &&
-          MOCK_HOSPITALS.map((hosp) => {
+          hospitals.map((hosp) => {
             const { x, y } = projectToPct(hosp.location.lat, hosp.location.lng);
             return (
               <div
@@ -252,7 +272,7 @@ export function MapboxView({ height = "100%" }: { height?: string }) {
 
         {/* NDRF Rescue Boats & Assets */}
         {layers.ndrfUnits &&
-          MOCK_RESOURCES.map((res) => {
+          resources.map((res) => {
             const { x, y } = projectToPct(res.location.lat, res.location.lng);
             return (
               <div

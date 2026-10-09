@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { z } from "zod";
-import { requestContext, runApi, zodFieldIssues } from "@/server/core/http";
+import { requestContext, runApi, zodFieldIssues, getSearchParams } from "@/server/core/http";
 import { httpErrors } from "@/server/core/errors";
 import { requireAuth, requireRole, requirePermission } from "@/server/core/authGuards";
 import { createHospitalSchema, createHospital, listHospitals, HOSPITAL_TYPES, EMERGENCY_STATUSES } from "@/server/services/hospitalService";
@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
     const auth = await requireAuth(request);
     requirePermission(auth, "read:hospitals");
 
-    const parsed = listQuerySchema.safeParse(Object.fromEntries(request.nextUrl.searchParams));
+    const parsed = listQuerySchema.safeParse(Object.fromEntries(getSearchParams(request)));
     if (!parsed.success) {
       throw httpErrors.invalidPayload(
         "hospitals list query failed schema validation",

@@ -62,14 +62,20 @@ function ruleBasedCopilot(prompt: string): CopilotResponse {
 
 export async function copilotQuery(input: CopilotInput): Promise<CopilotResponse> {
   try {
-    const llmUrl = env.ML_SERVICE_URL + "/llm/copilot";
-    const response = await mlRequest<CopilotResponse>(llmUrl, {
-      method: "POST",
-      body: input,
-      timeout: 30000,
-      retries: 2,
-    });
-    return response;
+    const response = await mlRequest<{ response: string; intent?: string; entities_extracted?: unknown }>(
+      "/llm/query",
+      {
+        method: "POST",
+        body: { query: input.prompt, session_id: "aspire-copilot", context: input.context_scope },
+        timeout: 30000,
+        retries: 2,
+      }
+    );
+    return {
+      answer: response.response,
+      citations: [{ source: `AI Intent (${response.intent ?? "general"})`, value: "Context Model" }],
+      suggested_actions: [],
+    };
   } catch (error) {
     logger.warn("LLM copilot fell back to rule-based engine");
     return ruleBasedCopilot(input.prompt);

@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { z } from "zod";
-import { requestContext, runApi, zodFieldIssues } from "@/server/core/http";
+import { requestContext, runApi, zodFieldIssues, getSearchParams } from "@/server/core/http";
 import { httpErrors } from "@/server/core/errors";
 import { requireAuth, requireRole, requirePermission } from "@/server/core/authGuards";
 import { createResourceSchema, createResource, listResources, RESOURCE_TYPES, RESOURCE_STATUSES } from "@/server/services/resourceService";
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
     const auth = await requireAuth(request);
     requirePermission(auth, "read:resources");
 
-    const parsed = listQuerySchema.safeParse(Object.fromEntries(request.nextUrl.searchParams));
+    const parsed = listQuerySchema.safeParse(Object.fromEntries(getSearchParams(request)));
     if (!parsed.success) {
       throw httpErrors.invalidPayload(
         "resources list query failed schema validation",

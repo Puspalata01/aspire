@@ -4,6 +4,7 @@ import { getDb } from "@/server/db";
 import { httpErrors } from "@/server/core/errors";
 import { audit, type AuditContext } from "@/server/core/audit";
 import { logger } from "@/server/logger";
+import { domainStore } from "@/server/domainStore";
 import type {
   AlertType,
   AlertAudience,
@@ -160,29 +161,35 @@ export async function listAlerts(input: {
   limit: number;
 }) {
   const db = getDb();
-  if (!db) throw httpErrors.serviceDegraded("Database unavailable");
+  if (!db) return domainStore.listAlerts(input);
 
-  let count = db
-    .selectFrom("alerts")
-    .select((eb) => eb.fn.countAll().as("total"));
+  try {
+    let count = db
+      .selectFrom("alerts")
+      .select((eb) => eb.fn.countAll().as("total"));
 
-  let q = baseSelect(db).orderBy("alerts.created_at", "desc").offset((input.page - 1) * input.limit).limit(input.limit);
+    let q = baseSelect(db).orderBy("alerts.created_at", "desc").offset((input.page - 1) * input.limit).limit(input.limit);
 
-  if (input.status) {
-    count = count.where("alerts.status", "=", input.status);
-    q = q.where("alerts.status", "=", input.status);
+    if (input.status) {
+      count = count.where("alerts.status", "=", input.status);
+      q = q.where("alerts.status", "=", input.status);
+    }
+    if (input.severity) {
+      count = count.where("alerts.severity", "=", input.severity);
+      q = q.where("alerts.severity", "=", input.severity);
+    }
+    if (input.disasterId) {
+      count = count.where("alerts.disaster_id", "=", input.disasterId);
+      q = q.where("alerts.disaster_id", "=", input.disasterId);
+    }
+
+    const [total, rows] = await Promise.all([count.executeTakeFirst(), q.execute()]);
+    if (!rows || rows.length === 0) return domainStore.listAlerts(input);
+    return { items: rows.map(mapRow), total_records: Number(total?.total ?? 0) };
+  } catch (err) {
+    logger.warn({ err }, "Alert DB query failed, falling back to domainStore");
+    return domainStore.listAlerts(input);
   }
-  if (input.severity) {
-    count = count.where("alerts.severity", "=", input.severity);
-    q = q.where("alerts.severity", "=", input.severity);
-  }
-  if (input.disasterId) {
-    count = count.where("alerts.disaster_id", "=", input.disasterId);
-    q = q.where("alerts.disaster_id", "=", input.disasterId);
-  }
-
-  const [total, rows] = await Promise.all([count.executeTakeFirst(), q.execute()]);
-  return { items: rows.map(mapRow), total_records: Number(total?.total ?? 0) };
 }
 
 export async function getAlertById(id: string): Promise<AlertRecord | null> {

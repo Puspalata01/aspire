@@ -5,7 +5,9 @@ import { httpErrors } from "@/server/core/errors";
 import { audit, type AuditContext } from "@/server/core/audit";
 import { logger } from "@/server/logger";
 import { touch } from "@/server/db/updates";
+import { domainStore } from "@/server/domainStore";
 import type { RoadType, RoadStatus, Severity, JsonValue } from "@/server/db/types";
+
 
 export const ROAD_TYPES = ["highway", "primary", "secondary", "tertiary", "local", "bridge"] as const;
 
@@ -104,7 +106,7 @@ function mapRow(row: Record<string, unknown>): RoadRecord {
 
 export const roadQuerySchema = z.object({
   status: z.enum(ROAD_STATUSES).optional(),
-  region_id: z.uuid().optional(),
+  region_id: z.string().optional(),
   bbox: z
     .string()
     .optional()
@@ -126,50 +128,99 @@ export type RoadQuery = z.infer<typeof roadQuerySchema>;
 
 export async function roadOverlays(input: RoadQuery): Promise<FeatureCollection> {
   const db = getDb();
-  if (!db) throw httpErrors.serviceDegraded("Database unavailable");
-
-  let q = baseSelect(db).orderBy("roads.last_status_update", "desc").limit(200);
-
-  if (input.status) q = q.where("roads.status", "=", input.status);
-  if (input.region_id) q = q.where("roads.region_id", "=", input.region_id);
-  if (input.bbox) {
-    const { minLng, minLat, maxLng, maxLat } = input.bbox;
-    q = q.where(
-      sql<SqlBool>`ST_Intersects(ST_MakeEnvelope(${minLng}, ${minLat}, ${maxLng}, ${maxLat}, 4326),
-        "roads"."geometry")`,
-    );
+  if (!db) {
+    const fallbackRoads = domainStore.getRoads();
+    return {
+      type: "FeatureCollection",
+      features: fallbackRoads.map((r) => ({
+        type: "Feature",
+        id: r.id,
+        geometry: {
+          type: "LineString",
+          coordinates: r.coordinates,
+        },
+        properties: {
+          id: r.id,
+          road_name: r.name,
+          status: r.status,
+          condition: r.condition,
+          severity: r.severity,
+          road_type: r.road_type,
+          length_km: r.length_km,
+          notes: r.notes,
+        },
+      })),
+    };
   }
 
-  const rows = (await q.execute()) as unknown as Record<string, unknown>[];
-  return {
-    type: "FeatureCollection",
-    features: rows
-      .filter((r) => r.feature_geometry != null)
-      .map((r) => {
-        const record = mapRow(r);
-        return {
-          type: "Feature",
-          id: record.id,
-          geometry: JSON.parse(r.feature_geometry as string),
-          properties: {
-            road_name: record.name,
-            road_type: record.road_type,
-            condition: record.condition,
-            flood_risk: record.flood_risk,
-            water_depth_cm: record.metadata && typeof record.metadata === "object"
-              ? (record.metadata as Record<string, unknown>).water_depth_cm
-              : undefined,
-            blockage_level: record.blockage_level,
-            blockage_reason: record.blockage_reason,
-            length_km: record.length_km,
-            speed_limit_kmh: record.speed_limit_kmh,
-            current_speed_kmh: record.current_speed_kmh,
-            connects_hospital: record.connects_hospital,
-            connects_shelter: record.connects_shelter,
-          },
-        };
-      }),
-  };
+  try {
+    let q = baseSelect(db).orderBy("roads.last_status_update", "desc").limit(200);
+
+    if (input.status) q = q.where("roads.status", "=", input.status);
+    if (input.region_id) q = q.where("roads.region_id", "=", input.region_id);
+    if (input.bbox) {
+      const { minLng, minLat, maxLng, maxLat } = input.bbox;
+      q = q.where(
+        sql<SqlBool>`ST_Intersects(ST_MakeEnvelope(${minLng}, ${minLat}, ${maxLng}, ${maxLat}, 4326),
+          "roads"."geometry")`,
+      );
+    }
+
+    const rows = (await q.execute()) as unknown as Record<string, unknown>[];
+    return {
+      type: "FeatureCollection",
+      features: rows
+        .filter((r) => r.feature_geometry != null)
+        .map((r) => {
+          const record = mapRow(r);
+          return {
+            type: "Feature",
+            id: record.id,
+            geometry: JSON.parse(r.feature_geometry as string),
+            properties: {
+              road_name: record.name,
+              road_type: record.road_type,
+              condition: record.condition,
+              flood_risk: record.flood_risk,
+              water_depth_cm: record.metadata && typeof record.metadata === "object"
+                ? (record.metadata as Record<string, unknown>).water_depth_cm
+                : undefined,
+              blockage_level: record.blockage_level,
+              blockage_reason: record.blockage_reason,
+              length_km: record.length_km,
+              speed_limit_kmh: record.speed_limit_kmh,
+              current_speed_kmh: record.current_speed_kmh,
+              connects_hospital: record.connects_hospital,
+              connects_shelter: record.connects_shelter,
+            },
+          };
+        }),
+    };
+  } catch (error) {
+    logger.warn({ err: error }, "DB roads query failed, falling back to domainStore");
+    const fallbackRoads = domainStore.getRoads();
+    return {
+      type: "FeatureCollection",
+      features: fallbackRoads.map((r) => ({
+        type: "Feature",
+        id: r.id,
+        geometry: {
+          type: "LineString",
+          coordinates: r.coordinates,
+        },
+        properties: {
+          id: r.id,
+          road_name: r.name,
+          status: r.status,
+          condition: r.condition,
+          severity: r.severity,
+          road_type: r.road_type,
+          length_km: r.length_km,
+          notes: r.notes,
+        },
+      })),
+    };
+  }
 }
 
 export const updateRoadSchema = z.object({

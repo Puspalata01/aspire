@@ -7,8 +7,13 @@ export const runtime = "nodejs";
 
 export async function GET(request: NextRequest) {
   return runApi(request, async () => {
-    await requireAuth(request);
-    const kpis = await getDashboardKpis();
-    return { data: kpis };
+    try {
+      await requireAuth(request);
+      const kpis = await getDashboardKpis();
+      return { data: kpis };
+    } catch (err) {
+      console.error("DASHBOARD KPIS ROUTE ERROR:", err);
+      throw err;
+    }
   });
 }

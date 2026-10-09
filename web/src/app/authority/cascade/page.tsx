@@ -1,9 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AuthorityHeader } from "@/components/layout/AuthorityHeader";
-import { MOCK_CASCADE_GRAPH } from "@/lib/mock-data";
-import { CascadeGraphNode, CascadeGraphEdge } from "@/types";
+import { api } from "@/lib/api";
+import { CascadeGraph, CascadeGraphNode, CascadeGraphEdge } from "@/types";
 import {
   Workflow,
   ArrowRight,
@@ -18,6 +18,32 @@ import {
 } from "lucide-react";
 
 export default function AuthorityCascadePage() {
+  const [graph, setGraph] = useState<CascadeGraph>({
+    nodes: [
+      { id: "surge", label: "2.4m Storm Surge", type: "hazard", status: "critical", impactScore: 94 },
+      { id: "grid", label: "132kV Grid Substation Puri", type: "power", status: "critical", impactScore: 82 },
+      { id: "water", label: "Mangalahat Water Works", type: "water", status: "vulnerable", impactScore: 78 },
+      { id: "hospital", label: "DHH Puri Hospital ICU", type: "hospital", status: "vulnerable", impactScore: 70 },
+      { id: "telecom", label: "Coastal Cellular Towers (18)", type: "telecom", status: "critical", impactScore: 85 },
+      { id: "evac", label: "Puri Coastal Shelters (5)", type: "shelter", status: "active", impactScore: 55 },
+    ],
+    edges: [
+      { source: "surge", target: "grid", probabilityPct: 88, lagHours: 2 },
+      { source: "grid", target: "water", probabilityPct: 94, lagHours: 4 },
+      { source: "grid", target: "hospital", probabilityPct: 80, lagHours: 1 },
+      { source: "surge", target: "telecom", probabilityPct: 91, lagHours: 2 },
+      { source: "surge", target: "evac", probabilityPct: 65, lagHours: 3 },
+    ],
+  });
+
+  useEffect(() => {
+    api.getCascadeGraph("cyclone", 24).then((data) => {
+      if (data && data.nodes && data.nodes.length > 0) {
+        setGraph(data);
+      }
+    });
+  }, []);
+
   const getNodeIcon = (type: string) => {
     switch (type) {
       case "power":
@@ -131,13 +157,13 @@ export default function AuthorityCascadePage() {
               <span>Inter-Sector Critical Infrastructure Nodes</span>
             </h3>
             <span className="text-xs font-mono font-semibold text-[#3B6CFF] px-2.5 py-0.5 rounded-full bg-[#3B6CFF]/15 border border-[#3B6CFF]/30">
-              {MOCK_CASCADE_GRAPH.nodes.length} Interconnected Vertices
+              {graph.nodes.length} Interconnected Vertices
             </span>
           </div>
 
           {/* Nodes Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
-            {MOCK_CASCADE_GRAPH.nodes.map((node: CascadeGraphNode) => {
+            {graph.nodes.map((node: CascadeGraphNode) => {
               const Icon = getNodeIcon(node.type);
               const isCrit = node.status === "critical";
 
@@ -190,7 +216,7 @@ export default function AuthorityCascadePage() {
             </h4>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
-              {MOCK_CASCADE_GRAPH.edges.map((edge: CascadeGraphEdge, idx: number) => (
+              {graph.edges.map((edge: CascadeGraphEdge, idx: number) => (
                 <div
                   key={idx}
                   className="flex items-center justify-between p-3 rounded-xl bg-[#161D2E]/80 border border-white/5"

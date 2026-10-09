@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { z } from "zod";
-import { runApi, zodFieldIssues } from "@/server/core/http";
+import { runApi, zodFieldIssues, getSearchParams } from "@/server/core/http";
 import { httpErrors } from "@/server/core/errors";
 import { requireAuth } from "@/server/core/authGuards";
 import { generateRiskHeatmap } from "@/server/services/analyticsService";
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
   return runApi(request, async () => {
     await requireAuth(request);
 
-    const parsed = querySchema.safeParse(Object.fromEntries(request.nextUrl.searchParams));
+    const parsed = querySchema.safeParse(Object.fromEntries(getSearchParams(request)));
     if (!parsed.success) {
       throw httpErrors.invalidPayload(
         "Risk heatmap query failed schema validation",

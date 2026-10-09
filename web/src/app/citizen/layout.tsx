@@ -9,7 +9,7 @@ export default function CitizenLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-[#E9E9E7] text-[#4A4A4F] flex flex-col font-sans">
+    <div className="min-h-screen bg-[#05070D] text-[#F5F7FB] flex flex-col font-sans selection:bg-[#3B6CFF] selection:text-white">
       <CitizenHeader />
       <LiveAlertBanner />
       <CitizenNav />

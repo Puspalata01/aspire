@@ -2,9 +2,16 @@ import { NextRequest } from "next/server";
 import { requestContext, runApi, zodFieldIssues } from "@/server/core/http";
 import { httpErrors } from "@/server/core/errors";
 import { requireAuth } from "@/server/core/authGuards";
-import { createSosSchema, createSos } from "@/server/services/sosService";
+import { createSosSchema, createSos, listSos } from "@/server/services/sosService";
 
 export const runtime = "nodejs";
+
+export async function GET(request: NextRequest) {
+  return runApi(request, async () => {
+    const { items, total_records } = await listSos({ page: 1, limit: 50 });
+    return { data: items, total_records };
+  });
+}
 
 export async function POST(request: NextRequest) {
   return runApi(request, async () => {

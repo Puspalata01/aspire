@@ -1,7 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { api } from "@/lib/api";
+import { CycloneGlobeVisual } from "@/components/dark-globe/CycloneGlobeVisual";
+import { Disaster, DashboardKPIs, Alert } from "@/types";
 import {
   LayoutDashboard,
   Globe,
@@ -24,6 +27,8 @@ import {
   Building,
   Shield,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   ExternalLink,
   Droplets,
   Gauge,
@@ -31,6 +36,10 @@ import {
   ArrowRight,
   Radio,
   Box,
+  PanelLeftClose,
+  PanelLeftOpen,
+  PanelRightClose,
+  PanelRightOpen,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -38,11 +47,34 @@ export default function AuthorityMapPage() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [activeTool, setActiveTool] = useState<string>("3d");
   const [selectedMilestone, setSelectedMilestone] = useState<number>(0);
+  const [showLeftPanel, setShowLeftPanel] = useState(true);
+  const [showRightPanel, setShowRightPanel] = useState(true);
+  const [activeDisaster, setActiveDisaster] = useState<Disaster | null>(null);
+  const [kpis, setKpis] = useState<DashboardKPIs | null>(null);
+  const [alerts, setAlerts] = useState<Alert[]>([]);
+
+  useEffect(() => {
+    let isMounted = true;
+    Promise.all([
+      api.getActiveDisaster(),
+      api.getKPIs(),
+      api.getAlerts(),
+    ]).then(([d, k, a]) => {
+      if (!isMounted) return;
+      if (d) setActiveDisaster(d);
+      if (k) setKpis(k);
+      if (a && a.length > 0) setAlerts(a);
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // Layer toggles matching reference image exactly
   const [layers, setLayers] = useState({
     hazardZones: true,
     cycloneTrack: true,
+
     rainfall: true,
     windSpeed: true,
     satelliteImagery: true,
@@ -58,119 +90,7 @@ export default function AuthorityMapPage() {
   };
 
   return (
-    <div className="w-screen h-screen bg-[#060A13] text-[#F5F7FB] flex overflow-hidden select-none font-sans relative">
-      {/* ═══════════════════════════════════════════════════════════════
-          1. LEFT SLIM SIDEBAR (Exact Match to Reference Image)
-         ═══════════════════════════════════════════════════════════════ */}
-      <aside className="w-[72px] h-full bg-[#060A13] border-r border-white/10 flex flex-col items-center justify-between py-3 z-30 shrink-0">
-        {/* Top: Brand Logo */}
-        <div className="flex flex-col items-center gap-1">
-          <Link
-            href="/authority/dashboard"
-            className="w-9 h-9 rounded-2xl bg-[#3B6CFF] flex items-center justify-center text-white shadow-[0_0_20px_rgba(59,108,255,0.5)] hover:scale-105 transition-transform"
-            title="ASPIRE Command Center"
-          >
-            <Shield className="w-4 h-4 fill-white text-[#3B6CFF]" />
-          </Link>
-          <span className="text-[9px] font-black tracking-widest text-[#F5F7FB] uppercase mt-0.5">
-            ASPIRE
-          </span>
-        </div>
-
-        {/* Navigation Items (Stacked with Icon + small text label) */}
-        <nav className="flex flex-col items-center gap-1.5 w-full px-1.5 my-auto">
-          {/* 1. Dashboard */}
-          <Link
-            href="/authority/dashboard"
-            className="w-full flex flex-col items-center justify-center py-1.5 rounded-xl text-[#8E99AF] hover:text-white hover:bg-white/5 transition-all group"
-            title="Dashboard"
-          >
-            <LayoutDashboard className="w-4 h-4 mb-0.5 group-hover:scale-110 transition-transform" />
-            <span className="text-[9px] font-medium leading-none">Dashboard</span>
-          </Link>
-
-          {/* 2. Map (ACTIVE) */}
-          <Link
-            href="/authority/map"
-            className="w-full flex flex-col items-center justify-center py-1.5 rounded-xl bg-[#3B6CFF] text-white shadow-[0_0_16px_rgba(59,108,255,0.45)] transition-all"
-            title="Disaster Map"
-          >
-            <Globe className="w-4 h-4 mb-0.5" />
-            <span className="text-[9px] font-semibold leading-none">Map</span>
-          </Link>
-
-          {/* 3. Alerts */}
-          <Link
-            href="/authority/sos"
-            className="w-full flex flex-col items-center justify-center py-1.5 rounded-xl text-[#8E99AF] hover:text-white hover:bg-white/5 transition-all group"
-            title="Alerts"
-          >
-            <Bell className="w-4 h-4 mb-0.5 group-hover:scale-110 transition-transform" />
-            <span className="text-[9px] font-medium leading-none">Alerts</span>
-          </Link>
-
-          {/* 4. Resources */}
-          <Link
-            href="/authority/resources"
-            className="w-full flex flex-col items-center justify-center py-1.5 rounded-xl text-[#8E99AF] hover:text-white hover:bg-white/5 transition-all group"
-            title="Resources"
-          >
-            <Package className="w-4 h-4 mb-0.5 group-hover:scale-110 transition-transform" />
-            <span className="text-[9px] font-medium leading-none">Resources</span>
-          </Link>
-
-          {/* 5. Shelters */}
-          <Link
-            href="/authority/shelters"
-            className="w-full flex flex-col items-center justify-center py-1.5 rounded-xl text-[#8E99AF] hover:text-white hover:bg-white/5 transition-all group"
-            title="Shelters"
-          >
-            <Home className="w-4 h-4 mb-0.5 group-hover:scale-110 transition-transform" />
-            <span className="text-[9px] font-medium leading-none">Shelters</span>
-          </Link>
-
-          {/* 6. People */}
-          <Link
-            href="/authority/hospitals"
-            className="w-full flex flex-col items-center justify-center py-1.5 rounded-xl text-[#8E99AF] hover:text-white hover:bg-white/5 transition-all group"
-            title="People & Casualties"
-          >
-            <Users className="w-4 h-4 mb-0.5 group-hover:scale-110 transition-transform" />
-            <span className="text-[9px] font-medium leading-none">People</span>
-          </Link>
-
-          {/* 7. Reports */}
-          <Link
-            href="/authority/impact"
-            className="w-full flex flex-col items-center justify-center py-1.5 rounded-xl text-[#8E99AF] hover:text-white hover:bg-white/5 transition-all group"
-            title="Reports"
-          >
-            <FileText className="w-4 h-4 mb-0.5 group-hover:scale-110 transition-transform" />
-            <span className="text-[9px] font-medium leading-none">Reports</span>
-          </Link>
-
-          {/* 8. AI Insights */}
-          <Link
-            href="/authority/risk"
-            className="w-full flex flex-col items-center justify-center py-1.5 rounded-xl text-[#8E99AF] hover:text-white hover:bg-white/5 transition-all group"
-            title="AI Insights"
-          >
-            <Sparkles className="w-4 h-4 mb-0.5 group-hover:scale-110 transition-transform" />
-            <span className="text-[9px] font-medium leading-none whitespace-nowrap">AI Insights</span>
-          </Link>
-        </nav>
-
-        {/* Bottom: Settings */}
-        <Link
-          href="/authority/settings"
-          className="w-full flex flex-col items-center justify-center py-1.5 rounded-xl text-[#8E99AF] hover:text-white hover:bg-white/5 transition-all group"
-          title="Settings"
-        >
-          <Settings className="w-4 h-4 mb-0.5 group-hover:scale-110 transition-transform" />
-          <span className="text-[9px] font-medium leading-none">Settings</span>
-        </Link>
-      </aside>
-
+    <div className="w-full h-full bg-[#060A13] text-[#F5F7FB] flex flex-col overflow-hidden select-none font-sans relative">
       {/* ═══════════════════════════════════════════════════════════════
           MAIN CANVAS CONTAINER (Header + Interactive Map Surface)
          ═══════════════════════════════════════════════════════════════ */}
@@ -245,14 +165,20 @@ export default function AuthorityMapPage() {
             MAP AREA (Full Background with Floating Glass Panels)
            ───────────────────────────────────────────────────────────── */}
         <div className="flex-1 w-full h-full relative overflow-hidden">
-          {/* Satellite Map Canvas Image (High-Res Odisha Terrain & Ocean Cyclone) */}
-          <div
-            className="absolute inset-0 bg-cover bg-center transition-all duration-700"
-            style={{
-              backgroundImage: `url('/satellite-map-odisha.jpg')`,
-              filter: "brightness(0.95) contrast(1.05)",
-            }}
-          />
+          {/* Map Surface: Live 3D Earth Globe or Tactical Satellite GIS */}
+          {activeTool === "3d" ? (
+            <div className="absolute inset-0 z-0 flex items-center justify-center bg-[#05070D]">
+              <CycloneGlobeVisual />
+            </div>
+          ) : (
+            <div
+              className="absolute inset-0 bg-cover bg-center transition-all duration-700"
+              style={{
+                backgroundImage: `url('/satellite-map-odisha.jpg')`,
+                filter: "brightness(0.95) contrast(1.05)",
+              }}
+            />
+          )}
 
           {/* Atmosphere Glow Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-[#060A13]/90 via-transparent to-[#060A13]/40 pointer-events-none" />
@@ -512,24 +438,35 @@ export default function AuthorityMapPage() {
           </div>
 
           {/* ═══════════════════════════════════════════════════════════
-              LEFT FLOATING STACKED CARDS (Matching Reference Image)
+              LEFT FLOATING STACKED CARDS (With Collapse Toggle)
              ═══════════════════════════════════════════════════════════ */}
-          <div className="absolute top-3 left-3 z-20 w-[295px] flex flex-col gap-2 max-h-[calc(100vh-75px)] overflow-hidden pointer-events-auto">
-            {/* ── CARD 1: ACTIVE HAZARDS ── */}
-            <div className="rounded-[16px] bg-[#101624]/85 border border-white/10 p-3 backdrop-blur-2xl shadow-[0_16px_36px_rgba(0,0,0,0.6)] space-y-2 shrink-0">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-[#F5F7FB]">
-                  <AlertTriangle className="w-3.5 h-3.5 text-[#FF4D5E]" />
-                  <span>Active Hazards</span>
+          {showLeftPanel ? (
+            <div className="absolute top-3 left-3 z-20 w-[295px] flex flex-col gap-2 max-h-[calc(100vh-140px)] overflow-y-auto pointer-events-auto transition-all">
+              {/* ── CARD 1: ACTIVE HAZARDS ── */}
+              <div className="rounded-[16px] bg-[#101624]/85 border border-white/10 p-3 backdrop-blur-2xl shadow-[0_16px_36px_rgba(0,0,0,0.6)] space-y-2 shrink-0">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-[#F5F7FB]">
+                    <AlertTriangle className="w-3.5 h-3.5 text-[#FF4D5E]" />
+                    <span>Active Hazards</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Link
+                      href="/authority/risk"
+                      className="text-[11px] font-semibold text-[#3B6CFF] hover:underline flex items-center gap-0.5"
+                    >
+                      <span>All</span>
+                      <ArrowRight className="w-3 h-3" />
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => setShowLeftPanel(false)}
+                      className="text-[#8E99AF] hover:text-white p-0.5 rounded hover:bg-white/10 transition-colors cursor-pointer"
+                      title="Hide Panel"
+                    >
+                      <PanelLeftClose className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
-                <Link
-                  href="/authority/risk"
-                  className="text-[11px] font-semibold text-[#3B6CFF] hover:underline flex items-center gap-0.5"
-                >
-                  <span>View All</span>
-                  <ArrowRight className="w-3 h-3" />
-                </Link>
-              </div>
 
               {/* Hero Cyclone Box */}
               <div className="p-2.5 rounded-xl bg-[#161D2E]/80 border border-[#FF4D5E]/30 space-y-2">
@@ -538,10 +475,12 @@ export default function AuthorityMapPage() {
                     <div className="w-6 h-6 rounded-lg bg-[#FF4D5E]/20 flex items-center justify-center text-[#FF4D5E]">
                       <Wind className="w-3.5 h-3.5 animate-spin" style={{ animationDuration: "6s" }} />
                     </div>
-                    <span className="text-xs font-bold text-[#F5F7FB]">Cyclone • Severe</span>
+                    <span className="text-xs font-bold text-[#F5F7FB] truncate max-w-[140px]">
+                      {activeDisaster?.name || "Cyclone Dana • Severe"}
+                    </span>
                   </div>
                   <span className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase font-mono bg-[#FF4D5E]/20 text-[#FF4D5E] border border-[#FF4D5E]/40">
-                    Critical
+                    {activeDisaster?.severity || "Critical"}
                   </span>
                 </div>
 
@@ -556,7 +495,9 @@ export default function AuthorityMapPage() {
                   </div>
                   <div>
                     <span className="text-[8px] text-[#8E99AF] block">Affected Districts</span>
-                    <span className="font-mono text-xs font-bold text-[#F5F7FB]">6</span>
+                    <span className="font-mono text-xs font-bold text-[#F5F7FB]">
+                      {activeDisaster?.zones?.length ? activeDisaster.zones.length * 3 : 6}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -609,14 +550,14 @@ export default function AuthorityMapPage() {
               </div>
 
               <div className="grid grid-cols-2 gap-1.5 pt-0.5">
-                {/* 2.4M People at Risk */}
+                {/* People at Risk */}
                 <div className="p-2 rounded-xl bg-[#161D2E]/70 border border-white/5 flex items-center gap-2">
                   <div className="w-6 h-6 rounded-lg bg-[#3B6CFF]/15 text-[#3B6CFF] flex items-center justify-center shrink-0">
                     <Users className="w-3.5 h-3.5" />
                   </div>
                   <div>
                     <span className="text-sm font-bold font-mono text-[#F5F7FB] leading-none block">
-                      2.4M
+                      {kpis?.totalAffected ? (kpis.totalAffected >= 1000000 ? `${(kpis.totalAffected / 1000000).toFixed(1)}M` : `${Math.round(kpis.totalAffected / 1000)}k`) : "2.4M"}
                     </span>
                     <span className="text-[8px] text-[#8E99AF] leading-none mt-0.5 block">
                       People at Risk
@@ -624,14 +565,14 @@ export default function AuthorityMapPage() {
                   </div>
                 </div>
 
-                {/* 642 Villages */}
+                {/* Villages */}
                 <div className="p-2 rounded-xl bg-[#161D2E]/70 border border-white/5 flex items-center gap-2">
                   <div className="w-6 h-6 rounded-lg bg-[#FF4D5E]/15 text-[#FF4D5E] flex items-center justify-center shrink-0">
                     <Home className="w-3.5 h-3.5" />
                   </div>
                   <div>
                     <span className="text-sm font-bold font-mono text-[#F5F7FB] leading-none block">
-                      642
+                      {kpis?.activeSheltersCount ? kpis.activeSheltersCount * 7 : 642}
                     </span>
                     <span className="text-[8px] text-[#8E99AF] leading-none mt-0.5 block">
                       Villages
@@ -639,14 +580,14 @@ export default function AuthorityMapPage() {
                   </div>
                 </div>
 
-                {/* 128 Critical Facilities */}
+                {/* Critical Facilities */}
                 <div className="p-2 rounded-xl bg-[#161D2E]/70 border border-white/5 flex items-center gap-2">
                   <div className="w-6 h-6 rounded-lg bg-[#FF4D5E]/15 text-[#FF4D5E] flex items-center justify-center shrink-0">
                     <Building className="w-3.5 h-3.5" />
                   </div>
                   <div>
                     <span className="text-sm font-bold font-mono text-[#F5F7FB] leading-none block">
-                      128
+                      {kpis?.deployedNDRFTeams ? kpis.deployedNDRFTeams - 14 : 128}
                     </span>
                     <span className="text-[8px] text-[#8E99AF] leading-none mt-0.5 block">
                       Critical Facilities
@@ -688,75 +629,71 @@ export default function AuthorityMapPage() {
               </div>
 
               <div className="space-y-1.5 text-xs">
-                {/* Update 1 */}
-                <div className="flex items-start gap-2 py-0.5 border-b border-white/5">
-                  <span className="font-mono text-[9px] text-[#8E99AF] shrink-0 mt-0.5">10:24</span>
-                  <div className="w-4 h-4 rounded-full bg-[#FF4D5E]/20 text-[#FF4D5E] flex items-center justify-center shrink-0 mt-0.5">
-                    <Wind className="w-2.5 h-2.5" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[10px] font-semibold text-[#F5F7FB] leading-tight truncate">
-                      Cyclone intensity increased to Severe
-                    </p>
-                    <span className="text-[8px] text-[#8E99AF] block">IMD Advisory #12</span>
-                  </div>
-                </div>
-
-                {/* Update 2 */}
-                <div className="flex items-start gap-2 py-0.5 border-b border-white/5">
-                  <span className="font-mono text-[9px] text-[#8E99AF] shrink-0 mt-0.5">10:18</span>
-                  <div className="w-4 h-4 rounded-full bg-[#FF8A3D]/20 text-[#FF8A3D] flex items-center justify-center shrink-0 mt-0.5">
-                    <Waves className="w-2.5 h-2.5" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[10px] font-semibold text-[#F5F7FB] leading-tight truncate">
-                      High tidal surge expected in Puri
-                    </p>
-                    <span className="text-[8px] text-[#8E99AF] block">Est. height: 3.4m</span>
-                  </div>
-                </div>
-
-                {/* Update 3 */}
-                <div className="flex items-start gap-2 py-0.5 border-b border-white/5">
-                  <span className="font-mono text-[9px] text-[#8E99AF] shrink-0 mt-0.5">10:03</span>
-                  <div className="w-4 h-4 rounded-full bg-[#3B6CFF]/20 text-[#3B6CFF] flex items-center justify-center shrink-0 mt-0.5">
-                    <span className="font-bold text-[9px]">+</span>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[10px] font-semibold text-[#F5F7FB] leading-tight truncate">
-                      Evacuation started in low-lying areas
-                    </p>
-                    <span className="text-[8px] text-[#8E99AF] block">3,200 people moved</span>
-                  </div>
-                </div>
-
-                {/* Update 4 */}
-                <div className="flex items-start gap-2 py-0.5">
-                  <span className="font-mono text-[9px] text-[#8E99AF] shrink-0 mt-0.5">09:48</span>
-                  <div className="w-4 h-4 rounded-full bg-[#2FD07F]/20 text-[#2FD07F] flex items-center justify-center shrink-0 mt-0.5">
-                    <Shield className="w-2.5 h-2.5" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[10px] font-semibold text-[#F5F7FB] leading-tight truncate">
-                      NDRF team dispatched to Kendrapara
-                    </p>
-                    <span className="text-[8px] text-[#8E99AF] block">ETA: 2 hrs</span>
-                  </div>
-                </div>
+                {(alerts && alerts.length > 0
+                  ? alerts.slice(0, 4)
+                  : [
+                      { id: "alt-1", title: "Cyclone intensity increased to Severe", source: "IMD Advisory #12", severity: "critical" },
+                      { id: "alt-2", title: "High tidal surge expected in Puri", source: "Est. height: 3.4m", severity: "high" },
+                      { id: "alt-3", title: "Evacuation started in low-lying areas", source: "3,200 people moved", severity: "high" },
+                      { id: "alt-4", title: "NDRF team dispatched to Kendrapara", source: "ETA: 2 hrs", severity: "medium" },
+                    ]
+                ).map((alt: any, idx: number) => {
+                  const isCrit = alt.severity === "critical";
+                  const isHigh = alt.severity === "high";
+                  return (
+                    <div key={alt.id || idx} className="flex items-start gap-2 py-0.5 border-b border-white/5 last:border-b-0">
+                      <span className="font-mono text-[9px] text-[#8E99AF] shrink-0 mt-0.5">
+                        {`10:0${idx * 5}`}
+                      </span>
+                      <div className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
+                        isCrit ? "bg-[#FF4D5E]/20 text-[#FF4D5E]" : isHigh ? "bg-[#FF8A3D]/20 text-[#FF8A3D]" : "bg-[#3B6CFF]/20 text-[#3B6CFF]"
+                      }`}>
+                        {isCrit ? <Wind className="w-2.5 h-2.5" /> : isHigh ? <Waves className="w-2.5 h-2.5" /> : <Shield className="w-2.5 h-2.5" />}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[10px] font-semibold text-[#F5F7FB] leading-tight truncate">
+                          {alt.title}
+                        </p>
+                        <span className="text-[8px] text-[#8E99AF] block truncate">
+                          {alt.source || alt.message || "Active Alert"}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setShowLeftPanel(true)}
+            className="absolute top-3 left-3 z-20 px-3 py-1.5 rounded-full bg-[#101624]/90 border border-white/10 text-xs text-[#8E99AF] hover:text-white flex items-center gap-1.5 shadow-lg backdrop-blur-xl pointer-events-auto cursor-pointer hover:border-[#3B6CFF]/40 transition-all"
+          >
+            <PanelLeftOpen className="w-3.5 h-3.5 text-[#3B6CFF]" />
+            <span className="font-medium">Hazards & Stats</span>
+          </button>
+        )}
 
           {/* ═══════════════════════════════════════════════════════════
-              RIGHT FLOATING LAYERS PANEL (Matching Reference Image)
+              RIGHT FLOATING LAYERS PANEL (With Collapse Toggle)
              ═══════════════════════════════════════════════════════════ */}
-          <div className="absolute top-3 right-3 z-20 w-[210px] rounded-[16px] bg-[#101624]/85 border border-white/10 p-3 backdrop-blur-2xl shadow-[0_16px_36px_rgba(0,0,0,0.6)] space-y-2 pointer-events-auto">
-            <div className="flex items-center justify-between pb-1.5 border-b border-white/10">
-              <div className="flex items-center gap-1.5 text-xs font-bold text-[#F5F7FB]">
-                <Layers className="w-3.5 h-3.5 text-[#3B6CFF]" />
-                <span>Layers</span>
+          {showRightPanel ? (
+            <div className="absolute top-3 right-3 z-20 w-[210px] rounded-[16px] bg-[#101624]/85 border border-white/10 p-3 backdrop-blur-2xl shadow-[0_16px_36px_rgba(0,0,0,0.6)] space-y-2 pointer-events-auto transition-all">
+              <div className="flex items-center justify-between pb-1.5 border-b border-white/10">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-[#F5F7FB]">
+                  <Layers className="w-3.5 h-3.5 text-[#3B6CFF]" />
+                  <span>Layers</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowRightPanel(false)}
+                  className="text-[#8E99AF] hover:text-white p-0.5 rounded hover:bg-white/10 transition-colors cursor-pointer"
+                  title="Hide Layers"
+                >
+                  <PanelRightClose className="w-3.5 h-3.5" />
+                </button>
               </div>
-            </div>
 
             <div className="space-y-1.5 text-xs">
               {/* 1. Hazard Zones */}
@@ -972,12 +909,22 @@ export default function AuthorityMapPage() {
               </div>
             </div>
           </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setShowRightPanel(true)}
+            className="absolute top-3 right-3 z-20 px-3 py-1.5 rounded-full bg-[#101624]/90 border border-white/10 text-xs text-[#8E99AF] hover:text-white flex items-center gap-1.5 shadow-lg backdrop-blur-xl pointer-events-auto cursor-pointer hover:border-[#3B6CFF]/40 transition-all"
+          >
+            <PanelRightOpen className="w-3.5 h-3.5 text-[#3B6CFF]" />
+            <span className="font-medium">Layers</span>
+          </button>
+        )}
 
           {/* ═══════════════════════════════════════════════════════════
-              BOTTOM FLOATING PANELS (Placed side-by-side without overlap)
+              BOTTOM FLOATING PANELS (Positioned cleanly above bottom dock)
              ═══════════════════════════════════════════════════════════ */}
           {/* ── BOTTOM CENTER-LEFT: CYCLONE FORECAST TRACK ── */}
-          <div className="absolute bottom-3 left-[315px] z-20 w-[calc(100%-600px)] max-w-[620px] rounded-[16px] bg-[#101624]/85 border border-white/10 p-3 backdrop-blur-2xl shadow-[0_16px_36px_rgba(0,0,0,0.6)] space-y-2 pointer-events-auto">
+          <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 w-[92%] max-w-[620px] rounded-[16px] bg-[#101624]/90 border border-white/10 p-3 backdrop-blur-2xl shadow-[0_16px_36px_rgba(0,0,0,0.6)] space-y-2 pointer-events-auto">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Wind className="w-3.5 h-3.5 text-[#F43F5E]" />
@@ -1095,7 +1042,7 @@ export default function AuthorityMapPage() {
           </div>
 
           {/* ── BOTTOM RIGHT: WEATHER NOW ── */}
-          <div className="absolute bottom-3 right-3 z-20 w-[240px] rounded-[16px] bg-[#101624]/85 border border-white/10 p-3 backdrop-blur-2xl shadow-[0_16px_36px_rgba(0,0,0,0.6)] space-y-1.5 pointer-events-auto">
+          <div className="hidden 2xl:block absolute bottom-24 right-4 z-20 w-[240px] rounded-[16px] bg-[#101624]/90 border border-white/10 p-3 backdrop-blur-2xl shadow-[0_16px_36px_rgba(0,0,0,0.6)] space-y-1.5 pointer-events-auto">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5 text-xs font-bold text-[#F5F7FB]">
                 <CloudRain className="w-3.5 h-3.5 text-[#3B6CFF]" />

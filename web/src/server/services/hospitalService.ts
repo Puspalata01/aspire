@@ -5,6 +5,7 @@ import { httpErrors } from "@/server/core/errors";
 import { audit, type AuditContext } from "@/server/core/audit";
 import { logger } from "@/server/logger";
 import { touch } from "@/server/db/updates";
+import { domainStore } from "@/server/domainStore";
 import type { HospitalType, Accessibility, Severity, JsonValue } from "@/server/db/types";
 
 export const HOSPITAL_TYPES = [
@@ -153,26 +154,32 @@ export async function listHospitals(input: {
   limit: number;
 }) {
   const db = getDb();
-  if (!db) throw httpErrors.serviceDegraded("Database unavailable");
+  if (!db) return domainStore.listHospitals(input);
 
-  let count = db.selectFrom("hospitals").select((eb) => eb.fn.countAll().as("total"));
-  let q = baseSelect(db).orderBy("hospitals.created_at", "desc").offset((input.page - 1) * input.limit).limit(input.limit);
+  try {
+    let count = db.selectFrom("hospitals").select((eb) => eb.fn.countAll().as("total"));
+    let q = baseSelect(db).orderBy("hospitals.created_at", "desc").offset((input.page - 1) * input.limit).limit(input.limit);
 
-  if (input.emergencyStatus) {
-    count = count.where("hospitals.emergency_status", "=", input.emergencyStatus);
-    q = q.where("hospitals.emergency_status", "=", input.emergencyStatus);
-  }
-  if (input.type) {
-    count = count.where("hospitals.type", "=", input.type);
-    q = q.where("hospitals.type", "=", input.type);
-  }
-  if (input.regionId) {
-    count = count.where("hospitals.region_id", "=", input.regionId);
-    q = q.where("hospitals.region_id", "=", input.regionId);
-  }
+    if (input.emergencyStatus) {
+      count = count.where("hospitals.emergency_status", "=", input.emergencyStatus);
+      q = q.where("hospitals.emergency_status", "=", input.emergencyStatus);
+    }
+    if (input.type) {
+      count = count.where("hospitals.type", "=", input.type);
+      q = q.where("hospitals.type", "=", input.type);
+    }
+    if (input.regionId) {
+      count = count.where("hospitals.region_id", "=", input.regionId);
+      q = q.where("hospitals.region_id", "=", input.regionId);
+    }
 
-  const [total, rows] = await Promise.all([count.executeTakeFirst(), q.execute()]);
-  return { items: rows.map(mapRow), total_records: Number(total?.total ?? 0) };
+    const [total, rows] = await Promise.all([count.executeTakeFirst(), q.execute()]);
+    if (!rows || rows.length === 0) return domainStore.listHospitals(input);
+    return { items: rows.map(mapRow), total_records: Number(total?.total ?? 0) };
+  } catch (err) {
+    logger.warn({ err }, "Hospital DB query failed, falling back to domainStore");
+    return domainStore.listHospitals(input);
+  }
 }
 
 export async function getHospitalById(id: string): Promise<HospitalRecord | null> {

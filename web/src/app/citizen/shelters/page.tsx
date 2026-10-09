@@ -1,18 +1,29 @@
 "use client";
 
-import React, { useState } from "react";
-import { MOCK_SHELTERS } from "@/lib/mock-data";
+import React, { useEffect, useState } from "react";
+import { api } from "@/lib/api";
+import { Shelter } from "@/types";
 import { Home, MapPin, Phone, Users, ShieldCheck, Search, Navigation } from "lucide-react";
 import { CapacityBar } from "@/components/shared/CapacityBar";
 
 export default function CitizenSheltersPage() {
   const [search, setSearch] = useState("");
+  const [shelters, setShelters] = useState<Shelter[]>([]);
 
-  const filtered = MOCK_SHELTERS.filter(
+  useEffect(() => {
+    api.getShelters().then((data) => {
+      if (data && data.length > 0) {
+        setShelters(data);
+      }
+    });
+  }, []);
+
+  const filtered = shelters.filter(
     (s) =>
       s.name.toLowerCase().includes(search.toLowerCase()) ||
       (s.address && s.address.toLowerCase().includes(search.toLowerCase()))
   );
+
 
   return (
     <div className="space-y-6 pb-20 md:pb-8">

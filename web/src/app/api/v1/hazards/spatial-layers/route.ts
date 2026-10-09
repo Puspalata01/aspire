@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { runApi, zodFieldIssues } from "@/server/core/http";
+import { runApi, zodFieldIssues, getSearchParams } from "@/server/core/http";
 import { httpErrors } from "@/server/core/errors";
 import { requireAuth, requirePermission } from "@/server/core/authGuards";
 import { overlayQuerySchema, hazardOverlays } from "@/server/services/hazardService";
@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
     requirePermission(auth, "read:risk");
 
     const parsed = overlayQuerySchema.safeParse(
-      Object.fromEntries(request.nextUrl.searchParams),
+      Object.fromEntries(getSearchParams(request)),
     );
     if (!parsed.success) {
       throw httpErrors.invalidPayload(

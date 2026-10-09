@@ -3,7 +3,9 @@ import { z } from "zod";
 import { getDb } from "@/server/db";
 import { httpErrors } from "@/server/core/errors";
 import { audit, type AuditContext } from "@/server/core/audit";
+import { logger } from "@/server/logger";
 import { touch } from "@/server/db/updates";
+import { domainStore } from "@/server/domainStore";
 import type { ResourceType, ResourceStatus, Severity, JsonValue } from "@/server/db/types";
 
 export const RESOURCE_TYPES = [
@@ -164,30 +166,36 @@ export async function listResources(input: {
   limit: number;
 }) {
   const db = getDb();
-  if (!db) throw httpErrors.serviceDegraded("Database unavailable");
+  if (!db) return domainStore.listResources(input);
 
-  let count = db.selectFrom("resources").select((eb) => eb.fn.countAll().as("total"));
-  let q = baseSelect(db).orderBy("resources.created_at", "desc").offset((input.page - 1) * input.limit).limit(input.limit);
+  try {
+    let count = db.selectFrom("resources").select((eb) => eb.fn.countAll().as("total"));
+    let q = baseSelect(db).orderBy("resources.created_at", "desc").offset((input.page - 1) * input.limit).limit(input.limit);
 
-  if (input.type) {
-    count = count.where("resources.type", "=", input.type);
-    q = q.where("resources.type", "=", input.type);
-  }
-  if (input.status) {
-    count = count.where("resources.status", "=", input.status);
-    q = q.where("resources.status", "=", input.status);
-  }
-  if (input.regionId) {
-    count = count.where("resources.region_id", "=", input.regionId);
-    q = q.where("resources.region_id", "=", input.regionId);
-  }
-  if (input.disasterId) {
-    count = count.where("resources.assigned_disaster_id", "=", input.disasterId);
-    q = q.where("resources.assigned_disaster_id", "=", input.disasterId);
-  }
+    if (input.type) {
+      count = count.where("resources.type", "=", input.type);
+      q = q.where("resources.type", "=", input.type);
+    }
+    if (input.status) {
+      count = count.where("resources.status", "=", input.status);
+      q = q.where("resources.status", "=", input.status);
+    }
+    if (input.regionId) {
+      count = count.where("resources.region_id", "=", input.regionId);
+      q = q.where("resources.region_id", "=", input.regionId);
+    }
+    if (input.disasterId) {
+      count = count.where("resources.assigned_disaster_id", "=", input.disasterId);
+      q = q.where("resources.assigned_disaster_id", "=", input.disasterId);
+    }
 
-  const [total, rows] = await Promise.all([count.executeTakeFirst(), q.execute()]);
-  return { items: rows.map(mapRow), total_records: Number(total?.total ?? 0) };
+    const [total, rows] = await Promise.all([count.executeTakeFirst(), q.execute()]);
+    if (!rows || rows.length === 0) return domainStore.listResources(input);
+    return { items: rows.map(mapRow), total_records: Number(total?.total ?? 0) };
+  } catch (err) {
+    logger.warn({ err }, "Resource DB query failed, falling back to domainStore");
+    return domainStore.listResources(input);
+  }
 }
 
 export async function getResourceById(id: string): Promise<ResourceRecord | null> {

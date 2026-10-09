@@ -1,6 +1,14 @@
 import { NextResponse } from "next/server";
-import { MOCK_ACTIVE_DISASTER } from "@/lib/mock-data";
+import { domainStore } from "@/server/domainStore";
 
 export async function GET() {
-  return NextResponse.json(MOCK_ACTIVE_DISASTER);
+  try {
+    const disaster = domainStore.getActiveDisaster();
+    return NextResponse.json(disaster);
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.stack || err.message : String(err);
+    console.error("Error in /api/disasters/active:", msg);
+    return NextResponse.json({ error: msg }, { status: 500 });
+  }
 }
+

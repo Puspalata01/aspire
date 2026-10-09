@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { z } from "zod";
-import { runApi, zodFieldIssues } from "@/server/core/http";
+import { runApi, zodFieldIssues, getSearchParams } from "@/server/core/http";
 import { httpErrors } from "@/server/core/errors";
 import { requireAuth } from "@/server/core/authGuards";
 import { listRegions } from "@/server/services/regionService";
@@ -9,7 +9,7 @@ export const runtime = "nodejs";
 
 const listQuerySchema = z.object({
   type: z.string().optional(),
-  parent_id: z.uuid().optional(),
+  parent_id: z.string().optional(),
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(100).default(20),
 });
@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
   return runApi(request, async () => {
     await requireAuth(request);
 
-    const parsed = listQuerySchema.safeParse(Object.fromEntries(request.nextUrl.searchParams));
+    const parsed = listQuerySchema.safeParse(Object.fromEntries(getSearchParams(request)));
     if (!parsed.success) {
       throw httpErrors.invalidPayload(
         "Regions list query failed schema validation",

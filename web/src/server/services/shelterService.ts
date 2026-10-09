@@ -5,6 +5,7 @@ import { httpErrors } from "@/server/core/errors";
 import { audit, type AuditContext } from "@/server/core/audit";
 import { logger } from "@/server/logger";
 import { touch } from "@/server/db/updates";
+import { domainStore } from "@/server/domainStore";
 import type { ShelterType, ShelterStatus, Accessibility, Severity, JsonValue } from "@/server/db/types";
 
 export const SHELTER_TYPES = [
@@ -186,32 +187,38 @@ export async function listShelters(input: {
   limit: number;
 }) {
   const db = getDb();
-  if (!db) throw httpErrors.serviceDegraded("Database unavailable");
+  if (!db) return domainStore.listShelters(input);
 
-  let count = db.selectFrom("shelters").select((eb) => eb.fn.countAll().as("total"));
-  let q = baseSelect(db)
-    .orderBy("shelters.created_at", "desc")
-    .offset((input.page - 1) * input.limit)
-    .limit(input.limit);
+  try {
+    let count = db.selectFrom("shelters").select((eb) => eb.fn.countAll().as("total"));
+    let q = baseSelect(db)
+      .orderBy("shelters.created_at", "desc")
+      .offset((input.page - 1) * input.limit)
+      .limit(input.limit);
 
-  if (input.status) {
-    count = count.where("shelters.status", "=", input.status);
-    q = q.where("shelters.status", "=", input.status);
-  }
-  if (input.type) {
-    count = count.where("shelters.type", "=", input.type);
-    q = q.where("shelters.type", "=", input.type);
-  }
-  if (input.regionId) {
-    count = count.where("shelters.region_id", "=", input.regionId);
-    q = q.where("shelters.region_id", "=", input.regionId);
-  }
+    if (input.status) {
+      count = count.where("shelters.status", "=", input.status);
+      q = q.where("shelters.status", "=", input.status);
+    }
+    if (input.type) {
+      count = count.where("shelters.type", "=", input.type);
+      q = q.where("shelters.type", "=", input.type);
+    }
+    if (input.regionId) {
+      count = count.where("shelters.region_id", "=", input.regionId);
+      q = q.where("shelters.region_id", "=", input.regionId);
+    }
 
-  const [total, rows] = await Promise.all([count.executeTakeFirst(), q.execute()]);
-  return {
-    items: rows.map(mapRow),
-    total_records: Number(total?.total ?? 0),
-  };
+    const [total, rows] = await Promise.all([count.executeTakeFirst(), q.execute()]);
+    if (!rows || rows.length === 0) return domainStore.listShelters(input);
+    return {
+      items: rows.map(mapRow),
+      total_records: Number(total?.total ?? 0),
+    };
+  } catch (err) {
+    logger.warn({ err }, "Shelter DB query failed, falling back to domainStore");
+    return domainStore.listShelters(input);
+  }
 }
 
 export async function getShelterById(id: string): Promise<ShelterRecord | null> {

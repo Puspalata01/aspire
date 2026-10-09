@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { z } from "zod";
-import { runApi, zodFieldIssues } from "@/server/core/http";
+import { runApi, zodFieldIssues, getSearchParams } from "@/server/core/http";
 import { httpErrors } from "@/server/core/errors";
 import { requireAuth, requirePermission } from "@/server/core/authGuards";
 import { listSos, SOS_STATUSES, SOS_TYPES, SEVERITIES } from "@/server/services/sosService";
@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
     const auth = await requireAuth(request);
     requirePermission(auth, "manage:sos");
 
-    const parsed = listQuerySchema.safeParse(Object.fromEntries(request.nextUrl.searchParams));
+    const parsed = listQuerySchema.safeParse(Object.fromEntries(getSearchParams(request)));
     if (!parsed.success) {
       throw httpErrors.invalidPayload(
         "SOS list query failed schema validation",

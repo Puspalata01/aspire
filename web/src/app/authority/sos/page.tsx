@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { AuthorityHeader } from "@/components/layout/AuthorityHeader";
 import { SOSTable } from "@/components/sos/SOSTable";
 import { useSOSStore } from "@/stores/useSOSStore";
@@ -20,9 +20,15 @@ import {
 import { toast } from "sonner";
 
 export default function AuthoritySOSPage() {
-  const { requests } = useSOSStore();
+  const { requests, fetchSOSRequests } = useSOSStore();
+
+  useEffect(() => {
+    fetchSOSRequests();
+  }, [fetchSOSRequests]);
+
   const criticalCount = requests.filter((r) => r.urgency === "critical").length;
   const totalTrapped = requests.reduce((acc, r) => acc + (r.peopleCount || 1), 0);
+
 
   return (
     <div className="w-full min-h-screen bg-[#05070D] text-[#F5F7FB] flex flex-col select-none">

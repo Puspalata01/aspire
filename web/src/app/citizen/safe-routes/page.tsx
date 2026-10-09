@@ -1,10 +1,21 @@
 "use client";
 
-import React from "react";
-import { MOCK_ROADS } from "@/lib/mock-data";
+import React, { useEffect, useState } from "react";
+import { api } from "@/lib/api";
+import { RoadSegment } from "@/types";
 import { Navigation, AlertTriangle, CheckCircle, Ban, ArrowRight } from "lucide-react";
 
 export default function CitizenSafeRoutesPage() {
+  const [roads, setRoads] = useState<RoadSegment[]>([]);
+
+  useEffect(() => {
+    api.getRoads().then((data) => {
+      if (data && data.length > 0) {
+        setRoads(data);
+      }
+    });
+  }, []);
+
   return (
     <div className="space-y-6 pb-20 md:pb-8">
       <div>
@@ -28,7 +39,8 @@ export default function CitizenSafeRoutesPage() {
         <h3 className="text-xs font-bold uppercase tracking-wider text-[#8A8A90]">
           Highway & Coastal Road Status
         </h3>
-        {MOCK_ROADS.map((road) => (
+        {roads.map((road) => (
+
           <div
             key={road.id}
             className="p-5 rounded-[24px] border border-[#D4D4D1] bg-[#F1F1EF] shadow-raise-1 hover:shadow-raise-2 transition-all flex items-start justify-between gap-4"

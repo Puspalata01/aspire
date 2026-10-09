@@ -3,7 +3,9 @@ import { z } from "zod";
 import { getDb } from "@/server/db";
 import { httpErrors } from "@/server/core/errors";
 import { audit, type AuditContext } from "@/server/core/audit";
+import { logger } from "@/server/logger";
 import { touch } from "@/server/db/updates";
+import { domainStore } from "@/server/domainStore";
 import type { SosType, SosStatus, Severity, JsonValue } from "@/server/db/types";
 
 export const SOS_TYPES = ["rescue", "food", "water", "medicine", "shelter", "medical_emergency", "other"] as const;
@@ -253,33 +255,39 @@ export async function listSos(input: {
   limit: number;
 }) {
   const db = getDb();
-  if (!db) throw httpErrors.serviceDegraded("Database unavailable");
+  if (!db) return domainStore.listSos(input);
 
-  let count = db.selectFrom("sos_reports").select((eb) => eb.fn.countAll().as("total"));
-  let q = baseSelect(db)
-    .orderBy("sos_reports.created_at", "desc")
-    .offset((input.page - 1) * input.limit)
-    .limit(input.limit);
+  try {
+    let count = db.selectFrom("sos_reports").select((eb) => eb.fn.countAll().as("total"));
+    let q = baseSelect(db)
+      .orderBy("sos_reports.created_at", "desc")
+      .offset((input.page - 1) * input.limit)
+      .limit(input.limit);
 
-  if (input.status) {
-    count = count.where("sos_reports.status", "=", input.status);
-    q = q.where("sos_reports.status", "=", input.status);
-  }
-  if (input.urgency) {
-    count = count.where("sos_reports.urgency", "=", input.urgency);
-    q = q.where("sos_reports.urgency", "=", input.urgency);
-  }
-  if (input.requestType) {
-    count = count.where("sos_reports.request_type", "=", input.requestType);
-    q = q.where("sos_reports.request_type", "=", input.requestType);
-  }
-  if (input.disasterId) {
-    count = count.where("sos_reports.disaster_id", "=", input.disasterId);
-    q = q.where("sos_reports.disaster_id", "=", input.disasterId);
-  }
+    if (input.status) {
+      count = count.where("sos_reports.status", "=", input.status);
+      q = q.where("sos_reports.status", "=", input.status);
+    }
+    if (input.urgency) {
+      count = count.where("sos_reports.urgency", "=", input.urgency);
+      q = q.where("sos_reports.urgency", "=", input.urgency);
+    }
+    if (input.requestType) {
+      count = count.where("sos_reports.request_type", "=", input.requestType);
+      q = q.where("sos_reports.request_type", "=", input.requestType);
+    }
+    if (input.disasterId) {
+      count = count.where("sos_reports.disaster_id", "=", input.disasterId);
+      q = q.where("sos_reports.disaster_id", "=", input.disasterId);
+    }
 
-  const [total, rows] = await Promise.all([count.executeTakeFirst(), q.execute()]);
-  return { items: rows.map(mapRow), total_records: Number(total?.total ?? 0) };
+    const [total, rows] = await Promise.all([count.executeTakeFirst(), q.execute()]);
+    if (!rows || rows.length === 0) return domainStore.listSos(input);
+    return { items: rows.map(mapRow), total_records: Number(total?.total ?? 0) };
+  } catch (err) {
+    logger.warn({ err }, "SOS DB query failed, falling back to domainStore");
+    return domainStore.listSos(input);
+  }
 }
 
 export async function getSosById(id: string): Promise<SosRecord | null> {
