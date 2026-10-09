@@ -250,4 +250,6 @@ async def assess_risk(req: RiskAssessRequest):
     }
 
 if __name__ == "__main__":
-    uvicorn.run("run_server:app", host="0.0.0.0", port=8000, reload=False, log_level="info")
+    import os
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("run_server:app", host="0.0.0.0", port=port, reload=False, log_level="info")

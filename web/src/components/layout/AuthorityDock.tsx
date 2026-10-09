@@ -318,7 +318,8 @@ export function AuthorityDock() {
       </div>
 
       {/* ── Compact macOS Liquid Glass Dock (No Scrollbar, Short Hover Badges) ── */}
-      <div        onMouseEnter={handleMouseEnter}
+      <div
+        onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         className={cn(
           "fixed bottom-3 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] select-none max-w-[98vw]",
