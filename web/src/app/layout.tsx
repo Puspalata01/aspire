@@ -50,8 +50,12 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${inter.variable} ${jetbrainsMono.variable} h-full`}
+      suppressHydrationWarning
     >
-      <body className="h-full bg-[#E9E9E7] text-[#4A4A4F] antialiased selection:bg-[#DCE7FB] selection:text-[#1D1D1F]">
+      <body
+        className="h-full bg-[#E9E9E7] text-[#4A4A4F] antialiased selection:bg-[#DCE7FB] selection:text-[#1D1D1F]"
+        suppressHydrationWarning
+      >
         {children}
         <Toaster
           position="top-right"

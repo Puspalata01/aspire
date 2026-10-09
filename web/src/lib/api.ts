@@ -268,6 +268,10 @@ export const api = {
     };
   },
 
+  createSOS: async (payload: Partial<SOSRequest>): Promise<SOSRequest> => {
+    return api.submitSOS(payload);
+  },
+
   updateSOSStatus: async (
     id: string,
     status: SOSRequest["status"],

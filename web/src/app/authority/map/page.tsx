@@ -3,8 +3,8 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { api } from "@/lib/api";
-import { CycloneGlobeVisual } from "@/components/dark-globe/CycloneGlobeVisual";
-import { Disaster, DashboardKPIs, Alert } from "@/types";
+import { RealEarthMap } from "@/components/map/RealEarthMap";
+import { Disaster, DashboardKPIs, Alert, Shelter, Hospital, Resource } from "@/types";
 import {
   LayoutDashboard,
   Globe,
@@ -44,14 +44,23 @@ import {
 import { toast } from "sonner";
 
 export default function AuthorityMapPage() {
+  const [mounted, setMounted] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [activeTool, setActiveTool] = useState<string>("3d");
+  const [activeTool, setActiveTool] = useState<string>("2d");
   const [selectedMilestone, setSelectedMilestone] = useState<number>(0);
   const [showLeftPanel, setShowLeftPanel] = useState(true);
   const [showRightPanel, setShowRightPanel] = useState(true);
   const [activeDisaster, setActiveDisaster] = useState<Disaster | null>(null);
+  const [disasters, setDisasters] = useState<Disaster[]>([]);
+  const [shelters, setShelters] = useState<Shelter[]>([]);
+  const [hospitals, setHospitals] = useState<Hospital[]>([]);
+  const [resources, setResources] = useState<Resource[]>([]);
   const [kpis, setKpis] = useState<DashboardKPIs | null>(null);
   const [alerts, setAlerts] = useState<Alert[]>([]);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -59,11 +68,19 @@ export default function AuthorityMapPage() {
       api.getActiveDisaster(),
       api.getKPIs(),
       api.getAlerts(),
-    ]).then(([d, k, a]) => {
+      api.getShelters(),
+      api.getHospitals(),
+      api.getResources(),
+      api.getDisasters(),
+    ]).then(([d, k, a, sh, h, r, dis]) => {
       if (!isMounted) return;
       if (d) setActiveDisaster(d);
       if (k) setKpis(k);
       if (a && a.length > 0) setAlerts(a);
+      if (sh && sh.length > 0) setShelters(sh);
+      if (h && h.length > 0) setHospitals(h);
+      if (r && r.length > 0) setResources(r);
+      if (dis && dis.length > 0) setDisasters(dis);
     });
     return () => {
       isMounted = false;
@@ -89,17 +106,10 @@ export default function AuthorityMapPage() {
     setLayers((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
-  return (
-    <div className="w-full h-full bg-[#060A13] text-[#F5F7FB] flex flex-col overflow-hidden select-none font-sans relative">
-      {/* ═══════════════════════════════════════════════════════════════
-          MAIN CANVAS CONTAINER (Header + Interactive Map Surface)
-         ═══════════════════════════════════════════════════════════════ */}
-      <div className="flex-1 h-full flex flex-col relative overflow-hidden">
-        {/* ─────────────────────────────────────────────────────────────
-            TOP HEADER BAR (Exact Match to Reference Image)
-           ───────────────────────────────────────────────────────────── */}
+  if (!mounted) {
+    return (
+      <div className="w-full flex-1 flex flex-col min-h-0 bg-[#060A13] text-[#F5F7FB] select-none font-sans relative overflow-hidden">
         <header className="h-[58px] px-5 bg-[#060A13]/90 backdrop-blur-xl border-b border-white/10 flex items-center justify-between gap-4 z-20 shrink-0">
-          {/* Left: Breadcrumb + Title + Subtitle */}
           <div className="flex flex-col">
             <span className="text-[10px] text-[#6B7488] font-medium leading-none">
               Authority / Map
@@ -108,7 +118,6 @@ export default function AuthorityMapPage() {
               <h1 className="text-base font-bold tracking-tight text-[#F5F7FB] leading-none">
                 Disaster Monitoring
               </h1>
-              {/* Green Live Pill */}
               <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#2FD07F]/15 border border-[#2FD07F]/30 text-[#2FD07F] text-[10px] font-semibold">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#2FD07F] animate-pulse" />
                 <span>Live</span>
@@ -118,115 +127,154 @@ export default function AuthorityMapPage() {
               Real-time multi-hazard tracking and impact intelligence
             </p>
           </div>
-
-          {/* Center: Search Field */}
-          <div className="hidden md:flex items-center relative flex-1 max-w-sm mx-4">
-            <Search className="w-3.5 h-3.5 text-[#6B7488] absolute left-3.5 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              placeholder="Search location, district, facility..."
-              className="w-full bg-[#101624]/80 border border-white/10 rounded-full pl-9 pr-14 py-1.5 text-xs text-[#F5F7FB] placeholder-[#6B7488] focus:border-[#3B6CFF] focus:outline-none focus:ring-1 focus:ring-[#3B6CFF] transition-all"
-            />
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/10 text-[#8E99AF] border border-white/5">
-              ⌘ K
-            </span>
-          </div>
-
-          {/* Right: Notifications + User Profile */}
-          <div className="flex items-center gap-3">
-            {/* Bell Icon */}
-            <Link
-              href="/authority/sos"
-              className="relative w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-[#9AA3B8] hover:text-white transition-colors"
-              title="Alerts"
-            >
-              <Bell className="w-4 h-4" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#FF4D5E] ring-2 ring-[#060A13]" />
-            </Link>
-
-            {/* Profile Avatar Pill */}
-            <div className="flex items-center gap-2 pl-1">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#3B6CFF] to-[#1D4ED8] ring-1 ring-white/20 flex items-center justify-center text-xs font-bold text-white shadow-sm">
-                AD
-              </div>
-              <div className="hidden lg:flex flex-col text-left">
-                <span className="text-xs font-semibold text-[#F5F7FB] leading-none">
-                  Authority User
-                </span>
-                <span className="text-[10px] text-[#8E99AF] leading-tight mt-0.5">
-                  State Emergency Ops
-                </span>
-              </div>
-            </div>
-          </div>
         </header>
+        <div className="flex-1 w-full relative overflow-hidden bg-[#05070D] flex items-center justify-center">
+          <div className="flex flex-col items-center gap-3">
+            <div className="w-8 h-8 rounded-full border-2 border-[#3B6CFF] border-t-transparent animate-spin" />
+            <span className="text-xs text-[#8E99AF] font-mono tracking-wider uppercase">Loading GIS Tactical Map...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-        {/* ─────────────────────────────────────────────────────────────
-            MAP AREA (Full Background with Floating Glass Panels)
-           ───────────────────────────────────────────────────────────── */}
-        <div className="flex-1 w-full h-full relative overflow-hidden">
-          {/* Map Surface: Live 3D Earth Globe or Tactical Satellite GIS */}
-          {activeTool === "3d" ? (
-            <div className="absolute inset-0 z-0 flex items-center justify-center bg-[#05070D]">
-              <CycloneGlobeVisual />
+  return (
+    <div className="w-full flex-1 flex flex-col min-h-0 bg-[#060A13] text-[#F5F7FB] select-none font-sans relative overflow-hidden">
+      {/* ─────────────────────────────────────────────────────────────
+          TOP HEADER BAR (Exact Match to Reference Image)
+         ───────────────────────────────────────────────────────────── */}
+      <header className="h-[58px] px-5 bg-[#060A13]/90 backdrop-blur-xl border-b border-white/10 flex items-center justify-between gap-4 z-20 shrink-0">
+        {/* Left: Breadcrumb + Title + Subtitle */}
+        <div className="flex flex-col">
+          <span className="text-[10px] text-[#6B7488] font-medium leading-none">
+            Authority / Map
+          </span>
+          <div className="flex items-center gap-2 mt-0.5">
+            <h1 className="text-base font-bold tracking-tight text-[#F5F7FB] leading-none">
+              Disaster Monitoring
+            </h1>
+            {/* Green Live Pill */}
+            <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#2FD07F]/15 border border-[#2FD07F]/30 text-[#2FD07F] text-[10px] font-semibold">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#2FD07F] animate-pulse" />
+              <span>Live</span>
             </div>
-          ) : (
-            <div
-              className="absolute inset-0 bg-cover bg-center transition-all duration-700"
-              style={{
-                backgroundImage: `url('/satellite-map-odisha.jpg')`,
-                filter: "brightness(0.95) contrast(1.05)",
-              }}
-            />
-          )}
+          </div>
+          <p className="text-[10px] text-[#8E99AF] font-medium leading-none mt-0.5 hidden sm:block">
+            Real-time multi-hazard tracking and impact intelligence
+          </p>
+        </div>
 
-          {/* Atmosphere Glow Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#060A13]/90 via-transparent to-[#060A13]/40 pointer-events-none" />
+        {/* Center: Search Field */}
+        <div className="hidden md:flex items-center relative flex-1 max-w-sm mx-4">
+          <Search className="w-3.5 h-3.5 text-[#6B7488] absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <input
+            type="text"
+            placeholder="Search location, district, facility..."
+            className="w-full bg-[#101624]/80 border border-white/10 rounded-full pl-9 pr-14 py-1.5 text-xs text-[#F5F7FB] placeholder-[#6B7488] focus:border-[#3B6CFF] focus:outline-none focus:ring-1 focus:ring-[#3B6CFF] transition-all"
+            suppressHydrationWarning
+          />
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/10 text-[#8E99AF] border border-white/5">
+            ⌘ K
+          </span>
+        </div>
 
-          {/* ═══════════════════════════════════════════════════════════
-              TOP FLOATING CONTROLS PILL BAR (Over Map)
-             ═══════════════════════════════════════════════════════════ */}
-          <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
-            {/* 1. 3D Mode */}
+        {/* Right: Notifications + User Profile */}
+        <div className="flex items-center gap-3">
+          {/* Bell Icon */}
+          <Link
+            href="/authority/sos"
+            className="relative w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-center text-[#9AA3B8] hover:text-white transition-colors"
+            title="Alerts"
+          >
+            <Bell className="w-4 h-4" />
+            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#FF4D5E] ring-2 ring-[#060A13]" />
+          </Link>
+
+          {/* Profile Avatar Pill */}
+          <div className="flex items-center gap-2 pl-1">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-[#3B6CFF] to-[#1D4ED8] ring-1 ring-white/20 flex items-center justify-center text-xs font-bold text-white shadow-sm">
+              AD
+            </div>
+            <div className="hidden lg:flex flex-col text-left">
+              <span className="text-xs font-semibold text-[#F5F7FB] leading-none">
+                Authority User
+              </span>
+              <span className="text-[10px] text-[#8E99AF] leading-tight mt-0.5">
+                State Emergency Ops
+              </span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* ─────────────────────────────────────────────────────────────
+          MAP AREA (Real Earth 3D WebGL Globe & GIS Surface)
+         ───────────────────────────────────────────────────────────── */}
+      <div className="flex-1 w-full min-h-0 relative overflow-hidden">
+        {/* Real Hardware-Accelerated 3D Earth / Tactical Satellite GIS */}
+        <div className="absolute inset-0 z-0">
+          <RealEarthMap
+            height="100%"
+            initialMode={activeTool === "3d" ? "globe" : "2d"}
+            initialTheme={layers.satelliteImagery ? "satellite" : "dark"}
+            initialCenter={[85.82, 20.29]} // Odisha GIS focus
+            initialZoom={7.2}
+            initialPitch={45}
+            activeDisaster={activeDisaster}
+            disasters={disasters}
+            shelters={layers.shelters ? shelters : []}
+            hospitals={layers.hospitals ? hospitals : []}
+            resources={layers.reliefAssets ? resources : []}
+            showTopBar={false}
+            showTelemetryBar={true}
+            showCameraControls={true}
+          />
+        </div>
+
+        {/* ═══════════════════════════════════════════════════════════
+            TOP FLOATING CONTROLS PILL BAR (Over Map)
+           ═══════════════════════════════════════════════════════════ */}
+        <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 pointer-events-auto">
+          {/* 1. 2D Tactical GIS */}
+          <button
+            type="button"
+            onClick={() => setActiveTool("2d")}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+              activeTool === "2d"
+                ? "bg-[#3B6CFF] text-white shadow-md border border-[#3B6CFF]"
+                : "bg-[#101624]/85 text-[#8E99AF] hover:text-white border border-white/10"
+            }`}
+          >
+            <Globe className="w-3.5 h-3.5" />
+            <span>2D Tactical GIS</span>
+          </button>
+
+          {/* 2. 3D Mode */}
+          <button
+            type="button"
+            onClick={() => setActiveTool("3d")}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+              activeTool === "3d"
+                ? "bg-[#3B6CFF] text-white shadow-[0_0_15px_rgba(59,108,255,0.5)] border border-[#3B6CFF]"
+                : "bg-[#101624]/85 text-[#8E99AF] hover:text-white border border-white/10"
+            }`}
+          >
+            <Box className="w-3.5 h-3.5" />
+            <span>3D Real Earth</span>
+          </button>
+
+            {/* 3. Satellite vs Dark Theme Toggle */}
             <button
               type="button"
-              onClick={() => setActiveTool("3d")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                activeTool === "3d"
-                  ? "bg-[#3B6CFF] text-white shadow-[0_0_15px_rgba(59,108,255,0.5)] border border-[#3B6CFF]"
-                  : "bg-[#101624]/85 text-[#8E99AF] hover:text-white border border-white/10"
-              }`}
-            >
-              <Box className="w-3.5 h-3.5" />
-              <span>3D</span>
-            </button>
-
-            {/* 2. Layers */}
-            <button
-              type="button"
-              onClick={() => setActiveTool("layers")}
+              onClick={() => toggleLayer("satelliteImagery")}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer ${
-                activeTool === "layers"
-                  ? "bg-[#3B6CFF] text-white shadow-md border border-[#3B6CFF]"
+                layers.satelliteImagery
+                  ? "bg-[#2FD07F]/20 text-[#2FD07F] border border-[#2FD07F]/40"
                   : "bg-[#101624]/85 text-[#8E99AF] hover:text-white border border-white/10"
               }`}
             >
               <Layers className="w-3.5 h-3.5" />
-              <span>Layers</span>
-            </button>
-
-            {/* 3. Weather */}
-            <button
-              type="button"
-              onClick={() => setActiveTool("weather")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer ${
-                activeTool === "weather"
-                  ? "bg-[#3B6CFF] text-white shadow-md border border-[#3B6CFF]"
-                  : "bg-[#101624]/85 text-[#8E99AF] hover:text-white border border-white/10"
-              }`}
-            >
-              <CloudRain className="w-3.5 h-3.5" />
-              <span>Weather</span>
+              <span>{layers.satelliteImagery ? "Satellite Active" : "Dark GIS"}</span>
             </button>
 
             {/* 4. Measure */}
@@ -258,192 +306,12 @@ export default function AuthorityMapPage() {
           </div>
 
           {/* ═══════════════════════════════════════════════════════════
-              INTERACTIVE GIS VECTOR OVERLAYS (Districts, Trajectory, Pins)
-             ═══════════════════════════════════════════════════════════ */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none z-10">
-            <defs>
-              <radialGradient id="coneGrad" cx="70%" cy="60%" r="70%">
-                <stop offset="0%" stopColor="#FF4D5E" stopOpacity="0.45" />
-                <stop offset="60%" stopColor="#FF4D5E" stopOpacity="0.15" />
-                <stop offset="100%" stopColor="#FF4D5E" stopOpacity="0.0" />
-              </radialGradient>
-            </defs>
-
-            {/* Projected Landfall Cone of Uncertainty (Funnel Leading to Coast) */}
-            {layers.cycloneTrack && (
-              <g>
-                <polygon
-                  points="780,560 620,410 490,320 520,380 660,540"
-                  fill="url(#coneGrad)"
-                  stroke="#FF4D5E"
-                  strokeWidth="1"
-                  strokeOpacity="0.5"
-                />
-                {/* White Dashed Trajectory Centerline */}
-                <line
-                  x1="760"
-                  y1="550"
-                  x2="500"
-                  y2="340"
-                  stroke="#FFFFFF"
-                  strokeWidth="2.5"
-                  strokeDasharray="6 6"
-                  strokeLinecap="round"
-                />
-                {/* Cyclone milestone nodes along trajectory */}
-                <circle cx="760" cy="550" r="7" fill="#FF4D5E" stroke="#FFFFFF" strokeWidth="2" />
-                <circle cx="680" cy="485" r="6" fill="#FF4D5E" stroke="#FFFFFF" strokeWidth="1.5" />
-                <circle cx="610" cy="425" r="5" fill="#FF8A3D" stroke="#FFFFFF" strokeWidth="1.5" />
-                <circle cx="550" cy="380" r="5" fill="#3B6CFF" stroke="#FFFFFF" strokeWidth="1.5" />
-              </g>
-            )}
-
-            {/* Coastal Hazard Zone Highlights */}
-            {layers.hazardZones && (
-              <g>
-                {/* Jagatsinghpur, Kendrapara & Puri Coastal Red Zone */}
-                <path
-                  d="M 520 290 Q 560 310 580 345 T 530 380 Q 500 340 520 290 Z"
-                  fill="#FF4D5E"
-                  fillOpacity="0.32"
-                  stroke="#FF4D5E"
-                  strokeWidth="1.5"
-                  className="animate-pulse"
-                />
-                {/* Cuttack & Jajpur Orange Alert Zone */}
-                <path
-                  d="M 480 260 Q 520 280 540 310 T 490 340 Q 460 300 480 260 Z"
-                  fill="#FF8A3D"
-                  fillOpacity="0.22"
-                  stroke="#FF8A3D"
-                  strokeWidth="1.5"
-                />
-              </g>
-            )}
-          </svg>
-
-          {/* ═══════════════════════════════════════════════════════════
-              GEOGRAPHIC DISTRICT LABELS & PINS ON MAP
-             ═══════════════════════════════════════════════════════════ */}
-          <div className="absolute inset-0 pointer-events-none z-10">
-            {/* ODISHA State Title */}
-            <div className="absolute left-[34%] top-[38%] text-base font-extrabold tracking-widest text-white/70 select-none">
-              ODISHA
-            </div>
-
-            {/* District Labels (Matching Reference Image) */}
-            {[
-              { name: "Sambalpur", x: "32%", y: "26%" },
-              { name: "Deogarh", x: "39%", y: "27%" },
-              { name: "Keonjhar", x: "46%", y: "26%" },
-              { name: "Mayurbhanj", x: "53%", y: "20%" },
-              { name: "Angul", x: "38%", y: "34%" },
-              { name: "Dhenkanal", x: "43%", y: "36%" },
-              { name: "Jajpur", x: "49%", y: "38%" },
-              { name: "Bhadrak", x: "55%", y: "37%" },
-              { name: "Baleswar", x: "56%", y: "33%" },
-              { name: "Kendrapara", x: "53%", y: "41%" },
-              { name: "Cuttack", x: "47%", y: "43%" },
-              { name: "Jagatsinghpur", x: "51%", y: "46%" },
-              { name: "Bhubaneswar", x: "42%", y: "50%" },
-              { name: "Khordha", x: "40%", y: "54%" },
-              { name: "Puri", x: "44%", y: "55%" },
-              { name: "Nayagarh", x: "35%", y: "49%" },
-              { name: "Ganjam", x: "33%", y: "60%" },
-            ].map((d) => (
-              <div
-                key={d.name}
-                className="absolute text-[10px] font-semibold text-white/60 tracking-tight"
-                style={{ left: d.x, top: d.y }}
-              >
-                {d.name}
-              </div>
-            ))}
-
-            {/* Pins Placed Across Coast (Shelters ⛺, Hospitals ➕, Hazard ⚠️) */}
-            {/* 1. Shelter Pins (Green) */}
-            {layers.shelters && (
-              <>
-                <div
-                  className="absolute pointer-events-auto cursor-pointer"
-                  style={{ left: "53%", top: "22%" }}
-                  onClick={() => toast.info("Shelter: Baripada High School Relief Hub (820 capacity, 410 occupied)")}
-                >
-                  <div className="w-5 h-5 rounded-full bg-[#2FD07F] border-2 border-white flex items-center justify-center text-white shadow-lg hover:scale-125 transition-transform">
-                    <Home className="w-2.5 h-2.5 fill-white" />
-                  </div>
-                </div>
-
-                <div
-                  className="absolute pointer-events-auto cursor-pointer"
-                  style={{ left: "56%", top: "28%" }}
-                  onClick={() => toast.info("Shelter: Baleswar Cyclone Center (1200 capacity, 940 occupied)")}
-                >
-                  <div className="w-5 h-5 rounded-full bg-[#2FD07F] border-2 border-white flex items-center justify-center text-white shadow-lg hover:scale-125 transition-transform">
-                    <Home className="w-2.5 h-2.5 fill-white" />
-                  </div>
-                </div>
-
-                <div
-                  className="absolute pointer-events-auto cursor-pointer"
-                  style={{ left: "39%", top: "47%" }}
-                  onClick={() => toast.info("Shelter: Khordha Community Shelter (950 capacity, 620 occupied)")}
-                >
-                  <div className="w-5 h-5 rounded-full bg-[#2FD07F] border-2 border-white flex items-center justify-center text-white shadow-lg hover:scale-125 transition-transform">
-                    <Home className="w-2.5 h-2.5 fill-white" />
-                  </div>
-                </div>
-              </>
-            )}
-
-            {/* 2. Hospital Pins (Blue Cross) */}
-            {layers.hospitals && (
-              <>
-                <div
-                  className="absolute pointer-events-auto cursor-pointer"
-                  style={{ left: "44.5%", top: "43%" }}
-                  onClick={() => toast.info("Hospital: SCB Medical College Cuttack (45 ICU Beds, Generator Online)")}
-                >
-                  <div className="w-5 h-5 rounded-full bg-[#3B6CFF] border-2 border-white flex items-center justify-center text-white shadow-lg hover:scale-125 transition-transform">
-                    <span className="font-bold text-[11px] leading-none">+</span>
-                  </div>
-                </div>
-
-                <div
-                  className="absolute pointer-events-auto cursor-pointer"
-                  style={{ left: "38.5%", top: "55%" }}
-                  onClick={() => toast.info("Hospital: AIIMS Bhubaneswar Emergency Unit (100% Power, 22 Free ICU Beds)")}
-                >
-                  <div className="w-5 h-5 rounded-full bg-[#3B6CFF] border-2 border-white flex items-center justify-center text-white shadow-lg hover:scale-125 transition-transform">
-                    <span className="font-bold text-[11px] leading-none">+</span>
-                  </div>
-                </div>
-              </>
-            )}
-
-            {/* 3. Alert Pins (Red Triangle) */}
-            {layers.hazardZones && (
-              <>
-                <div
-                  className="absolute pointer-events-auto cursor-pointer"
-                  style={{ left: "51%", top: "34%" }}
-                  onClick={() => toast.error("CRITICAL: Coastal breach alert in Jajpur canal!")}
-                >
-                  <div className="w-5 h-5 rounded-full bg-[#FF4D5E] border-2 border-white flex items-center justify-center text-white shadow-lg hover:scale-125 transition-transform animate-bounce">
-                    <AlertTriangle className="w-2.5 h-2.5" />
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
-
-          {/* ═══════════════════════════════════════════════════════════
               LEFT FLOATING STACKED CARDS (With Collapse Toggle)
              ═══════════════════════════════════════════════════════════ */}
           {showLeftPanel ? (
-            <div className="absolute top-3 left-3 z-20 w-[295px] flex flex-col gap-2 max-h-[calc(100vh-140px)] overflow-y-auto pointer-events-auto transition-all">
+            <div className="absolute top-3 left-3 z-20 w-[260px] flex flex-col gap-2 max-h-[calc(100vh-140px)] overflow-y-auto pointer-events-auto transition-all">
               {/* ── CARD 1: ACTIVE HAZARDS ── */}
-              <div className="rounded-[16px] bg-[#101624]/85 border border-white/10 p-3 backdrop-blur-2xl shadow-[0_16px_36px_rgba(0,0,0,0.6)] space-y-2 shrink-0">
+              <div className="rounded-[16px] bg-[#101624]/85 border border-white/10 p-2.5 backdrop-blur-2xl shadow-[0_16px_36px_rgba(0,0,0,0.6)] space-y-1.5 shrink-0">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5 text-xs font-bold text-[#F5F7FB]">
                     <AlertTriangle className="w-3.5 h-3.5 text-[#FF4D5E]" />
@@ -679,7 +547,7 @@ export default function AuthorityMapPage() {
               RIGHT FLOATING LAYERS PANEL (With Collapse Toggle)
              ═══════════════════════════════════════════════════════════ */}
           {showRightPanel ? (
-            <div className="absolute top-3 right-3 z-20 w-[210px] rounded-[16px] bg-[#101624]/85 border border-white/10 p-3 backdrop-blur-2xl shadow-[0_16px_36px_rgba(0,0,0,0.6)] space-y-2 pointer-events-auto transition-all">
+            <div className="absolute top-3 right-3 z-20 w-[185px] rounded-[16px] bg-[#101624]/85 border border-white/10 p-2.5 backdrop-blur-2xl shadow-[0_16px_36px_rgba(0,0,0,0.6)] space-y-1.5 pointer-events-auto transition-all">
               <div className="flex items-center justify-between pb-1.5 border-b border-white/10">
                 <div className="flex items-center gap-1.5 text-xs font-bold text-[#F5F7FB]">
                   <Layers className="w-3.5 h-3.5 text-[#3B6CFF]" />
@@ -924,7 +792,7 @@ export default function AuthorityMapPage() {
               BOTTOM FLOATING PANELS (Positioned cleanly above bottom dock)
              ═══════════════════════════════════════════════════════════ */}
           {/* ── BOTTOM CENTER-LEFT: CYCLONE FORECAST TRACK ── */}
-          <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 w-[92%] max-w-[620px] rounded-[16px] bg-[#101624]/90 border border-white/10 p-3 backdrop-blur-2xl shadow-[0_16px_36px_rgba(0,0,0,0.6)] space-y-2 pointer-events-auto">
+          <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 w-[92%] max-w-[540px] rounded-[16px] bg-[#101624]/90 border border-white/10 p-2.5 backdrop-blur-2xl shadow-[0_16px_36px_rgba(0,0,0,0.6)] space-y-1.5 pointer-events-auto">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Wind className="w-3.5 h-3.5 text-[#F43F5E]" />
@@ -1042,7 +910,7 @@ export default function AuthorityMapPage() {
           </div>
 
           {/* ── BOTTOM RIGHT: WEATHER NOW ── */}
-          <div className="hidden 2xl:block absolute bottom-24 right-4 z-20 w-[240px] rounded-[16px] bg-[#101624]/90 border border-white/10 p-3 backdrop-blur-2xl shadow-[0_16px_36px_rgba(0,0,0,0.6)] space-y-1.5 pointer-events-auto">
+          <div className="hidden 2xl:block absolute bottom-24 right-4 z-20 w-[195px] rounded-[16px] bg-[#101624]/90 border border-white/10 p-2.5 backdrop-blur-2xl shadow-[0_16px_36px_rgba(0,0,0,0.6)] space-y-1.5 pointer-events-auto">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5 text-xs font-bold text-[#F5F7FB]">
                 <CloudRain className="w-3.5 h-3.5 text-[#3B6CFF]" />
@@ -1092,6 +960,5 @@ export default function AuthorityMapPage() {
           </div>
         </div>
       </div>
-    </div>
   );
 }

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { cn } from "@/lib/utils";
 import {
@@ -19,10 +19,15 @@ import {
   Navigation,
   BarChart3,
   Settings,
-  ArrowRightLeft,
   ChevronUp,
   Pin,
   PinOff,
+  LifeBuoy,
+  Shield,
+  Camera,
+  Bell,
+  BookOpen,
+  ArrowRightLeft,
 } from "lucide-react";
 
 interface DockItem {
@@ -35,7 +40,7 @@ interface DockItem {
   iconColor: string;
 }
 
-const DOCK_ITEMS: DockItem[] = [
+const AUTHORITY_DOCK_ITEMS: DockItem[] = [
   {
     id: "dashboard",
     label: "Command Dashboard",
@@ -71,7 +76,7 @@ const DOCK_ITEMS: DockItem[] = [
   },
   {
     id: "resources",
-    label: "Resource Deployment",
+    label: "Resource Deploy",
     href: "/authority/resources",
     icon: Truck,
     gradient: "from-[#06B6D4] to-[#0891B2]",
@@ -137,13 +142,90 @@ const DOCK_ITEMS: DockItem[] = [
   },
 ];
 
+const CITIZEN_DOCK_ITEMS: DockItem[] = [
+  {
+    id: "citizen-home",
+    label: "Citizen Lifeline",
+    href: "/citizen/home",
+    icon: Home,
+    gradient: "from-[#3B6CFF] to-[#1D4ED8]",
+    iconColor: "text-white",
+  },
+  {
+    id: "citizen-map",
+    label: "Live Safe Map",
+    href: "/citizen/map",
+    icon: Map,
+    badge: "LIVE",
+    gradient: "from-[#10B981] to-[#047857]",
+    iconColor: "text-white",
+  },
+  {
+    id: "citizen-shelters",
+    label: "Nearby Shelters",
+    href: "/citizen/shelters",
+    icon: Shield,
+    badge: "GPS",
+    gradient: "from-[#14B8A6] to-[#0F766E]",
+    iconColor: "text-white",
+  },
+  {
+    id: "citizen-routes",
+    label: "Safe Evac Routes",
+    href: "/citizen/safe-routes",
+    icon: Navigation,
+    gradient: "from-[#8B5CF6] to-[#6D28D9]",
+    iconColor: "text-white",
+  },
+  {
+    id: "citizen-sos",
+    label: "Emergency SOS",
+    href: "/citizen/sos",
+    icon: LifeBuoy,
+    badge: "SOS",
+    gradient: "from-[#EF4444] to-[#B91C1C]",
+    iconColor: "text-white",
+  },
+  {
+    id: "citizen-report",
+    label: "Report Hazard (Photo & GPS)",
+    href: "/citizen/reports",
+    icon: Camera,
+    gradient: "from-[#06B6D4] to-[#0891B2]",
+    iconColor: "text-white",
+  },
+  {
+    id: "citizen-alerts",
+    label: "Local Warnings",
+    href: "/citizen/alerts",
+    icon: Bell,
+    badge: "ALERT",
+    gradient: "from-[#F59E0B] to-[#D97706]",
+    iconColor: "text-white",
+  },
+  {
+    id: "citizen-guide",
+    label: "Survival Guidance",
+    href: "/citizen/guidance",
+    icon: BookOpen,
+    gradient: "from-[#6366F1] to-[#4338CA]",
+    iconColor: "text-white",
+  },
+];
+
 export function AuthorityDock() {
   const pathname = usePathname();
-  const { toggleDemoRole } = useAuthStore();
+  const router = useRouter();
+  const { setRole } = useAuthStore();
+  const isCitizenMode = pathname?.startsWith("/citizen");
+
+  const [mounted, setMounted] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isPinned, setIsPinned] = useState(false);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const hideTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const activeDockItems = isCitizenMode ? CITIZEN_DOCK_ITEMS : AUTHORITY_DOCK_ITEMS;
 
   const handleMouseEnter = () => {
     if (hideTimeoutRef.current) {
@@ -161,10 +243,23 @@ export function AuthorityDock() {
   };
 
   useEffect(() => {
+    setMounted(true);
     return () => {
       if (hideTimeoutRef.current) clearTimeout(hideTimeoutRef.current);
     };
   }, []);
+
+  if (!mounted) return null;
+
+  const handleSwitchPortal = (target: "authority" | "citizen") => {
+    if (target === "authority") {
+      setRole("authority");
+      router.push("/authority/dashboard");
+    } else {
+      setRole("citizen");
+      router.push("/citizen/home");
+    }
+  };
 
   const isVisible = isPinned || isHovered;
 
@@ -194,130 +289,151 @@ export function AuthorityDock() {
               <span className="relative inline-flex rounded-full h-2 w-2 bg-[#3B6CFF]" />
             </span>
             <span className="font-semibold text-xs text-[#F5F7FB]">
-              Hover here to access navigation dock
+              Hover here for {isCitizenMode ? "Citizen Lifeline" : "Authority HQ"} Dock
             </span>
             <ChevronUp className="w-3.5 h-3.5 text-[#3B6CFF] animate-bounce" />
           </div>
         </div>
       </div>
 
-      {/* ── macOS Liquid Glass Dock (Dark Globe Theme Palette) ── */}
+      {/* ── macOS Liquid Glass Dock ── */}
       <div
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         className={cn(
-          "fixed bottom-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] select-none",
+          "fixed bottom-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] select-none max-w-[96vw]",
           isVisible
             ? "translate-y-0 opacity-100 scale-100 pointer-events-auto"
             : "translate-y-[calc(100%+32px)] opacity-0 scale-95 pointer-events-none"
         )}
       >
         <nav
-          aria-label="macOS Navigation Dock"
-          className="relative flex items-end gap-2 px-3 py-2.5 rounded-[28px] bg-[#101624]/85 backdrop-blur-3xl border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.7),0_1px_1px_rgba(255,255,255,0.1)_inset]"
+          aria-label="Application Dock"
+          className="relative flex items-center gap-1.5 sm:gap-2 px-3 py-2.5 rounded-[28px] bg-[#101624]/90 backdrop-blur-3xl border border-white/15 shadow-[0_20px_50px_rgba(0,0,0,0.7),0_1px_1px_rgba(255,255,255,0.1)_inset] overflow-x-auto max-w-full"
         >
           {/* Liquid Glass Highlight Shine */}
           <div className="absolute inset-x-4 top-0.5 h-[1px] bg-gradient-to-r from-transparent via-[#4FB3FF]/40 to-transparent opacity-80 pointer-events-none" />
 
-          {/* Primary Navigation Icons */}
-          {DOCK_ITEMS.map((item) => {
-            const Icon = item.icon;
-            const isActive = pathname === item.href;
-            const isHoveredCurrent = hoveredItem === item.id;
-
-            return (
-              <div
-                key={item.id}
-                onMouseEnter={() => setHoveredItem(item.id)}
-                className="relative flex flex-col items-center group"
-              >
-                {/* Tooltip */}
-                <div
-                  className={cn(
-                    "absolute -top-11 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-[#05070D]/95 backdrop-blur-md text-[#F5F7FB] text-[11px] font-semibold whitespace-nowrap shadow-xl border border-white/10 pointer-events-none transition-all duration-150 z-50 flex items-center gap-1.5",
-                    isHoveredCurrent
-                      ? "opacity-100 -translate-y-1 scale-100"
-                      : "opacity-0 translate-y-1 scale-90"
-                  )}
-                >
-                  <span>{item.label}</span>
-                  {item.badge && (
-                    <span
-                      className={cn(
-                        "text-[9px] px-1.5 py-0.2 rounded-full font-bold font-mono",
-                        item.badge === "LIVE"
-                          ? "bg-[#2FD07F] text-[#05070D]"
-                          : "bg-[#FF4D5E] text-white"
-                      )}
-                    >
-                      {item.badge}
-                    </span>
-                  )}
-                </div>
-
-                {/* Dock Icon Button */}
-                <Link
-                  href={item.href}
-                  className={cn(
-                    "relative flex items-center justify-center rounded-2xl transition-all duration-200 ease-out",
-                    isActive
-                      ? "w-12 h-12 bg-gradient-to-b from-white/20 to-white/5 border border-white/25 shadow-[0_0_16px_rgba(59,108,255,0.5)]"
-                      : "w-11 h-11 bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/15",
-                    isHoveredCurrent && "scale-115 -translate-y-1"
-                  )}
-                >
-                  <div
-                    className={cn(
-                      "w-9 h-9 rounded-xl flex items-center justify-center bg-gradient-to-tr shadow-sm",
-                      item.gradient
-                    )}
-                  >
-                    <Icon className={cn("w-5 h-5", item.iconColor)} />
-                  </div>
-                </Link>
-
-                {/* Active Indicator Dot */}
-                {isActive && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#3B6CFF] mt-1 shadow-[0_0_8px_#3B6CFF]" />
-                )}
-              </div>
-            );
-          })}
-
-          {/* Separator */}
-          <div className="h-9 w-[1px] bg-white/15 my-auto mx-1 shadow-sm opacity-80" />
-
-          {/* Switch to Citizen Portal */}
-          <div
-            onMouseEnter={() => setHoveredItem("switch-portal")}
-            className="relative flex flex-col items-center group"
-          >
-            <div
-              className={cn(
-                "absolute -top-11 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-[#05070D]/95 backdrop-blur-md text-[#F5F7FB] text-[11px] font-semibold whitespace-nowrap shadow-xl border border-white/10 pointer-events-none transition-all duration-150 z-50",
-                hoveredItem === "switch-portal"
-                  ? "opacity-100 -translate-y-1 scale-100"
-                  : "opacity-0 translate-y-1 scale-90"
-              )}
-            >
-              Switch to Citizen Portal
-            </div>
-
+          {/* ── PROMINENT PORTAL SWITCHER: Authority HQ <-> Citizen Lifeline ── */}
+          <div className="flex items-center p-1 rounded-2xl bg-black/40 border border-white/10 shrink-0">
+            {/* Authority Command Dashboard Button */}
             <button
               type="button"
-              onClick={toggleDemoRole}
-              aria-label="Switch to Citizen Portal"
-              className="relative flex items-center justify-center w-11 h-11 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all duration-200 cursor-pointer"
+              onClick={() => handleSwitchPortal("authority")}
+              onMouseEnter={() => setHoveredItem("portal-authority")}
+              className={cn(
+                "flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer relative",
+                !isCitizenMode
+                  ? "bg-[#3B6CFF] text-white shadow-[0_0_15px_rgba(59,108,255,0.6)]"
+                  : "text-[#8E99AF] hover:text-white hover:bg-white/5"
+              )}
             >
-              <ArrowRightLeft className="w-5 h-5 text-[#9AA3B8] hover:text-white" />
+              <Shield className="w-4 h-4 shrink-0" />
+              <span className="hidden md:inline">Authority HQ</span>
+              {!isCitizenMode && (
+                <span className="w-1.5 h-1.5 rounded-full bg-white ml-0.5" />
+              )}
             </button>
-            <div className="h-1.5 flex items-center justify-center mt-1" />
+
+            {/* Citizen Lifeline Dashboard Button */}
+            <button
+              type="button"
+              onClick={() => handleSwitchPortal("citizen")}
+              onMouseEnter={() => setHoveredItem("portal-citizen")}
+              className={cn(
+                "flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer relative",
+                isCitizenMode
+                  ? "bg-[#2FD07F] text-[#05070D] shadow-[0_0_15px_rgba(47,208,127,0.6)]"
+                  : "text-[#8E99AF] hover:text-white hover:bg-white/5"
+              )}
+            >
+              <LifeBuoy className="w-4 h-4 shrink-0 animate-pulse" />
+              <span className="hidden md:inline">Citizen Lifeline</span>
+              {isCitizenMode && (
+                <span className="w-1.5 h-1.5 rounded-full bg-[#05070D] ml-0.5" />
+              )}
+            </button>
           </div>
 
-          {/* Platform Settings */}
+          {/* Separator */}
+          <div className="h-8 w-[1px] bg-white/15 mx-1 shrink-0" />
+
+          {/* ── Suite-Specific Navigation Icons ── */}
+          <div className="flex items-center gap-1.5 shrink-0">
+            {activeDockItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = pathname === item.href;
+              const isHoveredCurrent = hoveredItem === item.id;
+
+              return (
+                <div
+                  key={item.id}
+                  onMouseEnter={() => setHoveredItem(item.id)}
+                  className="relative flex flex-col items-center group shrink-0"
+                >
+                  {/* Tooltip */}
+                  <div
+                    className={cn(
+                      "absolute -top-11 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-[#05070D]/95 backdrop-blur-md text-[#F5F7FB] text-[11px] font-semibold whitespace-nowrap shadow-xl border border-white/10 pointer-events-none transition-all duration-150 z-50 flex items-center gap-1.5",
+                      isHoveredCurrent
+                        ? "opacity-100 -translate-y-1 scale-100"
+                        : "opacity-0 translate-y-1 scale-90"
+                    )}
+                  >
+                    <span>{item.label}</span>
+                    {item.badge && (
+                      <span
+                        className={cn(
+                          "text-[9px] px-1.5 py-0.2 rounded-full font-bold font-mono",
+                          item.badge === "LIVE"
+                            ? "bg-[#2FD07F] text-[#05070D]"
+                            : item.badge === "GPS"
+                            ? "bg-[#3B6CFF] text-white"
+                            : "bg-[#FF4D5E] text-white"
+                        )}
+                      >
+                        {item.badge}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Dock Icon Link */}
+                  <Link
+                    href={item.href}
+                    className={cn(
+                      "relative flex items-center justify-center rounded-2xl transition-all duration-200 ease-out",
+                      isActive
+                        ? "w-11 h-11 bg-white/20 border border-white/30 shadow-[0_0_16px_rgba(59,108,255,0.5)]"
+                        : "w-10 h-10 bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/15",
+                      isHoveredCurrent && "scale-115 -translate-y-1"
+                    )}
+                  >
+                    <div
+                      className={cn(
+                        "w-8 h-8 rounded-xl flex items-center justify-center bg-gradient-to-tr shadow-sm",
+                        item.gradient
+                      )}
+                    >
+                      <Icon className={cn("w-4 h-4", item.iconColor)} />
+                    </div>
+                  </Link>
+
+                  {/* Active Indicator Dot */}
+                  {isActive && (
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#3B6CFF] mt-1 shadow-[0_0_8px_#3B6CFF]" />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Separator */}
+          <div className="h-8 w-[1px] bg-white/15 mx-1 shrink-0" />
+
+          {/* System Settings (or Guidance) */}
           <div
             onMouseEnter={() => setHoveredItem("settings")}
-            className="relative flex flex-col items-center group"
+            className="relative flex flex-col items-center group shrink-0"
           >
             <div
               className={cn(
@@ -327,27 +443,30 @@ export function AuthorityDock() {
                   : "opacity-0 translate-y-1 scale-90"
               )}
             >
-              System Settings
+              {isCitizenMode ? "Emergency Guidance" : "System Settings"}
             </div>
 
             <Link
-              href="/authority/settings"
+              href={isCitizenMode ? "/citizen/guidance" : "/authority/settings"}
               className={cn(
-                "relative flex items-center justify-center w-11 h-11 rounded-2xl transition-all duration-200",
-                pathname === "/authority/settings"
+                "relative flex items-center justify-center w-10 h-10 rounded-2xl transition-all duration-200",
+                pathname === "/authority/settings" || pathname === "/citizen/guidance"
                   ? "bg-white/15 border border-white/20 shadow-[0_0_12px_rgba(59,108,255,0.4)]"
                   : "bg-white/5 hover:bg-white/10 border border-white/10"
               )}
             >
-              <Settings className="w-5 h-5 text-[#9AA3B8] hover:text-white" />
+              {isCitizenMode ? (
+                <BookOpen className="w-4 h-4 text-[#9AA3B8] hover:text-white" />
+              ) : (
+                <Settings className="w-4 h-4 text-[#9AA3B8] hover:text-white" />
+              )}
             </Link>
-            <div className="h-1.5 flex items-center justify-center mt-1" />
           </div>
 
           {/* Pin / Unpin Dock Toggle */}
           <div
             onMouseEnter={() => setHoveredItem("pin-dock")}
-            className="relative flex flex-col items-center group ml-1"
+            className="relative flex flex-col items-center group ml-1 shrink-0"
           >
             <div
               className={cn(
@@ -373,7 +492,6 @@ export function AuthorityDock() {
             >
               {isPinned ? <Pin className="w-3.5 h-3.5" /> : <PinOff className="w-3.5 h-3.5" />}
             </button>
-            <div className="h-1.5 flex items-center justify-center mt-1" />
           </div>
         </nav>
       </div>
