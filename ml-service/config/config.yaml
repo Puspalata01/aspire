@@ -1,0 +1,88 @@
+app:
+  name: "Multi-Hazard ML Service"
+  version: "0.1.0"
+  environment: "development"
+  debug: true
+
+paths:
+  data_root: "./data"
+  raw_data: "./data/raw"
+  processed_data: "./data/processed"
+  sample_data: "./data/sample"
+  models: "./models"
+  logs: "./logs"
+  checkpoints: "./models/checkpoints"
+
+geography:
+  region: "Odisha"
+  country: "India"
+  bbox:
+    min_lat: 17.78
+    max_lat: 22.57
+    min_lon: 81.37
+    max_lon: 87.53
+  crs: "EPSG:4326"
+
+hazards:
+  primary: "flood"
+  supported:
+    - flood
+    - cyclone
+    - storm_surge
+    - heatwave
+    - landslide
+    - lightning
+    - drought
+
+flood:
+  model_type: "unet"
+  input_channels: 4
+  output_classes: 2
+  image_size: 256
+  batch_size: 8
+  epochs: 50
+  learning_rate: 0.001
+  
+precipitation:
+  model_type: "lstm"
+  sequence_length: 30
+  forecast_horizon: 7
+  hidden_size: 128
+  num_layers: 2
+  batch_size: 32
+  epochs: 100
+
+risk:
+  thresholds:
+    low: 0.25
+    medium: 0.50
+    high: 0.75
+    critical: 0.90
+  vulnerability_weights:
+    population_density: 0.3
+    age_vulnerability: 0.2
+    infrastructure_age: 0.2
+    socioeconomic: 0.3
+
+api:
+  host: "0.0.0.0"
+  port: 8000
+  reload: true
+  workers: 4
+  cors_origins:
+    - "http://localhost:3000"
+    - "http://localhost:8080"
+
+logging:
+  level: "INFO"
+  format: "<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan> - <level>{message}</level>"
+  rotation: "500 MB"
+  retention: "10 days"
+
+mlflow:
+  tracking_uri: "./mlruns"
+  experiment_name: "multi_hazard_detection"
+
+monitoring:
+  enable_metrics: true
+  metrics_port: 9090

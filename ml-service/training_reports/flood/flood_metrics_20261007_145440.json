@@ -1,0 +1,19 @@
+{
+  "train": {
+    "label": "flood_train",
+    "threshold": 0.5,
+    "auc_roc": 0.5,
+    "avg_prec": 0.5,
+    "f1": 0.6667,
+    "precision": 0.5,
+    "recall": 1.0,
+    "tp": 4,
+    "fp": 4,
+    "fn": 0,
+    "tn": 0,
+    "n_positive": 4,
+    "n_negative": 4
+  },
+  "cv_auc_mean": NaN,
+  "cv_auc_std": NaN
+}

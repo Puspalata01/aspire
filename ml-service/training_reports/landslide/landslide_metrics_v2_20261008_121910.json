@@ -1,0 +1,19 @@
+{
+  "train": {
+    "label": "landslide_train",
+    "threshold": 0.5,
+    "auc_roc": 1.0,
+    "avg_prec": 1.0,
+    "f1": 0.997,
+    "precision": 0.9989,
+    "recall": 0.9951,
+    "tp": 1812,
+    "fp": 2,
+    "fn": 9,
+    "tn": 3641,
+    "n_positive": 1821,
+    "n_negative": 3643
+  },
+  "cv_auc_mean": 0.9993623212696757,
+  "cv_auc_std": 0.0004802817592652351
+}

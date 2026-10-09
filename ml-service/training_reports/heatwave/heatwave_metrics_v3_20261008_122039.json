@@ -1,0 +1,51 @@
+{
+  "threshold": 0.15047394757002455,
+  "n_features": 18,
+  "train": {
+    "label": "hw_train",
+    "threshold": 0.15047394757002455,
+    "auc_roc": 0.9996,
+    "avg_prec": 0.3912,
+    "f1": 0.0249,
+    "precision": 0.0126,
+    "recall": 1.0,
+    "tp": 538,
+    "fp": 42068,
+    "fn": 0,
+    "tn": 1095714,
+    "n_positive": 538,
+    "n_negative": 1137782
+  },
+  "val": {
+    "label": "hw_val",
+    "threshold": 0.15047394757002455,
+    "auc_roc": 0.9963,
+    "avg_prec": 0.2954,
+    "f1": 0.4488,
+    "precision": 0.2894,
+    "recall": 1.0,
+    "tp": 408,
+    "fp": 1002,
+    "fn": 0,
+    "tn": 140880,
+    "n_positive": 408,
+    "n_negative": 141882
+  },
+  "test": {
+    "label": "hw_test",
+    "threshold": 0.15047394757002455,
+    "auc_roc": 0.998,
+    "avg_prec": 0.2671,
+    "f1": 0.3867,
+    "precision": 0.2397,
+    "recall": 1.0,
+    "tp": 203,
+    "fp": 644,
+    "fn": 0,
+    "tn": 141443,
+    "n_positive": 203,
+    "n_negative": 142087
+  },
+  "cv_auc_mean": NaN,
+  "cv_auc_std": NaN
+}
